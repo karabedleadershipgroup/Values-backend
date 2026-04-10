@@ -1,0 +1,53 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --navy: #1B2A4A;
+  --navy-dark: #111d33;
+  --gold: #C9A84C;
+  --gold-light: #FBF3E2;
+  --gold-text: #7A5C1E;
+  --gold-border: #C9A84C;
+  --bg: #ffffff;
+  --bg-secondary: #f7f6f3;
+  --text-primary: #1a1a1a;
+  --text-secondary: #5f5e5a;
+  --text-tertiary: #888780;
+  --border: rgba(0,0,0,0.12);
+  --border-secondary: rgba(0,0,0,0.2);
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --green-bg: #E1F5EE;
+  --green-text: #085041;
+  --green-border: #5DCAA5;
+  --red-bg: #FCEBEB;
+  --red-text: #791F1F;
+  --red-border: #E24B4A;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a1a;
+    --bg-secondary: #242424;
+    --text-primary: #f0ede8;
+    --text-secondary: #a09e98;
+    --text-tertiary: #6b6966;
+    --border: rgba(255,255,255,0.12);
+    --border-secondary: rgba(255,255,255,0.2);
+    --gold-light: #2a2318;
+    --gold-text: #C9A84C;
+  }
+}
+
+html, body {
+  font-family: 'Georgia', serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+a { color: inherit; text-decoration: none; }
