@@ -564,7 +564,35 @@
     document.getElementById('results-view').style.display = 'block';
   }
 
-  function reset() {
+  async function listenToSummary(d) {
+  const btn = document.getElementById('audio-btn');
+  btn.textContent = 'Generating audio...';
+  btn.disabled = true;
+
+  const summary = `Here is your leadership analysis. 
+Behavior observed: ${d.behaviorObserved}. 
+Values impacted: ${d.valuesAnalysis.filter(v => v.status === 'Misaligned').map(v => v.value).join(', ') || 'none identified as misaligned'}. 
+Recommended action: ${d.recommendedAction.action}. ${d.recommendedAction.reasoning}`;
+
+  try {
+    const res = await fetch('/api/audio', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ summary })
+    });
+    if (!res.ok) throw new Error();
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.play();
+    btn.textContent = 'Playing...';
+    audio.onended = () => { btn.textContent = 'Listen to summary'; btn.disabled = false; };
+  } catch (err) {
+    btn.textContent = 'Listen to summary';
+    btn.disabled = false;
+    alert('Audio failed. Please try again.');
+  }
+}
     document.getElementById('results-view').style.display = 'none';
     document.getElementById('sit').value = '';
     document.getElementById('step2-view').style.display = 'block';
