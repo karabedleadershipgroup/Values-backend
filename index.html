@@ -274,8 +274,20 @@ async function listenToSummary() {
   btn.disabled = true;
   spin.style.display = 'block';
   label.textContent = 'Generating...';
-  const misaligned = lastResult.valuesAnalysis.filter(v => v.status === 'Misaligned').map(v => v.value).join(', ') || 'none identified';
-  const summary = `Here is your leadership analysis summary. Behavior observed: ${lastResult.behaviorObserved}. Values impacted: ${misaligned}. Client impact: ${lastResult.impact.client}. Recommended action: ${lastResult.recommendedAction.action}. ${lastResult.recommendedAction.reasoning}`;
+  const misaligned = lastResult.valuesAnalysis.filter(v => v.status === 'Misaligned');
+  const misalignedText = misaligned.map(v => `${v.value}: ${v.explanation}`).join('. ');
+  const script = lastResult.conversationScript;
+  const summary = `Here is your leadership guidance summary.
+
+${lastResult.behaviorObserved}.
+
+In terms of your organizational values, here is what was misaligned. ${misalignedText}.
+
+The impact of this behavior is significant. For the client: ${lastResult.impact.client}. For the team: ${lastResult.impact.team}. For the organization: ${lastResult.impact.organizational}.
+
+When you have this conversation, here is how to approach it. Start by opening with: ${script.opening}. Then address the behavior and its impact by saying: ${script.behaviorImpact}. Set a clear expectation: ${script.expectation}. Ask a curiosity question to understand their perspective: ${script.curiosityQuestion}. Close with an alignment statement: ${script.alignmentStatement}.
+
+Your recommended next step is to ${lastResult.recommendedAction.action.toLowerCase()} this staff member. ${lastResult.recommendedAction.reasoning}.`;
   try {
     const res = await fetch('/api/audio', {
       method: 'POST',
