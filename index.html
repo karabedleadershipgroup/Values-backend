@@ -368,6 +368,54 @@ function formatTime(s) {
 
 
 
+function listenToSummary() {
+  if (!lastResult) return;
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    document.getElementById('audio-label').textContent = '▶ Listen';
+    document.getElementById('audio-player').classList.remove('visible');
+    document.getElementById('play-icon').style.display = 'block';
+    document.getElementById('pause-icon').style.display = 'none';
+    audioGenerating = false;
+    return;
+  }
+  const misaligned = lastResult.valuesAnalysis.filter(v => v.status === 'Misaligned');
+  const misalignedText = misaligned.map(v => v.value).join(', ') || 'none identified';
+  const script = lastResult.conversationScript;
+  const summary = `Here is your leadership guidance summary. ${lastResult.behaviorObserved}. The values that were misaligned are: ${misalignedText}. The impact on the client was: ${lastResult.impact.client}. When you speak with this staff member, open by saying: ${script.opening}. Then say: ${script.behaviorImpact}. Your recommended next step is to ${lastResult.recommendedAction.action.toLowerCase()} this staff member. ${lastResult.recommendedAction.reasoning}.`;
+
+  const utterance = new SpeechSynthesisUtterance(summary);
+  utterance.rate = 0.92;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.lang.startsWith('en') && v.name.includes('Samantha'))
+    || voices.find(v => v.lang.startsWith('en'));
+  if (preferred) utterance.voice = preferred;
+
+  utterance.onstart = () => {
+    document.getElementById('audio-label').textContent = '■ Stop';
+    document.getElementById('audio-player').classList.add('visible');
+    document.getElementById('play-icon').style.display = 'none';
+    document.getElementById('pause-icon').style.display = 'block';
+    audioGenerating = true;
+  };
+  utterance.onend = () => {
+    audioGenerating = false;
+    document.getElementById('audio-label').textContent = '▶ Listen';
+    document.getElementById('play-icon').style.display = 'block';
+    document.getElementById('pause-icon').style.display = 'none';
+    document.getElementById('audio-progress-fill').style.width = '100%';
+  };
+  utterance.onerror = () => {
+    audioGenerating = false;
+    document.getElementById('audio-label').textContent = '▶ Listen';
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
 function render(d) {
   document.getElementById('loading-view').style.display = 'none';
   const ac = d.recommendedAction.action.toLowerCase();
