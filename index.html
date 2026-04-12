@@ -98,6 +98,18 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .document { background: var(--gold-light); color: var(--amber); border: 1px solid var(--gold); }
 .escalate { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
 
+/* Audio player */
+.audio-player { background: var(--navy); border-radius: var(--r); padding: 14px 16px; margin-bottom: 1.25rem; display:none; }
+.audio-player.visible { display:block; }
+.audio-controls { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.audio-ctrl-btn { background: none; border: none; cursor: pointer; color: var(--gold); padding: 4px; display:flex; align-items:center; justify-content:center; opacity:0.85; transition:opacity 0.15s; }
+.audio-ctrl-btn:hover { opacity: 1; }
+.audio-play-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--gold); color: var(--navy); border: none; cursor: pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.audio-progress-wrap { flex: 1; display:flex; align-items:center; gap:8px; }
+.audio-progress { flex:1; height:3px; background: rgba(201,168,76,0.25); border-radius:999px; cursor:pointer; position:relative; }
+.audio-progress-fill { height:100%; background: var(--gold); border-radius:999px; width:0%; transition: width 0.1s linear; pointer-events:none; }
+.audio-time { font-size:11px; color:rgba(201,168,76,0.6); font-family:'DM Sans',sans-serif; white-space:nowrap; min-width:70px; text-align:right; }
+
 /* Error */
 .err { font-size: 13px; color: var(--red); background: var(--red-bg); border: 1px solid var(--red-border); border-radius: var(--r); padding: 10px 14px; margin-top: 0.75rem; font-weight: 300; }
 
@@ -175,6 +187,26 @@ textarea.values-input { min-height: 120px; resize: vertical; }
           <span id="audio-label">&#9654; Listen</span>
         </button>
         <button class="btn-restart" onclick="restart()">Start over</button>
+      </div>
+    </div>
+    <div class="audio-player" id="audio-player">
+      <div class="audio-controls">
+        <button class="audio-ctrl-btn" onclick="seekAudio(-15)" title="Back 15s">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.96"/><text x="8" y="15" font-size="6" fill="currentColor" stroke="none" font-family="sans-serif">15</text></svg>
+        </button>
+        <button class="audio-play-btn" id="play-pause-btn" onclick="togglePlayPause()">
+          <svg id="play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          <svg id="pause-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </button>
+        <button class="audio-ctrl-btn" onclick="seekAudio(15)" title="Forward 15s">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.96"/><text x="8" y="15" font-size="6" fill="currentColor" stroke="none" font-family="sans-serif">15</text></svg>
+        </button>
+        <div class="audio-progress-wrap">
+          <div class="audio-progress" id="audio-progress" onclick="scrubAudio(event)">
+            <div class="audio-progress-fill" id="audio-progress-fill"></div>
+          </div>
+          <div class="audio-time" id="audio-time">0:00 / 0:00</div>
+        </div>
       </div>
     </div>
     <div class="card" id="results-card"></div>
@@ -266,6 +298,41 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
   }
 }
 
+let currentAudio = null;
+
+function togglePlayPause() {
+  if (!currentAudio) return;
+  if (currentAudio.paused) {
+    currentAudio.play();
+    document.getElementById('play-icon').style.display = 'block';
+    document.getElementById('pause-icon').style.display = 'none';
+  } else {
+    currentAudio.pause();
+    document.getElementById('play-icon').style.display = 'none';
+    document.getElementById('pause-icon').style.display = 'block';
+  }
+}
+
+function seekAudio(seconds) {
+  if (!currentAudio) return;
+  currentAudio.currentTime = Math.max(0, Math.min(currentAudio.duration, currentAudio.currentTime + seconds));
+}
+
+function scrubAudio(e) {
+  if (!currentAudio) return;
+  const bar = document.getElementById('audio-progress');
+  const rect = bar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  currentAudio.currentTime = pct * currentAudio.duration;
+}
+
+function formatTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
 async function listenToSummary() {
   if (!lastResult) return;
   const btn = document.getElementById('audio-btn');
@@ -297,9 +364,24 @@ Your recommended next step is to ${lastResult.recommendedAction.action.toLowerCa
     if (!res.ok) throw new Error('Audio failed');
     const blob = await res.blob();
     const audio = new Audio(URL.createObjectURL(blob));
+    currentAudio = audio;
+    spin.style.display = 'none';
+    label.textContent = '\u25B6 Listen';
+    btn.disabled = false;
+    document.getElementById('audio-player').classList.add('visible');
+    document.getElementById('play-icon').style.display = 'none';
+    document.getElementById('pause-icon').style.display = 'block';
     audio.play();
-    label.textContent = 'Playing...';
-    audio.onended = () => { spin.style.display = 'none'; label.textContent = '\u25B6 Listen'; btn.disabled = false; };
+    audio.ontimeupdate = () => {
+      const pct = (audio.currentTime / audio.duration) * 100;
+      document.getElementById('audio-progress-fill').style.width = pct + '%';
+      document.getElementById('audio-time').textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
+    };
+    audio.onended = () => {
+      document.getElementById('play-icon').style.display = 'block';
+      document.getElementById('pause-icon').style.display = 'none';
+      document.getElementById('audio-progress-fill').style.width = '100%';
+    };
   } catch (e) {
     spin.style.display = 'none';
     label.textContent = '\u25B6 Listen';
@@ -353,6 +435,12 @@ function restart() {
   document.getElementById('audio-btn').disabled = false;
   document.getElementById('audio-spin').style.display = 'none';
   document.getElementById('audio-label').textContent = '\u25B6 Listen';
+  document.getElementById('audio-player').classList.remove('visible');
+  document.getElementById('audio-progress-fill').style.width = '0%';
+  document.getElementById('audio-time').textContent = '0:00 / 0:00';
+  document.getElementById('play-icon').style.display = 'block';
+  document.getElementById('pause-icon').style.display = 'none';
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   document.getElementById('step-1').style.display = 'block';
 }
 </script>
