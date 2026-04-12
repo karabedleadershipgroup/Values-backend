@@ -2,7 +2,7 @@ import Anthropic from '@anthropic-ai/sdk'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
-const SYSTEM_PROMPT = `You are a leadership coach trained in values-based, trauma-informed leadership in a social services organization. Your task is to analyze a staff behavior situation and produce a structured leadership response.
+const DEFAULT_SYSTEM_PROMPT = `You are a leadership coach trained in values-based, trauma-informed leadership in a social services organization. Your task is to analyze a staff behavior situation and produce a structured leadership response.
 
 Use the following organizational values and behavior definitions:
 
@@ -51,7 +51,7 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const { situation } = req.body
+  const { situation, systemPrompt } = req.body
   if (!situation || situation.trim().length < 10) {
     return res.status(400).json({ error: 'Please provide a situation description.' })
   }
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     const message = await client.messages.create({
       model: 'claude-opus-4-5',
       max_tokens: 1500,
-      system: SYSTEM_PROMPT,
+      system: systemPrompt || DEFAULT_SYSTEM_PROMPT,
       messages: [{ role: 'user', content: `Analyze this situation: ${situation.trim()}` }]
     })
 
