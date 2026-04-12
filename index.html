@@ -334,21 +334,21 @@ let currentAudio = null;
 let audioGenerating = false;
 
 function togglePlayPause() {
-  if (!currentAudio) return;
-  if (currentAudio.paused) {
-    currentAudio.play();
-    document.getElementById('play-icon').style.display = 'block';
-    document.getElementById('pause-icon').style.display = 'none';
-  } else {
-    currentAudio.pause();
-    document.getElementById('play-icon').style.display = 'none';
-    document.getElementById('pause-icon').style.display = 'block';
+  if (window.speechSynthesis.speaking) {
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+      document.getElementById('play-icon').style.display = 'none';
+      document.getElementById('pause-icon').style.display = 'block';
+    } else {
+      window.speechSynthesis.pause();
+      document.getElementById('play-icon').style.display = 'block';
+      document.getElementById('pause-icon').style.display = 'none';
+    }
   }
 }
 
 function seekAudio(seconds) {
-  if (!currentAudio) return;
-  currentAudio.currentTime = Math.max(0, Math.min(currentAudio.duration, currentAudio.currentTime + seconds));
+  // Browser speech synthesis does not support seeking
 }
 
 function scrubAudio(e) {
@@ -567,7 +567,7 @@ function restart() {
   document.getElementById('audio-time').textContent = '0:00 / 0:00';
   document.getElementById('play-icon').style.display = 'block';
   document.getElementById('pause-icon').style.display = 'none';
-  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  window.speechSynthesis.cancel();
   audioGenerating = false;
   document.getElementById('step-1').style.display = 'block';
 }
