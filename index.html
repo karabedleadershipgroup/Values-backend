@@ -186,6 +186,9 @@ textarea.values-input { min-height: 120px; resize: vertical; }
           <div class="audio-spin" id="audio-spin"></div>
           <span id="audio-label">&#9654; Listen</span>
         </button>
+        <button class="btn-audio" id="pdf-btn" onclick="downloadPDF()" style="background:var(--gold);color:var(--navy);">
+          &#8595; PDF
+        </button>
         <button class="btn-restart" onclick="restart()">Start over</button>
       </div>
     </div>
@@ -299,6 +302,7 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 }
 
 let currentAudio = null;
+let audioGenerating = false;
 
 function togglePlayPause() {
   if (!currentAudio) return;
@@ -334,7 +338,8 @@ function formatTime(s) {
 }
 
 async function listenToSummary() {
-  if (!lastResult) return;
+  if (!lastResult || audioGenerating) return;
+  audioGenerating = true;
   const btn = document.getElementById('audio-btn');
   const spin = document.getElementById('audio-spin');
   const label = document.getElementById('audio-label');
@@ -386,6 +391,7 @@ Your recommended next step is to ${lastResult.recommendedAction.action.toLowerCa
     spin.style.display = 'none';
     label.textContent = '\u25B6 Listen';
     btn.disabled = false;
+    audioGenerating = false;
     alert('Audio failed. Please try again.');
   }
 }
@@ -426,6 +432,105 @@ function render(d) {
   document.getElementById('results-view').style.display = 'block';
 }
 
+function downloadPDF() {
+  if (!lastResult) return;
+  const d = lastResult;
+  const misaligned = d.valuesAnalysis.filter(v => v.status === 'Misaligned');
+  const upheld = d.valuesAnalysis.filter(v => v.status === 'Upheld');
+
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Values Lab — Leadership Analysis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }
+  .header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }
+  .header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }
+  .header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+  .header-right { text-align:right; font-size:11px; color:#888; }
+  .section { margin-bottom: 28px; }
+  .section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }
+  .content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }
+  .value-row { padding: 10px 0; border-bottom: 1px solid #eee; }
+  .value-row:last-child { border-bottom: none; }
+  .value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }
+  .mis { font-size: 11px; color: #A32D2D; font-weight: 500; }
+  .uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }
+  .impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }
+  .impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }
+  .slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }
+  .action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }
+  .coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }
+  .document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }
+  .escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>Values Lab</h1>
+    <p>Leadership Analysis Report &mdash; Karabed Leadership Group</p>
+  </div>
+  <div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div>
+</div>
+
+<div class="section">
+  <div class="section-label">Behavior Observed</div>
+  <p class="content">${d.behaviorObserved}</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Values Analysis</div>
+  ${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}
+</div>
+
+<div class="section">
+  <div class="section-label">Impact</div>
+  <div class="impact-grid">
+    <div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div>
+    <div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div>
+    <div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Correct Behavior</div>
+  <p class="content">${d.correctBehavior}</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Conversation Script</div>
+  <div class="slabel">Opening</div><div class="sblock">${d.conversationScript.opening}</div>
+  <div class="slabel">Behavior + Impact</div><div class="sblock">${d.conversationScript.behaviorImpact}</div>
+  <div class="slabel">Expectation</div><div class="sblock">${d.conversationScript.expectation}</div>
+  <div class="slabel">Curiosity Question</div><div class="sblock">${d.conversationScript.curiosityQuestion}</div>
+  <div class="slabel">Alignment Statement</div><div class="sblock">${d.conversationScript.alignmentStatement}</div>
+</div>
+
+<div class="section">
+  <div class="section-label">Recommended Action</div>
+  <span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span>
+  <span class="content">${d.recommendedAction.reasoning}</span>
+</div>
+
+<div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, '_blank');
+  if (win) {
+    win.onload = () => { win.print(); };
+  }
+}
+
 function restart() {
   document.getElementById('results-view').style.display = 'none';
   document.getElementById('f-situation').value = '';
@@ -441,6 +546,7 @@ function restart() {
   document.getElementById('play-icon').style.display = 'block';
   document.getElementById('pause-icon').style.display = 'none';
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  audioGenerating = false;
   document.getElementById('step-1').style.display = 'block';
 }
 </script>
