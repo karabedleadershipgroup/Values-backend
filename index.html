@@ -366,54 +366,7 @@ function formatTime(s) {
   return m + ':' + (sec < 10 ? '0' : '') + sec;
 }
 
-async function listenToSummary() {
-  if (!lastResult || audioGenerating) return;
-  audioGenerating = true;
-  const btn = document.getElementById('audio-btn');
-  const spin = document.getElementById('audio-spin');
-  const label = document.getElementById('audio-label');
-  btn.disabled = true;
-  spin.style.display = 'block';
-  label.textContent = 'Generating...';
-  const misaligned = lastResult.valuesAnalysis.filter(v => v.status === 'Misaligned');
-  const misalignedText = misaligned.map(v => v.value).join(', ') || 'none identified';
-  const script = lastResult.conversationScript;
-  const summary = `Here is your leadership guidance summary. ${lastResult.behaviorObserved}. The values that were misaligned are: ${misalignedText}. The impact on the client was: ${lastResult.impact.client}. When you speak with this staff member, open by saying: ${script.opening}. Then say: ${script.behaviorImpact}. Your recommended next step is to ${lastResult.recommendedAction.action.toLowerCase()} this staff member. ${lastResult.recommendedAction.reasoning}.`;
-  try {
-    const res = await fetch('/api/audio', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ summary })
-    });
-    if (!res.ok) throw new Error('Audio failed');
-    const blob = await res.blob();
-    const audio = new Audio(URL.createObjectURL(blob));
-    currentAudio = audio;
-    spin.style.display = 'none';
-    label.textContent = '\u25B6 Listen';
-    btn.disabled = false;
-    document.getElementById('audio-player').classList.add('visible');
-    document.getElementById('play-icon').style.display = 'none';
-    document.getElementById('pause-icon').style.display = 'block';
-    audio.play();
-    audio.ontimeupdate = () => {
-      const pct = (audio.currentTime / audio.duration) * 100;
-      document.getElementById('audio-progress-fill').style.width = pct + '%';
-      document.getElementById('audio-time').textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
-    };
-    audio.onended = () => {
-      document.getElementById('play-icon').style.display = 'block';
-      document.getElementById('pause-icon').style.display = 'none';
-      document.getElementById('audio-progress-fill').style.width = '100%';
-    };
-  } catch (e) {
-    spin.style.display = 'none';
-    label.textContent = '\u25B6 Listen';
-    btn.disabled = false;
-    audioGenerating = false;
-    alert('Audio failed. Please try again.');
-  }
-}
+
 
 function render(d) {
   document.getElementById('loading-view').style.display = 'none';
