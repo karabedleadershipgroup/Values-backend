@@ -150,7 +150,7 @@ textarea.values-input { min-height: 120px; resize: vertical; }
     <div class="card">
       <div class="step-badge">Step 1 of 2</div>
       <div class="field-label">What are your organizational values?</div>
-      <input type="text" class="values-input" id="f-values" value="Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability" />
+      <input type="text" class="values-input" id="f-values" placeholder="Ex: Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability" />
       <div class="field-hint">Separate values with commas.</div>
       <div id="values-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:28px;"></div>
       <div id="err-1" class="err" style="display:none"></div>
@@ -164,6 +164,21 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       <div class="step-badge">Step 2 of 2</div>
       <div class="field-label">Describe the staff's behavior</div>
       <textarea class="values-input" id="f-situation" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID. Other staff witnessed the interaction."></textarea>
+
+      <div style="margin-top:1.25rem;">
+        <div class="field-label">Is this the first time or a repeated behavior?</div>
+        <div style="display:flex;gap:10px;margin-top:0.5rem;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;flex:1;min-width:140px;background:var(--white);transition:all 0.15s;" id="pattern-first-label">
+            <input type="radio" name="pattern" value="first" id="pattern-first" style="accent-color:var(--navy);" onchange="selectPattern()">
+            <span style="font-size:13px;font-weight:300;color:var(--text2);">First time</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;flex:1;min-width:140px;background:var(--white);transition:all 0.15s;" id="pattern-repeated-label">
+            <input type="radio" name="pattern" value="repeated" id="pattern-repeated" style="accent-color:var(--navy);" onchange="selectPattern()">
+            <span style="font-size:13px;font-weight:300;color:var(--text2);">Repeated behavior</span>
+          </label>
+        </div>
+      </div>
+
       <div id="err-2" class="err" style="display:none"></div>
       <div style="display:flex;gap:10px;margin-top:1.25rem;">
         <button class="btn-back" onclick="goStep1()">← Back</button>
@@ -244,6 +259,14 @@ function goStep2() {
   document.getElementById('step-2').style.display = 'block';
 }
 
+function selectPattern() {
+  const first = document.getElementById('pattern-first-label');
+  const repeated = document.getElementById('pattern-repeated-label');
+  const val = document.querySelector('input[name="pattern"]:checked')?.value;
+  first.style.borderColor = val === 'first' ? 'var(--navy)' : 'var(--border2)';
+  repeated.style.borderColor = val === 'repeated' ? 'var(--navy)' : 'var(--border2)';
+}
+
 function goStep1() {
   document.getElementById('step-2').style.display = 'none';
   document.getElementById('step-1').style.display = 'block';
@@ -251,8 +274,10 @@ function goStep1() {
 
 async function generate() {
   const situation = document.getElementById('f-situation').value.trim();
+  const pattern = document.querySelector('input[name="pattern"]:checked')?.value;
   const err = document.getElementById('err-2');
-  if (!situation || situation.length < 15) { err.textContent = 'Please describe the situation in more detail.'; err.style.display = 'block'; return; }
+  if (!situation || situation.length < 15) { err.textContent = "Please describe the staff's behavior in more detail."; err.style.display = 'block'; return; }
+  if (!pattern) { err.textContent = 'Please indicate if this is a first-time or repeated behavior.'; err.style.display = 'block'; return; }
   err.style.display = 'none';
 
   document.getElementById('step-2').style.display = 'none';
@@ -260,12 +285,16 @@ async function generate() {
 
   const valuesText = orgValues.map(v => `- ${v.toUpperCase()}`).join('\n');
 
-  const systemPrompt = `You are a leadership coach trained in values-based, trauma-informed leadership for social services organizations.
+  const systemPrompt = `Behavior pattern: ${pattern === 'first' ? 'This is the FIRST TIME this behavior has been observed.' : 'This is a REPEATED behavior — it has happened before.'}\n\nYou are a leadership coach trained in values-based, trauma-informed leadership for social services organizations.
 
 Analyze the staff behavior situation using ONLY these organizational values:
 ${valuesText}
 
 Constraints: Be specific not generic. Align with trauma-informed care. Do not shame the staff member. Focus on accountability and growth.
+
+IMPORTANT — adjust your response based on behavior pattern:
+- If FIRST TIME: use a coaching and curiosity-based tone. Assume positive intent. Focus on awareness and correction. Recommend coaching as the action unless severity requires otherwise.
+- If REPEATED: use a firmer accountability tone. Acknowledge the pattern explicitly. Recommend documentation or escalation depending on severity. The conversation script must reflect that this is not the first time.
 
 Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 {
@@ -287,7 +316,7 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
     const res = await fetch('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ situation, systemPrompt })
+      body: JSON.stringify({ situation, pattern, systemPrompt })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Something went wrong.');
@@ -534,6 +563,9 @@ function downloadPDF() {
 function restart() {
   document.getElementById('results-view').style.display = 'none';
   document.getElementById('f-situation').value = '';
+  document.querySelectorAll('input[name="pattern"]').forEach(r => r.checked = false);
+  document.getElementById('pattern-first-label').style.borderColor = 'var(--border2)';
+  document.getElementById('pattern-repeated-label').style.borderColor = 'var(--border2)';
   document.getElementById('f-values').value = '';
   lastResult = null;
   orgValues = [];
