@@ -39,8 +39,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .values-input { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: var(--white); border: 1px solid var(--border2); border-radius: var(--r); padding: 14px 16px; transition: border-color 0.2s; font-weight: 300; }
 .values-input:focus { outline: none; border-color: var(--navy); }
 .values-input::placeholder { color: var(--text3); }
-.field-hint { font-size: 12px; color: var(--text3); margin-top: 6px; text-align: center; font-weight: 300; }
-
+.field-hint { font-size: 12px; color: var(--text3); margin-top: 6px; font-weight: 300; }
 textarea.values-input { min-height: 120px; resize: vertical; }
 
 /* Card */
@@ -52,6 +51,48 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .btn-continue:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-back { font-size: 13px; color: var(--text3); background: none; border: 1px solid var(--border2); border-radius: var(--r); padding: 8px 18px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 .btn-back:hover { color: var(--text2); }
+
+/* ── Values Picker ── */
+.picker-intro { font-size: 13px; color: var(--text3); margin-bottom: 1rem; font-weight: 300; line-height: 1.6; }
+.picker-search { width: 100%; margin-bottom: 1.25rem; }
+.picker-category { margin-bottom: 1.25rem; }
+.picker-cat-title { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.picker-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.picker-chip {
+  padding: 5px 13px; border-radius: 999px;
+  border: 1px solid var(--border2); background: var(--bg);
+  font-size: 13px; color: var(--text2); font-family: 'DM Sans', sans-serif;
+  cursor: pointer; transition: all 0.12s; user-select: none; font-weight: 300;
+}
+.picker-chip:hover { background: var(--gold-pale); border-color: var(--gold); }
+.picker-chip.selected { background: var(--navy); color: var(--gold); border-color: var(--navy); font-weight: 500; }
+
+/* Custom add row */
+.custom-row { display: flex; gap: 8px; margin-top: 0.5rem; }
+.custom-add-btn {
+  padding: 0 16px; border-radius: var(--r);
+  border: 1px solid var(--border2); background: var(--white);
+  font-size: 13px; color: var(--text2); cursor: pointer;
+  font-family: 'DM Sans', sans-serif; white-space: nowrap; font-weight: 400;
+  transition: background 0.12s;
+}
+.custom-add-btn:hover { background: var(--gold-pale); border-color: var(--gold); }
+
+/* Selected summary pills */
+.selected-summary { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+.selected-summary-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.selected-pills { display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px; }
+.selected-pill {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 12px 4px 13px; border-radius: 999px;
+  background: var(--navy); border: 1px solid var(--navy);
+  font-size: 11px; color: var(--gold); font-weight: 500;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+}
+.selected-pill.custom { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.selected-pill-x { font-size: 13px; line-height: 1; opacity: 0.7; }
+.selected-count { font-size: 12px; color: var(--text3); margin-top: 8px; font-weight: 300; }
+.selected-warn { color: var(--amber); }
 
 /* Loading */
 .loading { display: flex; align-items: center; gap: 12px; color: var(--text3); font-size: 13px; padding: 3rem 0; font-weight: 300; justify-content: center; }
@@ -140,19 +181,39 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   <h1>Values</h1>
   <div class="lab">Lab</div>
   <div class="byline">By Karabed Leadership Group</div>
-  <p>A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
+  <p>A trauma-informed leadership response tool. Select your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
 </div>
 
 <div class="main">
 
-  <!-- Step 1: Values -->
+  <!-- Step 1: Values Picker -->
   <div id="step-1">
     <div class="card">
       <div class="step-badge">Step 1 of 2</div>
       <div class="field-label">What are your organizational values?</div>
-      <input type="text" class="values-input" id="f-values" placeholder="Ex: Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability" />
-      <div class="field-hint">Separate values with commas.</div>
-      <div id="values-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:28px;"></div>
+      <p class="picker-intro">Select from common organizational values below, or add your own. Most organizations work with 3–7 core values.</p>
+
+      <input type="text" class="values-input picker-search" id="picker-search" placeholder="Search values..." oninput="filterPicker()" />
+
+      <div id="picker-categories"></div>
+
+      <!-- Custom value add -->
+      <div style="margin-top: 1rem;">
+        <div class="field-label">Don't see your organization's values? Add them here.</div>
+        <div class="custom-row">
+          <input type="text" class="values-input" id="custom-value-input" placeholder="e.g. Stewardship, Ubuntu, Client-Centered..." style="flex:1; padding: 10px 14px;" />
+          <button class="custom-add-btn" onclick="addCustomValue()">Add</button>
+        </div>
+        <div class="field-hint">Press Enter or click Add. Custom values appear highlighted below.</div>
+      </div>
+
+      <!-- Selected summary -->
+      <div class="selected-summary" id="selected-summary" style="display:none;">
+        <div class="selected-summary-label">Selected values</div>
+        <div class="selected-pills" id="selected-pills"></div>
+        <div class="selected-count" id="selected-count"></div>
+      </div>
+
       <div id="err-1" class="err" style="display:none"></div>
       <button class="btn-continue" onclick="goStep2()">Continue</button>
     </div>
@@ -162,9 +223,16 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   <div id="step-2" style="display:none">
     <div class="card">
       <div class="step-badge">Step 2 of 2</div>
+
+      <!-- Selected values recap -->
+      <div style="margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border);">
+        <div class="field-label" style="margin-bottom: 6px;">Your values</div>
+        <div id="step2-values-recap" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+        <button onclick="goStep1()" style="font-size:11px; color:var(--text3); background:none; border:none; cursor:pointer; margin-top:6px; font-family:'DM Sans',sans-serif; padding:0; text-decoration:underline;">Edit values</button>
+      </div>
+
       <div class="field-label">Describe the staff's behavior</div>
       <textarea class="values-input" id="f-situation" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID. Other staff witnessed the interaction."></textarea>
-
       <div style="margin-top:1.25rem;">
         <div class="field-label">Is this the first time or a repeated behavior?</div>
         <div style="display:flex;gap:10px;margin-top:0.5rem;flex-wrap:wrap;">
@@ -178,7 +246,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
           </label>
         </div>
       </div>
-
       <div id="err-2" class="err" style="display:none"></div>
       <div style="display:flex;gap:10px;margin-top:1.25rem;">
         <button class="btn-back" onclick="goStep1()">← Back</button>
@@ -207,6 +274,7 @@ textarea.values-input { min-height: 120px; resize: vertical; }
         <button class="btn-restart" onclick="restart()">Start over</button>
       </div>
     </div>
+
     <div class="audio-player" id="audio-player">
       <div class="audio-controls">
         <button class="audio-ctrl-btn" onclick="seekAudio(-15)" title="Back 15s">
@@ -227,6 +295,7 @@ textarea.values-input { min-height: 120px; resize: vertical; }
         </div>
       </div>
     </div>
+
     <div class="card" id="results-card"></div>
     <div class="footer"><p>Powered by <strong>Karabed Leadership Group</strong> — Values Lab</p></div>
   </div>
@@ -234,29 +303,125 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 </div>
 
 <script>
+// ── Picker data ──
+const VALUE_CATEGORIES = {
+  "Integrity & character": ["Integrity","Honesty","Accountability","Courage","Humility","Transparency","Consistency"],
+  "Relationships & community": ["Respect","Compassion","Belonging","Collaboration","Empathy","Trust","Solidarity","Service"],
+  "Justice & equity": ["Equity","Dignity","Inclusion","Justice","Fairness","Liberation","Advocacy","Voice","DEIB"],
+  "Growth & excellence": ["Excellence","Innovation","Curiosity","Resilience","Adaptability","Learning","Creativity","Vision"],
+  "Wellbeing & purpose": ["Purpose","Balance","Healing","Hope","Joy","Faith","Gratitude","Stewardship"]
+};
+
+let selectedValues = new Map(); // value -> isCustom
+let customValues = [];
+let pickerQuery = "";
 let orgValues = [];
 let lastResult = null;
 
+// ── Picker rendering ──
+function filterPicker() {
+  pickerQuery = document.getElementById('picker-search').value.toLowerCase();
+  renderPicker();
+}
+
+function toggleValue(value, isCustom) {
+  if (selectedValues.has(value)) selectedValues.delete(value);
+  else selectedValues.set(value, isCustom || false);
+  renderPicker();
+  renderSelectedSummary();
+}
+
+function addCustomValue() {
+  const input = document.getElementById('custom-value-input');
+  const raw = input.value.trim();
+  if (!raw) return;
+  const formatted = raw.charAt(0).toUpperCase() + raw.slice(1);
+  if (!customValues.includes(formatted)) customValues.push(formatted);
+  selectedValues.set(formatted, true);
+  input.value = '';
+  renderPicker();
+  renderSelectedSummary();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  const input = document.getElementById('f-values');
-  const pillsDiv = document.getElementById('values-pills');
-  function renderPills() {
-    const values = input.value.split(',').map(v => v.trim()).filter(v => v.length > 0);
-    pillsDiv.innerHTML = values.map(v => `<span style="font-size:11px;padding:4px 12px;border-radius:999px;background:var(--navy);color:var(--gold);font-weight:500;font-family:'DM Sans',sans-serif;">${v}</span>`).join('');
-  }
-  input.addEventListener('input', renderPills);
-  renderPills();
+  document.getElementById('custom-value-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') addCustomValue();
+  });
+  renderPicker();
 });
 
+function renderPicker() {
+  const container = document.getElementById('picker-categories');
+  container.innerHTML = '';
+
+  for (const [cat, vals] of Object.entries(VALUE_CATEGORIES)) {
+    const filtered = pickerQuery ? vals.filter(v => v.toLowerCase().includes(pickerQuery)) : vals;
+    if (filtered.length === 0) continue;
+    const sec = document.createElement('div');
+    sec.className = 'picker-category';
+    sec.innerHTML = `<div class="picker-cat-title">${cat}</div><div class="picker-chips">${
+      filtered.map(v => `<span class="picker-chip${selectedValues.has(v) ? ' selected' : ''}" onclick="toggleValue('${v}')">${v}</span>`).join('')
+    }</div>`;
+    container.appendChild(sec);
+  }
+
+  if (customValues.length > 0) {
+    const filtered = pickerQuery ? customValues.filter(v => v.toLowerCase().includes(pickerQuery)) : customValues;
+    if (filtered.length > 0) {
+      const sec = document.createElement('div');
+      sec.className = 'picker-category';
+      sec.innerHTML = `<div class="picker-cat-title">Your organization's values</div><div class="picker-chips">${
+        filtered.map(v => `<span class="picker-chip${selectedValues.has(v) ? ' selected' : ''}" onclick="toggleValue('${v}', true)">${v}</span>`).join('')
+      }</div>`;
+      container.appendChild(sec);
+    }
+  }
+}
+
+function renderSelectedSummary() {
+  const summary = document.getElementById('selected-summary');
+  const pillsDiv = document.getElementById('selected-pills');
+  const countDiv = document.getElementById('selected-count');
+
+  if (selectedValues.size === 0) {
+    summary.style.display = 'none';
+    return;
+  }
+  summary.style.display = 'block';
+  pillsDiv.innerHTML = [...selectedValues.entries()].map(([v, isCustom]) =>
+    `<span class="selected-pill${isCustom ? ' custom' : ''}" onclick="toggleValue('${v}', ${isCustom})">
+      <span>${v}</span><span class="selected-pill-x">×</span>
+    </span>`
+  ).join('');
+  const n = selectedValues.size;
+  const warn = n > 7 ? ' <span class="selected-warn">— consider narrowing to 3–7 for greatest impact</span>' : '';
+  countDiv.innerHTML = `${n} value${n === 1 ? '' : 's'} selected${warn}`;
+}
+
+// ── Step navigation ──
 function goStep2() {
-  const raw = document.getElementById('f-values').value.trim();
   const err = document.getElementById('err-1');
-  const values = raw.split(',').map(v => v.trim()).filter(v => v.length > 0);
-  if (values.length < 2) { err.textContent = 'Please enter at least two values separated by commas.'; err.style.display = 'block'; return; }
+  if (selectedValues.size < 2) {
+    err.textContent = 'Please select at least two values.';
+    err.style.display = 'block';
+    return;
+  }
   err.style.display = 'none';
-  orgValues = values;
+  orgValues = [...selectedValues.keys()];
+
+  // Populate recap in step 2
+  const recap = document.getElementById('step2-values-recap');
+  recap.innerHTML = orgValues.map(v =>
+    `<span style="font-size:11px;padding:3px 12px;border-radius:999px;background:var(--navy);color:var(--gold);font-weight:500;">${v}</span>`
+  ).join('');
+
   document.getElementById('step-1').style.display = 'none';
   document.getElementById('step-2').style.display = 'block';
+}
+
+function goStep1() {
+  document.getElementById('step-2').style.display = 'none';
+  document.getElementById('step-1').style.display = 'block';
 }
 
 function selectPattern() {
@@ -267,11 +432,7 @@ function selectPattern() {
   repeated.style.borderColor = val === 'repeated' ? 'var(--navy)' : 'var(--border2)';
 }
 
-function goStep1() {
-  document.getElementById('step-2').style.display = 'none';
-  document.getElementById('step-1').style.display = 'block';
-}
-
+// ── Generate ──
 async function generate() {
   const situation = document.getElementById('f-situation').value.trim();
   const pattern = document.querySelector('input[name="pattern"]:checked')?.value;
@@ -279,24 +440,26 @@ async function generate() {
   if (!situation || situation.length < 15) { err.textContent = "Please describe the staff's behavior in more detail."; err.style.display = 'block'; return; }
   if (!pattern) { err.textContent = 'Please indicate if this is a first-time or repeated behavior.'; err.style.display = 'block'; return; }
   err.style.display = 'none';
-
   document.getElementById('step-2').style.display = 'none';
   document.getElementById('loading-view').style.display = 'block';
 
   const valuesText = orgValues.map(v => `- ${v.toUpperCase()}`).join('\n');
-
   const systemPrompt = `Behavior pattern: ${pattern === 'first' ? 'This is the FIRST TIME this behavior has been observed.' : 'This is a REPEATED behavior — it has happened before.'}\n\nYou are a leadership coach trained in values-based, trauma-informed leadership for social services organizations.
 
 Analyze the staff behavior situation using ONLY these organizational values:
+
 ${valuesText}
 
 Constraints: Be specific not generic. Align with trauma-informed care. Do not shame the staff member. Focus on accountability and growth.
 
 IMPORTANT — adjust your response based on behavior pattern:
+
 - If FIRST TIME: use a coaching and curiosity-based tone. Assume positive intent. Focus on awareness and correction. Recommend coaching as the action unless severity requires otherwise.
+
 - If REPEATED: use a firmer accountability tone. Acknowledge the pattern explicitly. Recommend documentation or escalation depending on severity. The conversation script must reflect that this is not the first time.
 
 Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
+
 {
   "behaviorObserved": "string",
   "valuesAnalysis": [{"value": "string", "status": "Misaligned|Upheld", "explanation": "string"}],
@@ -330,6 +493,7 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
   }
 }
 
+// ── Audio ──
 let currentAudio = null;
 let audioGenerating = false;
 
@@ -347,9 +511,7 @@ function togglePlayPause() {
   }
 }
 
-function seekAudio(seconds) {
-  // Browser speech synthesis does not support seeking
-}
+function seekAudio(seconds) {}
 
 function scrubAudio(e) {
   if (!currentAudio) return;
@@ -358,15 +520,6 @@ function scrubAudio(e) {
   const pct = (e.clientX - rect.left) / rect.width;
   currentAudio.currentTime = pct * currentAudio.duration;
 }
-
-function formatTime(s) {
-  if (isNaN(s)) return '0:00';
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return m + ':' + (sec < 10 ? '0' : '') + sec;
-}
-
-
 
 function listenToSummary() {
   if (!lastResult) return;
@@ -385,14 +538,11 @@ function listenToSummary() {
   const summary = `Here is your leadership guidance summary. ${lastResult.behaviorObserved}. The values that were misaligned are: ${misalignedText}. The impact on the client was: ${lastResult.impact.client}. When you speak with this staff member, open by saying: ${script.opening}. Then say: ${script.behaviorImpact}. Your recommended next step is to ${lastResult.recommendedAction.action.toLowerCase()} this staff member. ${lastResult.recommendedAction.reasoning}.`;
 
   const utterance = new SpeechSynthesisUtterance(summary);
-  utterance.rate = 0.92;
-  utterance.pitch = 1;
-  utterance.volume = 1;
+  utterance.rate = 0.92; utterance.pitch = 1; utterance.volume = 1;
 
   const doSpeak = () => {
     const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(v => v.lang.startsWith('en') && v.name.includes('Samantha'))
-      || voices.find(v => v.lang.startsWith('en'));
+    const preferred = voices.find(v => v.lang.startsWith('en') && v.name.includes('Samantha')) || voices.find(v => v.lang.startsWith('en'));
     if (preferred) utterance.voice = preferred;
     window.speechSynthesis.speak(utterance);
   };
@@ -411,16 +561,13 @@ function listenToSummary() {
     document.getElementById('pause-icon').style.display = 'none';
     document.getElementById('audio-progress-fill').style.width = '100%';
   };
-  utterance.onerror = () => {
-    audioGenerating = false;
-    document.getElementById('audio-label').textContent = '▶ Listen';
-  };
+  utterance.onerror = () => { audioGenerating = false; document.getElementById('audio-label').textContent = '▶ Listen'; };
 
   const voices = window.speechSynthesis.getVoices();
-  if (voices.length > 0) { doSpeak(); }
-  else { window.speechSynthesis.onvoiceschanged = doSpeak; }
+  if (voices.length > 0) { doSpeak(); } else { window.speechSynthesis.onvoiceschanged = doSpeak; }
 }
 
+// ── Render results ──
 function render(d) {
   document.getElementById('loading-view').style.display = 'none';
   const ac = d.recommendedAction.action.toLowerCase();
@@ -457,114 +604,87 @@ function render(d) {
   document.getElementById('results-view').style.display = 'block';
 }
 
+// ── PDF ──
 function downloadPDF() {
   if (!lastResult) return;
   const d = lastResult;
-  const misaligned = d.valuesAnalysis.filter(v => v.status === 'Misaligned');
-  const upheld = d.valuesAnalysis.filter(v => v.status === 'Upheld');
-
   const html = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Values Lab — Leadership Analysis</title>
+<html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }
-  .header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }
-  .header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }
-  .header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
-  .header-right { text-align:right; font-size:11px; color:#888; }
-  .section { margin-bottom: 28px; }
-  .section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }
-  .content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }
-  .value-row { padding: 10px 0; border-bottom: 1px solid #eee; }
-  .value-row:last-child { border-bottom: none; }
-  .value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }
-  .mis { font-size: 11px; color: #A32D2D; font-weight: 500; }
-  .uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }
-  .impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-  .impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }
-  .impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-  .sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }
-  .slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }
-  .action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }
-  .coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }
-  .document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }
-  .escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }
-  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }
-</style>
-</head>
-<body>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }
+.header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }
+.header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }
+.header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+.header-right { text-align:right; font-size:11px; color:#888; }
+.section { margin-bottom: 28px; }
+.section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }
+.content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }
+.value-row { padding: 10px 0; border-bottom: 1px solid #eee; }
+.value-row:last-child { border-bottom: none; }
+.value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }
+.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }
+.uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }
+.impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }
+.impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+.sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }
+.slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }
+.action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }
+.coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }
+.document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }
+.escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }
+.footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }
+</style></head><body>
 <div class="header">
-  <div class="header-left">
-    <h1>Values Lab</h1>
-    <p>Leadership Analysis Report &mdash; Karabed Leadership Group</p>
-  </div>
+  <div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis Report &mdash; Karabed Leadership Group</p></div>
   <div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div>
 </div>
-
-<div class="section">
-  <div class="section-label">Behavior Observed</div>
-  <p class="content">${d.behaviorObserved}</p>
+<div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div>
+<div class="section"><div class="section-label">Values Analysis</div>
+${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}
 </div>
-
-<div class="section">
-  <div class="section-label">Values Analysis</div>
-  ${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}
-</div>
-
-<div class="section">
-  <div class="section-label">Impact</div>
-  <div class="impact-grid">
-    <div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div>
-    <div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div>
-    <div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div>
-  </div>
-</div>
-
-<div class="section">
-  <div class="section-label">Correct Behavior</div>
-  <p class="content">${d.correctBehavior}</p>
-</div>
-
-<div class="section">
-  <div class="section-label">Conversation Script</div>
+<div class="section"><div class="section-label">Impact</div><div class="impact-grid">
+  <div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div>
+  <div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div>
+  <div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div>
+</div></div>
+<div class="section"><div class="section-label">Correct Behavior</div><p class="content">${d.correctBehavior}</p></div>
+<div class="section"><div class="section-label">Conversation Script</div>
   <div class="slabel">Opening</div><div class="sblock">${d.conversationScript.opening}</div>
   <div class="slabel">Behavior + Impact</div><div class="sblock">${d.conversationScript.behaviorImpact}</div>
   <div class="slabel">Expectation</div><div class="sblock">${d.conversationScript.expectation}</div>
   <div class="slabel">Curiosity Question</div><div class="sblock">${d.conversationScript.curiosityQuestion}</div>
   <div class="slabel">Alignment Statement</div><div class="sblock">${d.conversationScript.alignmentStatement}</div>
 </div>
-
-<div class="section">
-  <div class="section-label">Recommended Action</div>
+<div class="section"><div class="section-label">Recommended Action</div>
   <span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span>
   <span class="content">${d.recommendedAction.reasoning}</span>
 </div>
-
 <div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div>
-</body>
-</html>`;
-
+</body></html>`;
   const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
   const win = window.open(url, '_blank');
-  if (win) {
-    win.onload = () => { win.print(); };
-  }
+  if (win) { win.onload = () => { win.print(); }; }
 }
 
+// ── Restart ──
 function restart() {
   document.getElementById('results-view').style.display = 'none';
   document.getElementById('f-situation').value = '';
   document.querySelectorAll('input[name="pattern"]').forEach(r => r.checked = false);
   document.getElementById('pattern-first-label').style.borderColor = 'var(--border2)';
   document.getElementById('pattern-repeated-label').style.borderColor = 'var(--border2)';
-  document.getElementById('f-values').value = '';
-  lastResult = null;
+  selectedValues = new Map();
+  customValues = [];
   orgValues = [];
+  lastResult = null;
+  pickerQuery = '';
+  document.getElementById('picker-search').value = '';
+  document.getElementById('selected-summary').style.display = 'none';
+  document.getElementById('selected-pills').innerHTML = '';
   document.getElementById('audio-btn').disabled = false;
   document.getElementById('audio-spin').style.display = 'none';
   document.getElementById('audio-label').textContent = '\u25B6 Listen';
@@ -575,6 +695,7 @@ function restart() {
   document.getElementById('pause-icon').style.display = 'none';
   window.speechSynthesis.cancel();
   audioGenerating = false;
+  renderPicker();
   document.getElementById('step-1').style.display = 'block';
 }
 </script>
