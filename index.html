@@ -426,8 +426,10 @@ textarea.values-input { min-height: 120px; resize: vertical; }
     <div class="card">
       <div class="step-badge">Step 1 of 2</div>
       <div class="field-label">What are your organizational values?</div>
-      <input type="text" class="values-input" id="f-values" placeholder="Ex: Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability" />
-      <div class="field-hint">Separate values with commas.</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-weight:300;">Select from common values or type your own below.</div>
+      <div id="preset-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
+      <input type="text" class="values-input" id="f-values" placeholder="Or type custom values separated by commas..." />
+      <div class="field-hint">Click values above to add or remove them.</div>
       <div id="values-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:28px;"></div>
       <div id="err-1" class="err" style="display:none"></div>
       <button class="btn-continue" onclick="goStep2()">Continue</button>
@@ -514,15 +516,61 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 // ── TERMS LOGIC ──────────────────────────────────────────
 const TERMS_KEY = 'klg_values_lab_terms_v1';
 
+const PRESET_VALUES = [
+  'Integrity','Respect','Equity','Inclusion','Collaboration',
+  'Accountability','Compassion','Transparency','Empowerment','Client-Centered',
+  'Diversity','Excellence','Innovation','Belonging','Justice',
+  'Trauma-Informed','Stewardship','Courage','Service','Adaptability',
+  'DEIB','Humility'
+];
+
+function initPills() {
+  const input = document.getElementById('f-values');
+  const pillsDiv = document.getElementById('values-pills');
+  const presetDiv = document.getElementById('preset-pills');
+  if (!input || input._pillsInit) return;
+  input._pillsInit = true;
+
+  function getSelected() {
+    return input.value.split(',').map(v => v.trim()).filter(v => v.length > 0);
+  }
+
+  function renderPills() {
+    const values = getSelected();
+    pillsDiv.innerHTML = values.map(v => `<span style="font-size:11px;padding:4px 12px;border-radius:999px;background:var(--navy);color:var(--gold);font-weight:500;font-family:'DM Sans',sans-serif;">${v}</span>`).join('');
+    renderPresets(values);
+  }
+
+  function renderPresets(selected) {
+    presetDiv.innerHTML = PRESET_VALUES.map(v => {
+      const active = selected.map(s => s.toLowerCase()).includes(v.toLowerCase());
+      return `<span onclick="togglePreset('${v}')" style="font-size:11px;padding:4px 12px;border-radius:999px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;border:1px solid ${active ? 'var(--navy)' : 'var(--border2)'};background:${active ? 'var(--navy)' : 'var(--white)'};color:${active ? 'var(--gold)' : 'var(--text3)'}; transition:all 0.15s;">${v}</span>`;
+    }).join('');
+  }
+
+  window.togglePreset = function(val) {
+    let selected = getSelected();
+    const idx = selected.map(s => s.toLowerCase()).indexOf(val.toLowerCase());
+    if (idx > -1) { selected.splice(idx, 1); } else { selected.push(val); }
+    input.value = selected.join(', ');
+    renderPills();
+  };
+
+  input.addEventListener('input', renderPills);
+  renderPills();
+}
+
 function agreeToTerms() {
   sessionStorage.setItem(TERMS_KEY, 'agreed');
   document.getElementById('terms-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
+  initPills();
 }
 
 function agreeModal() {
   sessionStorage.setItem(TERMS_KEY, 'agreed');
   document.getElementById('terms-modal').classList.remove('visible');
+  initPills();
 }
 
 function declineModal() {
@@ -541,22 +589,11 @@ function closeModal() {
 window.addEventListener('DOMContentLoaded', function() {
   const agreed = sessionStorage.getItem(TERMS_KEY);
   if (agreed === 'agreed') {
-    // Show app but also show the reminder modal
     document.getElementById('terms-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     document.getElementById('terms-modal').classList.add('visible');
+    initPills();
   }
-  // else: terms-screen is already visible by default
-
-  // Values pill rendering
-  const input = document.getElementById('f-values');
-  const pillsDiv = document.getElementById('values-pills');
-  function renderPills() {
-    const values = input.value.split(',').map(v => v.trim()).filter(v => v.length > 0);
-    pillsDiv.innerHTML = values.map(v => `<span style="font-size:11px;padding:4px 12px;border-radius:999px;background:var(--navy);color:var(--gold);font-weight:500;font-family:'DM Sans',sans-serif;">${v}</span>`).join('');
-  }
-  input.addEventListener('input', renderPills);
-  renderPills();
 });
 
 // ── APP LOGIC ────────────────────────────────────────────
