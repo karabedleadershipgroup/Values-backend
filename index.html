@@ -19,6 +19,202 @@
 }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
+/* ── TERMS LANDING SCREEN ── */
+#terms-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+  background: var(--bg);
+}
+.terms-card {
+  background: var(--white);
+  border: 1px solid var(--border2);
+  border-radius: var(--rl);
+  max-width: 560px;
+  width: 100%;
+  overflow: hidden;
+}
+.terms-card-header {
+  background: var(--navy);
+  padding: 2rem 2rem 1.5rem;
+  text-align: center;
+}
+.terms-card-header .logo-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 1.25rem;
+}
+.terms-card-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px; font-weight: 700;
+  color: var(--white); line-height: 1;
+}
+.terms-card-header .lab {
+  font-size: 11px; color: var(--gold);
+  letter-spacing: 0.35em; text-transform: uppercase;
+}
+.terms-card-header .byline {
+  font-size: 10px; color: rgba(255,255,255,0.35);
+  letter-spacing: 0.2em; text-transform: uppercase; margin-top: 4px;
+}
+.terms-card-body {
+  padding: 1.75rem 2rem 2rem;
+}
+.terms-badge {
+  display: inline-block;
+  font-size: 10px; font-weight: 500;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 4px 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.terms-card-body h2 {
+  font-size: 15px; font-weight: 500;
+  color: var(--navy); margin-bottom: 0.6rem;
+}
+.terms-card-body p {
+  font-size: 13px; color: var(--text2);
+  line-height: 1.7; font-weight: 300; margin-bottom: 1rem;
+}
+.terms-scroll {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 1rem 1.25rem;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 1.25rem;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.75;
+  font-weight: 300;
+}
+.terms-scroll h3 {
+  font-size: 11px; font-weight: 500;
+  color: var(--navy); margin: 0.75rem 0 0.25rem;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.terms-scroll h3:first-child { margin-top: 0; }
+.btn-agree {
+  width: 100%;
+  padding: 14px;
+  background: var(--navy);
+  color: var(--gold);
+  border: none;
+  border-radius: var(--r);
+  font-size: 14px; font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.05em;
+  transition: opacity 0.15s;
+}
+.btn-agree:hover { opacity: 0.88; }
+.terms-note {
+  font-size: 11px; color: var(--text3);
+  text-align: center; margin-top: 0.75rem; font-weight: 300;
+}
+
+/* ── MODAL OVERLAY ── */
+#terms-modal {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(10,18,35,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+#terms-modal.visible { display: flex; }
+.modal-box {
+  background: var(--white);
+  border-radius: var(--rl);
+  max-width: 500px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  animation: modal-in 0.22s ease;
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-header {
+  background: var(--navy);
+  padding: 1.25rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-header h3 {
+  font-size: 13px; font-weight: 500;
+  color: var(--gold); letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.modal-close {
+  background: none; border: none;
+  color: rgba(255,255,255,0.45);
+  font-size: 18px; cursor: pointer;
+  line-height: 1; padding: 2px 4px;
+  transition: color 0.15s;
+}
+.modal-close:hover { color: var(--white); }
+.modal-body { padding: 1.5rem; }
+.modal-body p {
+  font-size: 13px; color: var(--text2);
+  line-height: 1.7; font-weight: 300; margin-bottom: 1rem;
+}
+.modal-scroll {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 0.875rem 1rem;
+  max-height: 180px;
+  overflow-y: auto;
+  margin-bottom: 1.25rem;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.75;
+  font-weight: 300;
+}
+.modal-scroll h3 {
+  font-size: 11px; font-weight: 500;
+  color: var(--navy); margin: 0.75rem 0 0.25rem;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.modal-scroll h3:first-child { margin-top: 0; }
+.modal-footer {
+  padding: 0 1.5rem 1.5rem;
+  display: flex; gap: 10px;
+}
+.btn-modal-decline {
+  flex: 1; padding: 12px;
+  background: none;
+  color: var(--text3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  font-size: 13px; font-weight: 400;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: color 0.15s;
+}
+.btn-modal-decline:hover { color: var(--text2); }
+.btn-modal-agree {
+  flex: 2; padding: 12px;
+  background: var(--navy);
+  color: var(--gold);
+  border: none;
+  border-radius: var(--r);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.05em;
+  transition: opacity 0.15s;
+}
+.btn-modal-agree:hover { opacity: 0.88; }
+
 /* Hero */
 .hero { background: var(--navy); padding: 4rem 1.5rem 3.5rem; text-align: center; }
 .hero h1 { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700; color: var(--white); line-height: 1; margin-bottom: 0.2rem; }
@@ -39,7 +235,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .values-input { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: var(--white); border: 1px solid var(--border2); border-radius: var(--r); padding: 14px 16px; transition: border-color 0.2s; font-weight: 300; }
 .values-input:focus { outline: none; border-color: var(--navy); }
 .values-input::placeholder { color: var(--text3); }
-.field-hint { font-size: 12px; color: var(--text3); margin-top: 6px; font-weight: 300; }
+.field-hint { font-size: 12px; color: var(--text3); margin-top: 6px; text-align: center; font-weight: 300; }
 textarea.values-input { min-height: 120px; resize: vertical; }
 
 /* Card */
@@ -51,48 +247,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .btn-continue:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-back { font-size: 13px; color: var(--text3); background: none; border: 1px solid var(--border2); border-radius: var(--r); padding: 8px 18px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 .btn-back:hover { color: var(--text2); }
-
-/* ── Values Picker ── */
-.picker-intro { font-size: 13px; color: var(--text3); margin-bottom: 1rem; font-weight: 300; line-height: 1.6; }
-.picker-search { width: 100%; margin-bottom: 1.25rem; }
-.picker-category { margin-bottom: 1.25rem; }
-.picker-cat-title { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
-.picker-chips { display: flex; flex-wrap: wrap; gap: 7px; }
-.picker-chip {
-  padding: 5px 13px; border-radius: 999px;
-  border: 1px solid var(--border2); background: var(--bg);
-  font-size: 13px; color: var(--text2); font-family: 'DM Sans', sans-serif;
-  cursor: pointer; transition: all 0.12s; user-select: none; font-weight: 300;
-}
-.picker-chip:hover { background: var(--gold-pale); border-color: var(--gold); }
-.picker-chip.selected { background: var(--navy); color: var(--gold); border-color: var(--navy); font-weight: 500; }
-
-/* Custom add row */
-.custom-row { display: flex; gap: 8px; margin-top: 0.5rem; }
-.custom-add-btn {
-  padding: 0 16px; border-radius: var(--r);
-  border: 1px solid var(--border2); background: var(--white);
-  font-size: 13px; color: var(--text2); cursor: pointer;
-  font-family: 'DM Sans', sans-serif; white-space: nowrap; font-weight: 400;
-  transition: background 0.12s;
-}
-.custom-add-btn:hover { background: var(--gold-pale); border-color: var(--gold); }
-
-/* Selected summary pills */
-.selected-summary { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
-.selected-summary-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
-.selected-pills { display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px; }
-.selected-pill {
-  display: flex; align-items: center; gap: 5px;
-  padding: 4px 12px 4px 13px; border-radius: 999px;
-  background: var(--navy); border: 1px solid var(--navy);
-  font-size: 11px; color: var(--gold); font-weight: 500;
-  cursor: pointer; font-family: 'DM Sans', sans-serif;
-}
-.selected-pill.custom { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
-.selected-pill-x { font-size: 13px; line-height: 1; opacity: 0.7; }
-.selected-count { font-size: 12px; color: var(--text3); margin-top: 8px; font-weight: 300; }
-.selected-warn { color: var(--amber); }
 
 /* Loading */
 .loading { display: flex; align-items: center; gap: 12px; color: var(--text3); font-size: 13px; padding: 3rem 0; font-weight: 300; justify-content: center; }
@@ -164,6 +318,87 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 </head>
 <body>
 
+<!-- ══════════════════════════════════════
+     TERMS LANDING SCREEN
+══════════════════════════════════════ -->
+<div id="terms-screen">
+  <div class="terms-card">
+    <div class="terms-card-header">
+      <div class="logo-wrap">
+        <svg width="56" height="56" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="80" height="80" rx="18" fill="#0D1B2A"/>
+          <rect x="12" y="12" width="56" height="56" stroke="#F5F1E8" stroke-width="1.5" fill="none"/>
+          <line x1="30.67" y1="12" x2="30.67" y2="68" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+          <line x1="49.33" y1="12" x2="49.33" y2="68" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+          <line x1="12" y1="30.67" x2="68" y2="30.67" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+          <line x1="12" y1="49.33" x2="68" y2="49.33" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+          <rect x="31" y="12.5" width="18.33" height="55" fill="#C6A75E" opacity="0.2"/>
+          <line x1="21" y1="21" x2="59" y2="59" stroke="#C6A75E" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="40" cy="40" r="4.5" fill="#C6A75E"/>
+        </svg>
+        <div>
+          <h1>Values Lab</h1>
+          <div class="lab">Beta Access</div>
+          <div class="byline">By Karabed Leadership Group</div>
+        </div>
+      </div>
+    </div>
+    <div class="terms-card-body">
+      <div class="terms-badge">Beta Testing — Confidential</div>
+      <h2>Before you begin</h2>
+      <p>Values Lab is an unreleased tool currently in beta testing. By accessing it, you agree to keep the tool, its outputs, and its underlying methodology confidential.</p>
+      <div class="terms-scroll">
+        <h3>1. Confidentiality</h3>
+        This tool and all related content — including its logic, coaching frameworks, interface, and outputs — are confidential and proprietary to Karabed Leadership Group. You agree not to share, reproduce, or distribute any part of this tool without written permission.
+        <h3>2. Beta Use Only</h3>
+        Access is granted solely for the purpose of providing feedback during the beta testing phase. Any other use is prohibited.
+        <h3>3. No Sharing of Access</h3>
+        You may not share the link or grant access to this tool to any third party without prior written consent from Karabed Leadership Group.
+        <h3>4. Intellectual Property</h3>
+        All rights to Values Lab, including its methodology and outputs, remain exclusively with Karabed Leadership Group. This access does not transfer any license or ownership rights.
+        <h3>5. Feedback</h3>
+        Any feedback you provide may be used to improve the tool. You grant Karabed Leadership Group the right to use your feedback without restriction or compensation.
+      </div>
+      <button class="btn-agree" onclick="agreeToTerms()">I Agree — Enter Values Lab</button>
+      <p class="terms-note">By clicking above, you acknowledge you have read and agree to these terms.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TERMS MODAL (shown on return visits)
+══════════════════════════════════════ -->
+<div id="terms-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Confidentiality Reminder</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Values Lab is a confidential, unreleased tool. Your continued use means you agree to keep it and its contents private.</p>
+      <div class="modal-scroll">
+        <h3>1. Confidentiality</h3>
+        This tool and all related content — including its logic, coaching frameworks, interface, and outputs — are confidential and proprietary to Karabed Leadership Group. You agree not to share, reproduce, or distribute any part of this tool without written permission.
+        <h3>2. Beta Use Only</h3>
+        Access is granted solely for the purpose of providing feedback during the beta testing phase. Any other use is prohibited.
+        <h3>3. No Sharing of Access</h3>
+        You may not share the link or grant access to this tool to any third party without prior written consent from Karabed Leadership Group.
+        <h3>4. Intellectual Property</h3>
+        All rights to Values Lab remain exclusively with Karabed Leadership Group. This access does not transfer any license or ownership rights.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-decline" onclick="declineModal()">Decline</button>
+      <button class="btn-modal-agree" onclick="agreeModal()">I Agree — Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MAIN APP (hidden until terms agreed)
+══════════════════════════════════════ -->
+<div id="app" style="display:none">
+
 <div class="hero">
   <div style="margin:0 auto 1.5rem; display:flex; flex-direction:column; align-items:center; gap:10px;">
     <svg width="72" height="72" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -181,39 +416,19 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   <h1>Values</h1>
   <div class="lab">Lab</div>
   <div class="byline">By Karabed Leadership Group</div>
-  <p>A trauma-informed leadership response tool. Select your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
+  <p>A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
 </div>
 
 <div class="main">
 
-  <!-- Step 1: Values Picker -->
+  <!-- Step 1: Values -->
   <div id="step-1">
     <div class="card">
       <div class="step-badge">Step 1 of 2</div>
       <div class="field-label">What are your organizational values?</div>
-      <p class="picker-intro">Select from common organizational values below, or add your own. Most organizations work with 3–7 core values.</p>
-
-      <input type="text" class="values-input picker-search" id="picker-search" placeholder="Search values..." oninput="filterPicker()" />
-
-      <div id="picker-categories"></div>
-
-      <!-- Custom value add -->
-      <div style="margin-top: 1rem;">
-        <div class="field-label">Don't see your organization's values? Add them here.</div>
-        <div class="custom-row">
-          <input type="text" class="values-input" id="custom-value-input" placeholder="e.g. Stewardship, Ubuntu, Client-Centered..." style="flex:1; padding: 10px 14px;" />
-          <button class="custom-add-btn" onclick="addCustomValue()">Add</button>
-        </div>
-        <div class="field-hint">Press Enter or click Add. Custom values appear highlighted below.</div>
-      </div>
-
-      <!-- Selected summary -->
-      <div class="selected-summary" id="selected-summary" style="display:none;">
-        <div class="selected-summary-label">Selected values</div>
-        <div class="selected-pills" id="selected-pills"></div>
-        <div class="selected-count" id="selected-count"></div>
-      </div>
-
+      <input type="text" class="values-input" id="f-values" placeholder="Ex: Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability" />
+      <div class="field-hint">Separate values with commas.</div>
+      <div id="values-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:28px;"></div>
       <div id="err-1" class="err" style="display:none"></div>
       <button class="btn-continue" onclick="goStep2()">Continue</button>
     </div>
@@ -223,14 +438,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   <div id="step-2" style="display:none">
     <div class="card">
       <div class="step-badge">Step 2 of 2</div>
-
-      <!-- Selected values recap -->
-      <div style="margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border);">
-        <div class="field-label" style="margin-bottom: 6px;">Your values</div>
-        <div id="step2-values-recap" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
-        <button onclick="goStep1()" style="font-size:11px; color:var(--text3); background:none; border:none; cursor:pointer; margin-top:6px; font-family:'DM Sans',sans-serif; padding:0; text-decoration:underline;">Edit values</button>
-      </div>
-
       <div class="field-label">Describe the staff's behavior</div>
       <textarea class="values-input" id="f-situation" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID. Other staff witnessed the interaction."></textarea>
       <div style="margin-top:1.25rem;">
@@ -301,127 +508,70 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   </div>
 
 </div>
+</div><!-- end #app -->
 
 <script>
-// ── Picker data ──
-const VALUE_CATEGORIES = {
-  "Integrity & character": ["Integrity","Honesty","Accountability","Courage","Humility","Transparency","Consistency"],
-  "Relationships & community": ["Respect","Compassion","Belonging","Collaboration","Empathy","Trust","Solidarity","Service"],
-  "Justice & equity": ["Equity","Dignity","Inclusion","Justice","Fairness","Liberation","Advocacy","Voice","DEIB"],
-  "Growth & excellence": ["Excellence","Innovation","Curiosity","Resilience","Adaptability","Learning","Creativity","Vision"],
-  "Wellbeing & purpose": ["Purpose","Balance","Healing","Hope","Joy","Faith","Gratitude","Stewardship"]
-};
+// ── TERMS LOGIC ──────────────────────────────────────────
+const TERMS_KEY = 'klg_values_lab_terms_v1';
 
-let selectedValues = new Map(); // value -> isCustom
-let customValues = [];
-let pickerQuery = "";
+function agreeToTerms() {
+  sessionStorage.setItem(TERMS_KEY, 'agreed');
+  document.getElementById('terms-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+function agreeModal() {
+  sessionStorage.setItem(TERMS_KEY, 'agreed');
+  document.getElementById('terms-modal').classList.remove('visible');
+}
+
+function declineModal() {
+  // Send them away if they decline from modal
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('terms-modal').classList.remove('visible');
+  document.getElementById('terms-screen').style.display = 'flex';
+  sessionStorage.removeItem(TERMS_KEY);
+}
+
+function closeModal() {
+  // Treat close as agree (they already agreed on landing)
+  agreeModal();
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  const agreed = sessionStorage.getItem(TERMS_KEY);
+  if (agreed === 'agreed') {
+    // Show app but also show the reminder modal
+    document.getElementById('terms-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('terms-modal').classList.add('visible');
+  }
+  // else: terms-screen is already visible by default
+
+  // Values pill rendering
+  const input = document.getElementById('f-values');
+  const pillsDiv = document.getElementById('values-pills');
+  function renderPills() {
+    const values = input.value.split(',').map(v => v.trim()).filter(v => v.length > 0);
+    pillsDiv.innerHTML = values.map(v => `<span style="font-size:11px;padding:4px 12px;border-radius:999px;background:var(--navy);color:var(--gold);font-weight:500;font-family:'DM Sans',sans-serif;">${v}</span>`).join('');
+  }
+  input.addEventListener('input', renderPills);
+  renderPills();
+});
+
+// ── APP LOGIC ────────────────────────────────────────────
 let orgValues = [];
 let lastResult = null;
 
-// ── Picker rendering ──
-function filterPicker() {
-  pickerQuery = document.getElementById('picker-search').value.toLowerCase();
-  renderPicker();
-}
-
-function toggleValue(value, isCustom) {
-  if (selectedValues.has(value)) selectedValues.delete(value);
-  else selectedValues.set(value, isCustom || false);
-  renderPicker();
-  renderSelectedSummary();
-}
-
-function addCustomValue() {
-  const input = document.getElementById('custom-value-input');
-  const raw = input.value.trim();
-  if (!raw) return;
-  const formatted = raw.charAt(0).toUpperCase() + raw.slice(1);
-  if (!customValues.includes(formatted)) customValues.push(formatted);
-  selectedValues.set(formatted, true);
-  input.value = '';
-  renderPicker();
-  renderSelectedSummary();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('custom-value-input').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') addCustomValue();
-  });
-  renderPicker();
-});
-
-function renderPicker() {
-  const container = document.getElementById('picker-categories');
-  container.innerHTML = '';
-
-  for (const [cat, vals] of Object.entries(VALUE_CATEGORIES)) {
-    const filtered = pickerQuery ? vals.filter(v => v.toLowerCase().includes(pickerQuery)) : vals;
-    if (filtered.length === 0) continue;
-    const sec = document.createElement('div');
-    sec.className = 'picker-category';
-    sec.innerHTML = `<div class="picker-cat-title">${cat}</div><div class="picker-chips">${
-      filtered.map(v => `<span class="picker-chip${selectedValues.has(v) ? ' selected' : ''}" onclick="toggleValue('${v}')">${v}</span>`).join('')
-    }</div>`;
-    container.appendChild(sec);
-  }
-
-  if (customValues.length > 0) {
-    const filtered = pickerQuery ? customValues.filter(v => v.toLowerCase().includes(pickerQuery)) : customValues;
-    if (filtered.length > 0) {
-      const sec = document.createElement('div');
-      sec.className = 'picker-category';
-      sec.innerHTML = `<div class="picker-cat-title">Your organization's values</div><div class="picker-chips">${
-        filtered.map(v => `<span class="picker-chip${selectedValues.has(v) ? ' selected' : ''}" onclick="toggleValue('${v}', true)">${v}</span>`).join('')
-      }</div>`;
-      container.appendChild(sec);
-    }
-  }
-}
-
-function renderSelectedSummary() {
-  const summary = document.getElementById('selected-summary');
-  const pillsDiv = document.getElementById('selected-pills');
-  const countDiv = document.getElementById('selected-count');
-
-  if (selectedValues.size === 0) {
-    summary.style.display = 'none';
-    return;
-  }
-  summary.style.display = 'block';
-  pillsDiv.innerHTML = [...selectedValues.entries()].map(([v, isCustom]) =>
-    `<span class="selected-pill${isCustom ? ' custom' : ''}" onclick="toggleValue('${v}', ${isCustom})">
-      <span>${v}</span><span class="selected-pill-x">×</span>
-    </span>`
-  ).join('');
-  const n = selectedValues.size;
-  const warn = n > 7 ? ' <span class="selected-warn">— consider narrowing to 3–7 for greatest impact</span>' : '';
-  countDiv.innerHTML = `${n} value${n === 1 ? '' : 's'} selected${warn}`;
-}
-
-// ── Step navigation ──
 function goStep2() {
+  const raw = document.getElementById('f-values').value.trim();
   const err = document.getElementById('err-1');
-  if (selectedValues.size < 2) {
-    err.textContent = 'Please select at least two values.';
-    err.style.display = 'block';
-    return;
-  }
+  const values = raw.split(',').map(v => v.trim()).filter(v => v.length > 0);
+  if (values.length < 2) { err.textContent = 'Please enter at least two values separated by commas.'; err.style.display = 'block'; return; }
   err.style.display = 'none';
-  orgValues = [...selectedValues.keys()];
-
-  // Populate recap in step 2
-  const recap = document.getElementById('step2-values-recap');
-  recap.innerHTML = orgValues.map(v =>
-    `<span style="font-size:11px;padding:3px 12px;border-radius:999px;background:var(--navy);color:var(--gold);font-weight:500;">${v}</span>`
-  ).join('');
-
+  orgValues = values;
   document.getElementById('step-1').style.display = 'none';
   document.getElementById('step-2').style.display = 'block';
-}
-
-function goStep1() {
-  document.getElementById('step-2').style.display = 'none';
-  document.getElementById('step-1').style.display = 'block';
 }
 
 function selectPattern() {
@@ -432,7 +582,11 @@ function selectPattern() {
   repeated.style.borderColor = val === 'repeated' ? 'var(--navy)' : 'var(--border2)';
 }
 
-// ── Generate ──
+function goStep1() {
+  document.getElementById('step-2').style.display = 'none';
+  document.getElementById('step-1').style.display = 'block';
+}
+
 async function generate() {
   const situation = document.getElementById('f-situation').value.trim();
   const pattern = document.querySelector('input[name="pattern"]:checked')?.value;
@@ -493,7 +647,6 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
   }
 }
 
-// ── Audio ──
 let currentAudio = null;
 let audioGenerating = false;
 
@@ -521,6 +674,13 @@ function scrubAudio(e) {
   currentAudio.currentTime = pct * currentAudio.duration;
 }
 
+function formatTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
 function listenToSummary() {
   if (!lastResult) return;
   if (window.speechSynthesis.speaking) {
@@ -536,17 +696,14 @@ function listenToSummary() {
   const misalignedText = misaligned.map(v => v.value).join(', ') || 'none identified';
   const script = lastResult.conversationScript;
   const summary = `Here is your leadership guidance summary. ${lastResult.behaviorObserved}. The values that were misaligned are: ${misalignedText}. The impact on the client was: ${lastResult.impact.client}. When you speak with this staff member, open by saying: ${script.opening}. Then say: ${script.behaviorImpact}. Your recommended next step is to ${lastResult.recommendedAction.action.toLowerCase()} this staff member. ${lastResult.recommendedAction.reasoning}.`;
-
   const utterance = new SpeechSynthesisUtterance(summary);
   utterance.rate = 0.92; utterance.pitch = 1; utterance.volume = 1;
-
   const doSpeak = () => {
     const voices = window.speechSynthesis.getVoices();
     const preferred = voices.find(v => v.lang.startsWith('en') && v.name.includes('Samantha')) || voices.find(v => v.lang.startsWith('en'));
     if (preferred) utterance.voice = preferred;
     window.speechSynthesis.speak(utterance);
   };
-
   utterance.onstart = () => {
     document.getElementById('audio-label').textContent = '■ Stop';
     document.getElementById('audio-player').classList.add('visible');
@@ -561,13 +718,14 @@ function listenToSummary() {
     document.getElementById('pause-icon').style.display = 'none';
     document.getElementById('audio-progress-fill').style.width = '100%';
   };
-  utterance.onerror = () => { audioGenerating = false; document.getElementById('audio-label').textContent = '▶ Listen'; };
-
+  utterance.onerror = () => {
+    audioGenerating = false;
+    document.getElementById('audio-label').textContent = '▶ Listen';
+  };
   const voices = window.speechSynthesis.getVoices();
   if (voices.length > 0) { doSpeak(); } else { window.speechSynthesis.onvoiceschanged = doSpeak; }
 }
 
-// ── Render results ──
 function render(d) {
   document.getElementById('loading-view').style.display = 'none';
   const ac = d.recommendedAction.action.toLowerCase();
@@ -604,7 +762,6 @@ function render(d) {
   document.getElementById('results-view').style.display = 'block';
 }
 
-// ── PDF ──
 function downloadPDF() {
   if (!lastResult) return;
   const d = lastResult;
@@ -642,9 +799,7 @@ body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; pad
   <div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div>
 </div>
 <div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div>
-<div class="section"><div class="section-label">Values Analysis</div>
-${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}
-</div>
+<div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div>
 <div class="section"><div class="section-label">Impact</div><div class="impact-grid">
   <div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div>
   <div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div>
@@ -670,21 +825,14 @@ ${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v
   if (win) { win.onload = () => { win.print(); }; }
 }
 
-// ── Restart ──
 function restart() {
   document.getElementById('results-view').style.display = 'none';
   document.getElementById('f-situation').value = '';
   document.querySelectorAll('input[name="pattern"]').forEach(r => r.checked = false);
   document.getElementById('pattern-first-label').style.borderColor = 'var(--border2)';
   document.getElementById('pattern-repeated-label').style.borderColor = 'var(--border2)';
-  selectedValues = new Map();
-  customValues = [];
-  orgValues = [];
-  lastResult = null;
-  pickerQuery = '';
-  document.getElementById('picker-search').value = '';
-  document.getElementById('selected-summary').style.display = 'none';
-  document.getElementById('selected-pills').innerHTML = '';
+  document.getElementById('f-values').value = '';
+  lastResult = null; orgValues = [];
   document.getElementById('audio-btn').disabled = false;
   document.getElementById('audio-spin').style.display = 'none';
   document.getElementById('audio-label').textContent = '\u25B6 Listen';
@@ -695,7 +843,6 @@ function restart() {
   document.getElementById('pause-icon').style.display = 'none';
   window.speechSynthesis.cancel();
   audioGenerating = false;
-  renderPicker();
   document.getElementById('step-1').style.display = 'block';
 }
 </script>
