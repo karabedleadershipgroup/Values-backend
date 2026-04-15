@@ -1,0 +1,125 @@
+# Values Lab — Changelog & Developer Context
+
+**App:** Values Lab  
+**Owner:** Karabed Leadership Group (KLG)  
+**Live URL:** https://values-backend.vercel.app  
+**GitHub Repo:** https://github.com/karabedleadershipgroup/Values-backend  
+**Deployed via:** Vercel (auto-deploys on GitHub push)
+
+---
+
+## App Overview
+
+Values Lab is a trauma-informed leadership response tool for managers in social services nonprofits. The user enters their organization's values and describes a staff behavior, and the app generates structured coaching guidance grounded in those values.
+
+---
+
+## File Structure
+
+```
+/
+├── index.html          # Full frontend + system prompt logic
+├── vercel.json         # Vercel routing config
+├── package.json        # Node dependencies
+├── api/
+│   ├── analyze.js      # Backend: calls Anthropic API with system prompt from frontend
+│   ├── speak.js        # Backend: calls ElevenLabs API to generate audio (Rachel voice)
+│   └── audio.js        # DEPRECATED — delete this file
+└── CHANGELOG.md        # This file
+```
+
+---
+
+## Environment Variables (set in Vercel dashboard)
+
+| Variable | Purpose |
+|---|---|
+| `ANTHROPIC_API_KEY` | Powers the AI analysis via Claude |
+| `ELEVENLABS_API_KEY` | Powers the audio readback via ElevenLabs |
+
+---
+
+## How the App Works
+
+1. User sees a **confidentiality gate** (beta testing terms) and must click "I Agree" to enter
+2. **Step 1:** User enters organizational values (type or tap common values chips)
+3. **Step 2:** User describes the staff behavior and selects first time or repeated
+4. Frontend builds a **system prompt** and sends it to `/api/analyze`
+5. `analyze.js` calls the Anthropic API and returns structured JSON
+6. Results are displayed across several sections (see below)
+7. User can click **Listen** to hear an ElevenLabs audio summary (Rachel voice)
+8. User can click **PDF** to download a print-ready report
+
+---
+
+## Results Sections (in display order)
+
+1. **Behavior Observed** — faithful restatement of what the user typed, no embellishment
+2. **Staff's Possible Reality** — compassionate possibilities for what may be driving the behavior (trauma, burnout, mental health, family stress)
+3. **Values Analysis** — each value marked Misaligned or Upheld with explanation
+4. **Impact** — client, team, and organizational impact
+5. **Values-Aligned Behavior** — what the behavior looks like when aligned (framed positively)
+6. **Conversation Guide** — five-part script in this order:
+   - Opening
+   - Curiosity question
+   - Observation + impact
+   - Shared expectation
+   - Alignment statement
+7. **Recommended Next Step** — Coach, Document, or Escalate with reasoning
+
+---
+
+## System Prompt Design Principles
+
+The system prompt lives inside the `generate()` function in `index.html`. Key rules baked into the prompt:
+
+- **Trauma-informed language only** — no "I need you to", "you must", "you have to", "this is unacceptable"
+- **Invitational and curious tone** — "I'm wondering...", "I'd like to explore...", "What I noticed was..."
+- **Expectations framed as shared commitments** — "As a team, we're committed to..."
+- **No shaming language** anywhere in the output
+- **behaviorObserved must be faithful** to what the user typed — no added details or assumptions
+- **staffReality** offers warm, human context for the leader to hold — not an excuse for behavior
+- **First time vs. repeated** adjusts the tone: first time = curiosity and care; repeated = warm but clear, names the pattern without blame
+
+---
+
+## Change History
+
+### Session: April 15, 2026
+
+**Changes made to `index.html`:**
+- Added ElevenLabs audio integration (replaced browser speech synthesis)
+  - Listen button calls `/api/speak` which returns audio from ElevenLabs
+  - Rachel voice, `eleven_multilingual_v2` model
+  - Full audio player with play/pause, seek ±15s, progress bar
+- Added confidentiality gate screen (beta testing terms, must agree before entering)
+- Added common nonprofit values quick-select chips (28 values, tap to add/remove)
+- Rewrote system prompt with full trauma-informed language rules
+- Renamed "Correct behavior" → "Values-aligned behavior"
+- Renamed "Conversation script" → "Conversation guide"
+- Renamed "Expectation" → "Shared expectation"
+- Renamed "Behavior + impact" → "Observation + impact"
+- Renamed "Recommended action" → "Recommended next step"
+- Added `staffReality` field — "Staff's possible reality" section
+- Reordered conversation guide: Curiosity question now appears after Opening
+- Added CRITICAL instruction: `behaviorObserved` must not add or invent details
+- PDF updated to match all UI changes
+
+**Added `api/speak.js`:**
+- New backend route for ElevenLabs text-to-speech
+- Uses Rachel voice ID: `21m00Tcm4TlvDq8ikWAM`
+- Reads `ELEVENLABS_API_KEY` from Vercel environment variables
+- Returns audio/mpeg stream
+
+**`api/audio.js`:** Mark for deletion — superseded by `speak.js`
+
+---
+
+## Important Notes for Future Sessions
+
+- Always pull `index.html` from GitHub at the start of a session before making changes
+- The system prompt is inside `index.html` in the `generate()` function — there is no separate prompt file
+- The JSON schema returned by the AI must include: `behaviorObserved`, `staffReality`, `valuesAnalysis`, `impact`, `valuesAlignedBehavior`, `conversationScript`, `recommendedAction`
+- `conversationScript` keys: `opening`, `curiosityQuestion`, `behaviorImpact`, `expectation`, `alignmentStatement`
+- After any change to `index.html`, commit to GitHub — Vercel redeploys automatically
+- If Vercel is serving an old version, go to the Vercel dashboard and click Redeploy
