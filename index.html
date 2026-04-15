@@ -18,8 +18,6 @@
   --r: 8px; --rl: 16px;
 }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-/* ── Confidentiality gate ── */
 #gate-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.25rem; }
 .gate-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--rl); max-width: 600px; width: 100%; overflow: hidden; box-shadow: 0 4px 24px rgba(27,42,74,0.08); }
 .gate-hero { background: var(--navy); padding: 2.5rem 1.5rem 2rem; text-align: center; }
@@ -38,8 +36,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .btn-gate { width: 100%; padding: 16px; background: var(--navy); color: var(--gold); border: none; border-radius: var(--r); font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.05em; transition: opacity 0.15s; margin-bottom: 0.75rem; }
 .btn-gate:hover { opacity: 0.88; }
 .gate-sub { font-size: 12px; color: var(--text3); text-align: center; font-weight: 300; }
-
-/* ── Main app (hidden until gate passed) ── */
 #app { display: none; }
 .hero { background: var(--navy); padding: 4rem 1.5rem 3.5rem; text-align: center; }
 .hero h1 { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700; color: var(--white); line-height: 1; margin-bottom: 0.2rem; }
@@ -115,7 +111,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 </head>
 <body>
 
-<!-- ── Confidentiality Gate ── -->
 <div id="gate-screen">
   <div class="gate-card">
     <div class="gate-hero">
@@ -160,7 +155,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   </div>
 </div>
 
-<!-- ── Main App ── -->
 <div id="app">
   <div class="hero">
     <div style="margin:0 auto 1.5rem; display:flex; flex-direction:column; align-items:center; gap:10px;">
@@ -183,8 +177,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   </div>
 
   <div class="main">
-
-    <!-- Step 1: Values -->
     <div id="step-1">
       <div class="card">
         <div class="step-badge">Step 1 of 2</div>
@@ -199,7 +191,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       </div>
     </div>
 
-    <!-- Step 2: Situation -->
     <div id="step-2" style="display:none">
       <div class="card">
         <div class="step-badge">Step 2 of 2</div>
@@ -226,12 +217,10 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       </div>
     </div>
 
-    <!-- Loading -->
     <div id="loading-view" style="display:none">
       <div class="loading"><div class="spinner"></div><span>Analyzing through a values-based lens...</span></div>
     </div>
 
-    <!-- Results -->
     <div id="results-view" style="display:none">
       <div class="results-header">
         <div class="results-label">Leadership guidance</div>
@@ -267,7 +256,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       <div class="card" id="results-card"></div>
       <div class="footer"><p>Powered by <strong>Karabed Leadership Group</strong> — Values Lab</p></div>
     </div>
-
   </div>
 </div>
 
@@ -358,7 +346,45 @@ async function generate() {
   document.getElementById('loading-view').style.display = 'block';
 
   const valuesText = orgValues.map(v => `- ${v.toUpperCase()}`).join('\n');
-  const systemPrompt = `Behavior pattern: ${pattern === 'first' ? 'This is the FIRST TIME this behavior has been observed.' : 'This is a REPEATED behavior — it has happened before.'}\n\nYou are a leadership coach trained in values-based, trauma-informed leadership for social services organizations.\n\nAnalyze the staff behavior situation using ONLY these organizational values:\n\n${valuesText}\n\nConstraints: Be specific not generic. Align with trauma-informed care. Do not shame the staff member. Focus on accountability and growth.\n\nIMPORTANT — adjust your response based on behavior pattern:\n- If FIRST TIME: use a coaching and curiosity-based tone. Assume positive intent. Focus on awareness and correction. Recommend coaching as the action unless severity requires otherwise.\n- If REPEATED: use a firmer accountability tone. Acknowledge the pattern explicitly. Recommend documentation or escalation depending on severity. The conversation script must reflect that this is not the first time.\n\nRespond ONLY in this JSON format with no markdown, no preamble, no backticks:\n\n{"behaviorObserved":"string","valuesAnalysis":[{"value":"string","status":"Misaligned|Upheld","explanation":"string"}],"impact":{"client":"string","team":"string","organizational":"string"},"correctBehavior":"string","conversationScript":{"opening":"string","behaviorImpact":"string","expectation":"string","curiosityQuestion":"string","alignmentStatement":"string"},"recommendedAction":{"action":"Coach|Document|Escalate","reasoning":"string"}}`;
+
+  const systemPrompt = `Behavior pattern: ${pattern === 'first' ? 'This is the FIRST TIME this behavior has been observed.' : 'This is a REPEATED behavior — it has happened before.'}
+
+You are a trauma-informed leadership coach supporting managers in social services organizations. Your role is to help leaders respond to staff behavior in ways that preserve dignity, invite reflection, and support growth — never to shame, command, or control.
+
+Analyze the staff behavior situation using ONLY these organizational values:
+
+${valuesText}
+
+TRAUMA-INFORMED LANGUAGE RULES — these apply to every field, especially the conversation script. Violations are not acceptable:
+
+NEVER use these phrases or anything like them:
+- "I need you to..." / "You need to..." / "You must..." / "You have to..."
+- "This is unacceptable" / "That was wrong" / "You failed to..." / "You didn't..."
+- "Going forward you will..." / "It is your responsibility to..."
+- Any language that commands, demands, or shames
+
+ALWAYS use invitational, curious, relational language such as:
+- "I'd like to explore with you..." / "I'm wondering..." / "I want to understand..."
+- "Something I've been thinking about is..." / "What I noticed was..."
+- "I'd love to hear your perspective on..." / "One thing I'd like us to look at together is..."
+- "What gets in the way for you when..." / "How are you feeling about..."
+- "What would feel supportive right now..." / "I wonder if we could..."
+- Frame expectations as shared values: "As a team, we're committed to..." / "What we've agreed to together is..."
+- Frame accountability gently: "I want to make sure we stay aligned on..." / "Part of my role is to support you in..."
+
+TONE GUIDANCE based on behavior pattern:
+- If FIRST TIME: lead with curiosity and genuine care. Assume something may be going on for the staff member. Invite reflection, not confession. Recommend coaching.
+- If REPEATED: maintain warmth while being clear that a pattern exists. Name it without blame. Use phrases like "I've noticed this has come up a few times now and I want to make sure I'm supporting you well." Recommend documentation or escalation only if warranted by severity, and frame it as a supportive step, not a punishment.
+
+Additional constraints:
+- Do not shame the staff member anywhere in the output
+- The "valuesAlignedBehavior" field should describe what values-aligned behavior looks like — frame it positively, not as a correction
+- Be specific to the situation, not generic
+- The conversationScript must sound like something a warm, grounded leader would actually say out loud
+
+Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
+
+{"behaviorObserved":"string","valuesAnalysis":[{"value":"string","status":"Misaligned|Upheld","explanation":"string"}],"impact":{"client":"string","team":"string","organizational":"string"},"valuesAlignedBehavior":"string","conversationScript":{"opening":"string","behaviorImpact":"string","expectation":"string","curiosityQuestion":"string","alignmentStatement":"string"},"recommendedAction":{"action":"Coach|Document|Escalate","reasoning":"string"}}`;
 
   try {
     const res = await fetch('/api/analyze', {
@@ -378,12 +404,10 @@ async function generate() {
   }
 }
 
-// ── ElevenLabs audio ──────────────────────────────────────────────────────────
-
 function buildSummaryText(d) {
   const misaligned = d.valuesAnalysis.filter(v => v.status === 'Misaligned').map(v => v.value).join(', ') || 'none identified';
   const s = d.conversationScript;
-  return `Here is your leadership guidance summary. ${d.behaviorObserved}. The values that were misaligned are: ${misaligned}. The impact on the client was: ${d.impact.client}. When you speak with this staff member, open by saying: ${s.opening}. Then say: ${s.behaviorImpact}. Your recommended next step is to ${d.recommendedAction.action.toLowerCase()} this staff member. ${d.recommendedAction.reasoning}.`;
+  return `Here is your leadership guidance summary. ${d.behaviorObserved}. The values that were affected are: ${misaligned}. The impact on the client was: ${d.impact.client}. When you speak with this staff member, you might open by saying: ${s.opening}. Then share: ${s.behaviorImpact}. Your recommended next step is to ${d.recommendedAction.action.toLowerCase()} this staff member. ${d.recommendedAction.reasoning}.`;
 }
 
 async function listenToSummary() {
@@ -472,13 +496,12 @@ function formatTime(s) {
   return Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
 }
 
-// ── Render ────────────────────────────────────────────────────────────────────
-
 function render(d) {
   document.getElementById('loading-view').style.display = 'none';
   const ac = d.recommendedAction.action.toLowerCase();
   const valuesHTML = d.valuesAnalysis.map(v => `<div class="vrow"><div class="vrow-head"><span class="vtag">${v.value}</span><span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status}</span></div><p class="content">${v.explanation}</p></div>`).join('');
-  const steps = [['opening','Opening'],['behaviorImpact','Behavior + impact'],['expectation','Expectation'],['curiosityQuestion','Curiosity question'],['alignmentStatement','Alignment statement']];
+  const steps = [['opening','Opening'],['behaviorImpact','Observation + impact'],['expectation','Shared expectation'],['curiosityQuestion','Curiosity question'],['alignmentStatement','Alignment statement']];
+  const alignedBehaviorKey = d.valuesAlignedBehavior ? 'valuesAlignedBehavior' : 'correctBehavior';
   document.getElementById('results-card').innerHTML = `
     <div style="margin-bottom:1.5rem"><div class="rlabel">Behavior observed</div><p class="content">${d.behaviorObserved}</p></div>
     <hr class="divider">
@@ -486,35 +509,32 @@ function render(d) {
     <hr class="divider">
     <div style="margin-bottom:1.5rem"><div class="rlabel">Impact</div><div class="igrid"><div class="icard"><div class="ilabel">Client</div><p>${d.impact.client}</p></div><div class="icard"><div class="ilabel">Team</div><p>${d.impact.team}</p></div><div class="icard"><div class="ilabel">Organizational</div><p>${d.impact.organizational}</p></div></div></div>
     <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">Correct behavior</div><p class="content">${d.correctBehavior}</p></div>
+    <div style="margin-bottom:1.5rem"><div class="rlabel">Values-aligned behavior</div><p class="content">${d[alignedBehaviorKey]}</p></div>
     <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">Conversation script</div>${steps.map(([k,l]) => `<div class="slstep"><div class="slstep-label">${l}</div><div class="sblock">${d.conversationScript[k]}</div></div>`).join('')}</div>
+    <div style="margin-bottom:1.5rem"><div class="rlabel">Conversation guide</div>${steps.map(([k,l]) => `<div class="slstep"><div class="slstep-label">${l}</div><div class="sblock">${d.conversationScript[k]}</div></div>`).join('')}</div>
     <hr class="divider">
-    <div><div class="rlabel">Recommended action</div><div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap"><span class="chip ${ac}">${d.recommendedAction.action}</span><p class="content" style="flex:1;min-width:160px;">${d.recommendedAction.reasoning}</p></div></div>`;
+    <div><div class="rlabel">Recommended next step</div><div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap"><span class="chip ${ac}">${d.recommendedAction.action}</span><p class="content" style="flex:1;min-width:160px;">${d.recommendedAction.reasoning}</p></div></div>`;
   document.getElementById('results-view').style.display = 'block';
 }
-
-// ── PDF ───────────────────────────────────────────────────────────────────────
 
 function downloadPDF() {
   if (!lastResult) return;
   const d = lastResult;
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');*{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;color:#1a1a1a;background:#fff;padding:48px;font-size:13px;line-height:1.7}.header{border-bottom:2px solid #1B2A4A;padding-bottom:24px;margin-bottom:32px;display:flex;align-items:flex-start;justify-content:space-between}.header-left h1{font-family:'DM Serif Display',serif;font-size:28px;color:#1B2A4A}.header-left p{font-size:11px;color:#888;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}.header-right{text-align:right;font-size:11px;color:#888}.section{margin-bottom:28px}.section-label{font-size:9px;font-weight:500;color:#C9A84C;text-transform:uppercase;letter-spacing:.15em;background:#fdf9f0;border:1px solid rgba(201,168,76,.3);border-radius:4px;padding:3px 10px;display:inline-block;margin-bottom:10px}.content{font-size:13px;color:#4a4a48;line-height:1.75;font-weight:300}.value-row{padding:10px 0;border-bottom:1px solid #eee}.value-row:last-child{border-bottom:none}.value-name{font-size:11px;font-weight:500;background:#1B2A4A;color:#C9A84C;padding:2px 10px;border-radius:999px;display:inline-block;margin-right:8px}.mis{font-size:11px;color:#A32D2D;font-weight:500}.uph{font-size:11px;color:#2d7a5f;font-weight:500}.impact-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}.impact-card{background:#fdf9f0;border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:12px}.impact-label{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}.sblock{background:#f7f6f3;border-left:3px solid #C9A84C;padding:10px 14px;margin-top:6px;border-radius:0 4px 4px 0;font-weight:300;color:#4a4a48}.slabel{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.1em;margin-top:12px;margin-bottom:3px}.action-chip{display:inline-block;font-size:11px;font-weight:500;padding:4px 14px;border-radius:4px;margin-right:10px}.coach{background:#eaf5f0;color:#2d7a5f;border:1px solid #7ecbb0}.document{background:#fdf9f0;color:#a06020;border:1px solid #C9A84C}.escalate{background:#fdf0f0;color:#8b2020;border:1px solid #e07070}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;font-size:10px;color:#aaa;text-align:center}</style></head><body>
-<div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis Report &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}</div></div>
+  const alignedBehaviorKey = d.valuesAlignedBehavior ? 'valuesAlignedBehavior' : 'correctBehavior';
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Guidance</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');*{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;color:#1a1a1a;background:#fff;padding:48px;font-size:13px;line-height:1.7}.header{border-bottom:2px solid #1B2A4A;padding-bottom:24px;margin-bottom:32px;display:flex;align-items:flex-start;justify-content:space-between}.header-left h1{font-family:'DM Serif Display',serif;font-size:28px;color:#1B2A4A}.header-left p{font-size:11px;color:#888;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}.header-right{text-align:right;font-size:11px;color:#888}.section{margin-bottom:28px}.section-label{font-size:9px;font-weight:500;color:#C9A84C;text-transform:uppercase;letter-spacing:.15em;background:#fdf9f0;border:1px solid rgba(201,168,76,.3);border-radius:4px;padding:3px 10px;display:inline-block;margin-bottom:10px}.content{font-size:13px;color:#4a4a48;line-height:1.75;font-weight:300}.value-row{padding:10px 0;border-bottom:1px solid #eee}.value-row:last-child{border-bottom:none}.value-name{font-size:11px;font-weight:500;background:#1B2A4A;color:#C9A84C;padding:2px 10px;border-radius:999px;display:inline-block;margin-right:8px}.mis{font-size:11px;color:#A32D2D;font-weight:500}.uph{font-size:11px;color:#2d7a5f;font-weight:500}.impact-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}.impact-card{background:#fdf9f0;border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:12px}.impact-label{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}.sblock{background:#f7f6f3;border-left:3px solid #C9A84C;padding:10px 14px;margin-top:6px;border-radius:0 4px 4px 0;font-weight:300;color:#4a4a48}.slabel{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.1em;margin-top:12px;margin-bottom:3px}.action-chip{display:inline-block;font-size:11px;font-weight:500;padding:4px 14px;border-radius:4px;margin-right:10px}.coach{background:#eaf5f0;color:#2d7a5f;border:1px solid #7ecbb0}.document{background:#fdf9f0;color:#a06020;border:1px solid #C9A84C}.escalate{background:#fdf0f0;color:#8b2020;border:1px solid #e07070}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;font-size:10px;color:#aaa;text-align:center}</style></head><body>
+<div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Guidance Report &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}</div></div>
 <div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div>
 <div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v=>`<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status==='Misaligned'?'mis':'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div>
 <div class="section"><div class="section-label">Impact</div><div class="impact-grid"><div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div><div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div><div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div></div></div>
-<div class="section"><div class="section-label">Correct Behavior</div><p class="content">${d.correctBehavior}</p></div>
-<div class="section"><div class="section-label">Conversation Script</div><div class="slabel">Opening</div><div class="sblock">${d.conversationScript.opening}</div><div class="slabel">Behavior + Impact</div><div class="sblock">${d.conversationScript.behaviorImpact}</div><div class="slabel">Expectation</div><div class="sblock">${d.conversationScript.expectation}</div><div class="slabel">Curiosity Question</div><div class="sblock">${d.conversationScript.curiosityQuestion}</div><div class="slabel">Alignment Statement</div><div class="sblock">${d.conversationScript.alignmentStatement}</div></div>
-<div class="section"><div class="section-label">Recommended Action</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div>
+<div class="section"><div class="section-label">Values-Aligned Behavior</div><p class="content">${d[alignedBehaviorKey]}</p></div>
+<div class="section"><div class="section-label">Conversation Guide</div><div class="slabel">Opening</div><div class="sblock">${d.conversationScript.opening}</div><div class="slabel">Observation + Impact</div><div class="sblock">${d.conversationScript.behaviorImpact}</div><div class="slabel">Shared Expectation</div><div class="sblock">${d.conversationScript.expectation}</div><div class="slabel">Curiosity Question</div><div class="sblock">${d.conversationScript.curiosityQuestion}</div><div class="slabel">Alignment Statement</div><div class="sblock">${d.conversationScript.alignmentStatement}</div></div>
+<div class="section"><div class="section-label">Recommended Next Step</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div>
 <div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div>
 </body></html>`;
   const blob = new Blob([html], {type:'text/html'});
   const win = window.open(URL.createObjectURL(blob), '_blank');
   if (win) { win.onload = () => win.print(); }
 }
-
-// ── Restart ───────────────────────────────────────────────────────────────────
 
 function restart() {
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
