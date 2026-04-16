@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Values Lab — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1B2A4A; --gold: #C9A84C; --gold-light: #f5edd8; --gold-pale: #fdf9f0;
+  --bg: #f2efe8; --white: #ffffff;
+  --text: #1a1a1a; --text2: #4a4a48; --text3: #8a8a85;
+  --border: rgba(27,42,74,0.1); --border2: rgba(27,42,74,0.2);
+  --green: #2d7a5f; --green-bg: #eaf5f0; --green-border: #7ecbb0;
+  --amber: #a06020; --amber-bg: #fef3e2; --amber-border: #e8b86d;
+  --red: #8b2020; --red-bg: #fdf0f0; --red-border: #e07070;
+  --r: 8px; --rl: 16px;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── LOGIN ── */
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+  background: var(--navy);
+}
+.login-logo { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 2.5rem; }
+.login-logo h1 { font-family: 'Playfair Display', serif; font-size: 44px; font-weight: 700; color: var(--white); line-height: 1; }
+.login-logo .lab { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400; color: var(--gold); letter-spacing: 0.35em; text-transform: uppercase; }
+.login-logo .byline { font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 0.2em; text-transform: uppercase; }
+.login-card {
+  background: var(--white);
+  border-radius: var(--rl);
+  padding: 2rem;
+  width: 100%;
+  max-width: 380px;
+}
+.login-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 1.5rem; text-align: center; }
+.field-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; }
+.login-input {
+  width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text);
+  background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r);
+  padding: 12px 14px; margin-bottom: 1rem; font-weight: 300; transition: border-color 0.2s;
+}
+.login-input:focus { outline: none; border-color: var(--navy); }
+.btn-login {
+  width: 100%; padding: 13px; background: var(--navy); color: var(--gold); border: none;
+  border-radius: var(--r); font-size: 14px; font-weight: 500; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; letter-spacing: 0.05em; transition: opacity 0.15s;
+  margin-top: 0.5rem;
+}
+.btn-login:hover { opacity: 0.88; }
+.btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
+.login-err {
+  font-size: 12px; color: var(--red); background: var(--red-bg);
+  border: 1px solid var(--red-border); border-radius: var(--r);
+  padding: 9px 12px; margin-top: 0.75rem; font-weight: 300; display: none;
+}
+.login-footer { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 2rem; text-align: center; }
+
+/* ── DASHBOARD ── */
+.dash-wrap { display: none; min-height: 100vh; flex-direction: column; }
+
+.dash-header {
+  background: var(--navy); padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px; flex-shrink: 0;
+}
+.dash-header-left { display: flex; align-items: center; gap: 14px; }
+.dash-wordmark { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--white); }
+.dash-wordmark span { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 400; color: var(--gold); letter-spacing: 0.3em; text-transform: uppercase; margin-left: 6px; vertical-align: middle; }
+.dash-org-pill {
+  background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.35);
+  color: var(--gold); font-size: 12px; padding: 4px 12px; border-radius: 999px;
+}
+.dash-header-right { display: flex; align-items: center; gap: 12px; }
+.btn-logout {
+  font-size: 12px; color: rgba(255,255,255,0.45); background: none;
+  border: 1px solid rgba(255,255,255,0.15); border-radius: var(--r);
+  padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.btn-logout:hover { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.3); }
+
+.dash-preview-bar {
+  background: var(--gold-pale); border-bottom: 1px solid rgba(201,168,76,0.4);
+  padding: 7px 2rem; font-size: 11px; color: var(--amber);
+  display: flex; align-items: center; gap: 6px;
+}
+.preview-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+.dash-body { padding: 2rem; max-width: 1100px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 1.5rem; }
+
+/* Metrics */
+.metrics-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+.metric-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--rl); padding: 18px 20px;
+  border-top: 2px solid var(--gold);
+}
+.metric-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.metric-value { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1; }
+.metric-value.sm { font-size: 18px; padding-top: 6px; }
+.metric-sub { font-size: 11px; color: var(--text3); margin-top: 5px; font-weight: 300; }
+
+/* Two-col layout */
+.dash-cols { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.6fr); gap: 16px; }
+.dash-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--rl); padding: 20px;
+}
+.card-title { font-size: 12px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+
+/* Values bar chart */
+.values-list { display: flex; flex-direction: column; gap: 10px; }
+.val-row { display: flex; align-items: center; gap: 10px; }
+.val-name { font-size: 13px; color: var(--text2); min-width: 140px; font-weight: 300; flex-shrink: 0; }
+.val-bar-bg { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; }
+.val-bar { height: 8px; border-radius: 4px; background: var(--navy); transition: width 0.6s ease; }
+.val-count { font-size: 12px; font-weight: 500; color: var(--text3); min-width: 20px; text-align: right; }
+.val-empty { font-size: 13px; color: var(--text3); font-weight: 300; text-align: center; padding: 2rem 0; }
+
+/* Donut */
+.donut-section { display: flex; align-items: center; gap: 20px; }
+.donut-wrap { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
+.donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+.donut-num { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--navy); line-height: 1; }
+.donut-sub { font-size: 10px; color: var(--text3); }
+.donut-legend { display: flex; flex-direction: column; gap: 8px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); font-weight: 300; }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* Session list */
+.filter-bar { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.filter-btn {
+  font-size: 11px; padding: 5px 14px; border-radius: 999px;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--text3); cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all 0.12s;
+}
+.filter-btn.active { background: var(--navy); color: var(--gold); border-color: var(--navy); }
+
+.sessions-list { display: flex; flex-direction: column; }
+.session-row {
+  display: flex; gap: 14px; padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s; cursor: pointer;
+}
+.session-row:last-child { border-bottom: none; }
+.session-row:hover { background: var(--bg); margin: 0 -10px; padding: 14px 10px; border-radius: var(--r); border-bottom: none; }
+.session-date { font-size: 11px; color: var(--text3); min-width: 44px; padding-top: 2px; flex-shrink: 0; font-weight: 300; }
+.session-body { flex: 1; min-width: 0; }
+.session-text { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 8px; font-weight: 300; }
+.session-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag {
+  font-size: 11px; padding: 2px 10px; border-radius: 999px;
+  background: rgba(27,42,74,0.07); color: var(--navy); font-weight: 400;
+}
+.session-action { margin-left: auto; flex-shrink: 0; padding-top: 2px; }
+
+.chip { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 12px; border-radius: var(--r); white-space: nowrap; }
+.chip.coach { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.chip.document { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.chip.escalate { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--text3); font-size: 13px; font-weight: 300; }
+
+/* Loading spinner */
+.spinner { width: 20px; height: 20px; border: 2px solid var(--border2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 3rem auto; display: block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.dash-footer {
+  margin-top: auto; padding: 1.5rem 2rem;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-footer p { font-size: 11px; color: var(--text3); font-weight: 300; }
+.dash-footer strong { color: var(--gold); font-weight: 500; }
+
+@media (max-width: 700px) {
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-cols { grid-template-columns: 1fr; }
+  .dash-body { padding: 1.25rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-view">
+  <div class="login-logo">
+    <svg width="60" height="60" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="80" height="80" rx="18" fill="#0D1B2A"/>
+      <rect x="12" y="12" width="56" height="56" stroke="#F5F1E8" stroke-width="1.5" fill="none"/>
+      <line x1="30.67" y1="12" x2="30.67" y2="68" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+      <line x1="49.33" y1="12" x2="49.33" y2="68" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+      <line x1="12" y1="30.67" x2="68" y2="30.67" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+      <line x1="12" y1="49.33" x2="68" y2="49.33" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+      <rect x="31" y="12.5" width="18.33" height="55" fill="#C6A75E" opacity="0.2"/>
+      <line x1="21" y1="21" x2="59" y2="59" stroke="#C6A75E" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="40" cy="40" r="4.5" fill="#C6A75E"/>
+    </svg>
+    <h1>Values</h1>
+    <div class="lab">Lab</div>
+    <div class="byline">By Karabed Leadership Group</div>
+  </div>
+  <div class="login-card">
+    <div class="login-title">Organization sign in</div>
+    <div class="field-label">Username</div>
+    <input type="text" class="login-input" id="login-username" placeholder="e.g. lifemoves" autocomplete="username" />
+    <div class="field-label">Password</div>
+    <input type="password" class="login-input" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+    <button class="btn-login" id="login-btn" onclick="doLogin()">Sign in</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+  <div class="login-footer">Values Lab · Karabed Leadership Group · Confidential</div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash-wrap" id="dash-view">
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <div class="dash-wordmark">Values <span>Lab</span></div>
+      <div class="dash-org-pill" id="dash-org-name">Organization</div>
+    </div>
+    <div class="dash-header-right">
+      <span style="font-size:11px;color:rgba(255,255,255,0.3);">Organization Dashboard</span>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="dash-preview-bar">
+    <div class="preview-dot"></div>
+    Live data from your Values Lab sessions
+  </div>
+
+  <div class="dash-body">
+
+    <div class="metrics-grid" id="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Total sessions</div>
+        <div class="metric-value" id="m-total"><div class="spinner" style="width:24px;height:24px;margin:0;"></div></div>
+        <div class="metric-sub">All time</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Top misaligned value</div>
+        <div class="metric-value sm" id="m-top">—</div>
+        <div class="metric-sub" id="m-top-sub">&nbsp;</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Escalations</div>
+        <div class="metric-value" id="m-esc">—</div>
+        <div class="metric-sub" id="m-esc-pct">&nbsp;</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Coaching rate</div>
+        <div class="metric-value" id="m-coach">—</div>
+        <div class="metric-sub">of all sessions</div>
+      </div>
+    </div>
+
+    <div class="dash-cols">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="dash-card">
+          <div class="card-title">Most misaligned values</div>
+          <div id="values-chart-wrap"><div class="val-empty">Loading...</div></div>
+        </div>
+        <div class="dash-card">
+          <div class="card-title">Recommended actions</div>
+          <div class="donut-section">
+            <div class="donut-wrap">
+              <canvas id="donut-chart" width="120" height="120" role="img" aria-label="Donut chart of recommended actions"></canvas>
+              <div class="donut-center">
+                <div class="donut-num" id="donut-total">—</div>
+                <div class="donut-sub">sessions</div>
+              </div>
+            </div>
+            <div class="donut-legend" id="donut-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#2d7a5f;"></div><span id="leg-coach">Coach</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#a06020;"></div><span id="leg-doc">Document</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#8b2020;"></div><span id="leg-esc">Escalate</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="card-title">Session history</div>
+        <div class="filter-bar">
+          <button class="filter-btn active" onclick="filterSessions('all',this)">All</button>
+          <button class="filter-btn" onclick="filterSessions('Coach',this)">Coach</button>
+          <button class="filter-btn" onclick="filterSessions('Document',this)">Document</button>
+          <button class="filter-btn" onclick="filterSessions('Escalate',this)">Escalate</button>
+        </div>
+        <div class="sessions-list" id="sessions-list">
+          <div class="empty-state">Loading sessions...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="dash-footer">
+    <p>Powered by <strong>Karabed Leadership Group</strong> — Values Lab</p>
+    <p id="dash-footer-note" style="font-size:11px;color:var(--text3);"></p>
+  </div>
+</div>
+
+let sb = null;
+let currentOrg = null;
+let allSessions = [];
+let donutChart = null;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const res = await fetch("/api/config");
+  const { supabaseUrl, supabaseKey } = await res.json();
+  sb = supabase.createClient(supabaseUrl, supabaseKey);
+  document.getElementById("login-password").addEventListener("keydown", e => {
+    if (e.key === "Enter") doLogin();
+  });
+  document.getElementById("login-username").addEventListener("keydown", e => {
+    if (e.key === "Enter") document.getElementById("login-password").focus();
+  });
+  const saved = sessionStorage.getItem("vl_org");
+  if (saved) { currentOrg = JSON.parse(saved); showDashboard(); }
+});
+
+async function doLogin() {
+  const username = document.getElementById('login-username').value.trim().toLowerCase();
+  const password = document.getElementById('login-password').value.trim();
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-err');
+  err.style.display = 'none';
+  if (!username || !password) { showErr('Please enter your username and password.'); return; }
+  btn.disabled = true;
+  btn.textContent = 'Signing in...';
+  try {
+    const { data, error } = await sb
+      .from('orgs')
+      .select('id, name, username')
+      .eq('username', username)
+      .eq('password', password)
+      .single();
+    if (error || !data) { showErr('Incorrect username or password. Please try again.'); return; }
+    currentOrg = data;
+    sessionStorage.setItem('vl_org', JSON.stringify(data));
+    showDashboard();
+  } catch (e) {
+    showErr('Connection error. Please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sign in';
+  }
+}
+
+function showErr(msg) {
+  const err = document.getElementById('login-err');
+  err.textContent = msg;
+  err.style.display = 'block';
+}
+
+function doLogout() {
+  sessionStorage.removeItem('vl_org');
+  currentOrg = null;
+  allSessions = [];
+  document.getElementById('login-view').style.display = 'flex';
+  document.getElementById('dash-view').style.display = 'none';
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+}
+
+async function showDashboard() {
+  document.getElementById('login-view').style.display = 'none';
+  const dv = document.getElementById('dash-view');
+  dv.style.display = 'flex';
+  document.getElementById('dash-org-name').textContent = currentOrg.name;
+  await loadSessions();
+}
+
+async function loadSessions() {
+  const { data, error } = await sb
+    .from('sessions')
+    .select('*')
+    .eq('org_id', currentOrg.id)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    document.getElementById('sessions-list').innerHTML = '<div class="empty-state">Error loading sessions. Please refresh.</div>';
+    return;
+  }
+
+  allSessions = data || [];
+  renderMetrics();
+  renderValuesChart();
+  renderDonut();
+  renderSessions('all');
+  const note = allSessions.length > 0
+    ? `${allSessions.length} session${allSessions.length !== 1 ? 's' : ''} recorded`
+    : 'No sessions yet';
+  document.getElementById('dash-footer-note').textContent = note;
+}
+
+function renderMetrics() {
+  const total = allSessions.length;
+  document.getElementById('m-total').textContent = total;
+
+  if (total === 0) {
+    document.getElementById('m-top').textContent = '—';
+    document.getElementById('m-top-sub').textContent = 'No sessions yet';
+    document.getElementById('m-esc').textContent = '0';
+    document.getElementById('m-esc-pct').textContent = '0% of sessions';
+    document.getElementById('m-coach').textContent = '0%';
+    return;
+  }
+
+  // Top misaligned value
+  const valMap = {};
+  allSessions.forEach(s => {
+    (s.misaligned_values || []).forEach(v => { valMap[v] = (valMap[v] || 0) + 1; });
+  });
+  const topVal = Object.entries(valMap).sort((a,b) => b[1]-a[1])[0];
+  if (topVal) {
+    document.getElementById('m-top').textContent = topVal[0];
+    document.getElementById('m-top-sub').textContent = `${topVal[1]} session${topVal[1] !== 1 ? 's' : ''}`;
+  }
+
+  const esc = allSessions.filter(s => s.recommended_action === 'Escalate').length;
+  document.getElementById('m-esc').textContent = esc;
+  document.getElementById('m-esc-pct').textContent = `${Math.round(esc / total * 100)}% of sessions`;
+
+  const coach = allSessions.filter(s => s.recommended_action === 'Coach').length;
+  document.getElementById('m-coach').textContent = Math.round(coach / total * 100) + '%';
+}
+
+function renderValuesChart() {
+  const wrap = document.getElementById('values-chart-wrap');
+  const valMap = {};
+  allSessions.forEach(s => {
+    (s.misaligned_values || []).forEach(v => { valMap[v] = (valMap[v] || 0) + 1; });
+  });
+  const sorted = Object.entries(valMap).sort((a,b) => b[1]-a[1]).slice(0, 6);
+  if (sorted.length === 0) {
+    wrap.innerHTML = '<div class="val-empty">No misaligned values recorded yet.</div>';
+    return;
+  }
+  const max = sorted[0][1];
+  wrap.innerHTML = '<div class="values-list">' + sorted.map(([name, count]) => `
+    <div class="val-row">
+      <div class="val-name">${name}</div>
+      <div class="val-bar-bg"><div class="val-bar" style="width:${Math.round(count/max*100)}%"></div></div>
+      <div class="val-count">${count}</div>
+    </div>`).join('') + '</div>';
+}
+
+function renderDonut() {
+  const total = allSessions.length;
+  const coachN = allSessions.filter(s => s.recommended_action === 'Coach').length;
+  const docN = allSessions.filter(s => s.recommended_action === 'Document').length;
+  const escN = allSessions.filter(s => s.recommended_action === 'Escalate').length;
+
+  document.getElementById('donut-total').textContent = total;
+  const pct = n => total > 0 ? Math.round(n/total*100) + '%' : '0%';
+  document.getElementById('leg-coach').textContent = `Coach ${pct(coachN)}`;
+  document.getElementById('leg-doc').textContent = `Document ${pct(docN)}`;
+  document.getElementById('leg-esc').textContent = `Escalate ${pct(escN)}`;
+
+  if (donutChart) donutChart.destroy();
+  donutChart = new Chart(document.getElementById('donut-chart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Coach','Document','Escalate'],
+      datasets: [{
+        data: total > 0 ? [coachN, docN, escN] : [1,1,1],
+        backgroundColor: total > 0 ? ['#2d7a5f','#a06020','#8b2020'] : ['#e8e6e0','#e8e6e0','#e8e6e0'],
+        borderWidth: 0,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: false,
+      cutout: '68%',
+      plugins: { legend: { display: false }, tooltip: { enabled: total > 0 } }
+    }
+  });
+}
+
+function renderSessions(filter) {
+  const list = document.getElementById('sessions-list');
+  const filtered = filter === 'all'
+    ? allSessions
+    : allSessions.filter(s => s.recommended_action === filter);
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state">No sessions found.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(s => {
+    const date = new Date(s.created_at);
+    const label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const action = (s.recommended_action || '').toLowerCase();
+    const tags = (s.misaligned_values || []).map(v => `<span class="tag">${v}</span>`).join('');
+    const behavior = s.behavior || (s.result_json?.behaviorObserved) || 'Session recorded';
+    const truncated = behavior.length > 120 ? behavior.slice(0,117) + '...' : behavior;
+    return `
+      <div class="session-row">
+        <div class="session-date">${label}</div>
+        <div class="session-body">
+          <div class="session-text">${truncated}</div>
+          <div class="session-tags">${tags}</div>
+        </div>
+        <div class="session-action"><span class="chip ${action}">${s.recommended_action || '—'}</span></div>
+      </div>`;
+  }).join('');
+}
+
+function filterSessions(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSessions(type);
+}
+</script>
+</body>
+</html>
