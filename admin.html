@@ -389,7 +389,6 @@ async function loadSessions() {
   const { data, error } = await sb
     .from('sessions')
     .select('*')
-    .eq('org_id', currentOrg.id)
     .order('created_at', { ascending: false });
 
   if (error) {
