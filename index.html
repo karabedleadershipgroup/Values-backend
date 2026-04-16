@@ -108,6 +108,8 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .footer p { font-size: 11px; color: var(--text3); font-weight: 300; }
 .footer strong { color: var(--gold); font-weight: 500; }
 @media (max-width: 500px) { .hero h1 { font-size: 38px; } .admin-link { font-size: 11px; padding: 5px 10px; } }
+.preset-pill { font-size: 12px; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 300; transition: all 0.15s; }
+.preset-pill:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
 </style>
 </head>
 <body>
@@ -133,6 +135,9 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   <p>A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
 </div>
 
+<div style="background:var(--gold-pale);border-bottom:1px solid rgba(201,168,76,0.35);padding:10px 1.5rem;text-align:center;">
+  <p style="font-size:12px;color:var(--amber);font-weight:400;">This app is currently in a testing phase. Please keep all content and outputs confidential. Thank you for your partnership.</p>
+</div>
 <div class="main">
 
 <!-- Step 1: Values -->
@@ -141,8 +146,41 @@ textarea.values-input { min-height: 120px; resize: vertical; }
     <div class="step-badge">Step 1 of 2</div>
     <div class="field-label">What are your organizational values?</div>
     <input type="text" class="values-input" id="f-values" placeholder="Ex: Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability" />
-    <div class="field-hint">Separate values with commas.</div>
+    <div class="field-hint">Type your own or tap values below to add them.</div>
     <div id="values-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:28px;"></div>
+    <div style="margin-top:1rem;">
+      <div class="field-label" style="margin-bottom:8px;">Common nonprofit values — tap to add</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <button class="preset-pill" onclick="addPreset('Client-Centered')">Client-Centered</button>
+        <button class="preset-pill" onclick="addPreset('Respect')">Respect</button>
+        <button class="preset-pill" onclick="addPreset('Integrity')">Integrity</button>
+        <button class="preset-pill" onclick="addPreset('Collaboration')">Collaboration</button>
+        <button class="preset-pill" onclick="addPreset('Accountability')">Accountability</button>
+        <button class="preset-pill" onclick="addPreset('Equity')">Equity</button>
+        <button class="preset-pill" onclick="addPreset('DEIB')">DEIB</button>
+        <button class="preset-pill" onclick="addPreset('Inclusion')">Inclusion</button>
+        <button class="preset-pill" onclick="addPreset('Diversity')">Diversity</button>
+        <button class="preset-pill" onclick="addPreset('Belonging')">Belonging</button>
+        <button class="preset-pill" onclick="addPreset('Transparency')">Transparency</button>
+        <button class="preset-pill" onclick="addPreset('Compassion')">Compassion</button>
+        <button class="preset-pill" onclick="addPreset('Empathy')">Empathy</button>
+        <button class="preset-pill" onclick="addPreset('Trauma-Informed Care')">Trauma-Informed Care</button>
+        <button class="preset-pill" onclick="addPreset('Adaptability')">Adaptability</button>
+        <button class="preset-pill" onclick="addPreset('Innovation')">Innovation</button>
+        <button class="preset-pill" onclick="addPreset('Excellence')">Excellence</button>
+        <button class="preset-pill" onclick="addPreset('Stewardship')">Stewardship</button>
+        <button class="preset-pill" onclick="addPreset('Community')">Community</button>
+        <button class="preset-pill" onclick="addPreset('Empowerment')">Empowerment</button>
+        <button class="preset-pill" onclick="addPreset('Dignity')">Dignity</button>
+        <button class="preset-pill" onclick="addPreset('Justice')">Justice</button>
+        <button class="preset-pill" onclick="addPreset('Safety')">Safety</button>
+        <button class="preset-pill" onclick="addPreset('Servant Leadership')">Servant Leadership</button>
+        <button class="preset-pill" onclick="addPreset('Humility')">Humility</button>
+        <button class="preset-pill" onclick="addPreset('Courage')">Courage</button>
+        <button class="preset-pill" onclick="addPreset('Trust')">Trust</button>
+        <button class="preset-pill" onclick="addPreset('Wellness')">Wellness</button>
+      </div>
+    </div>
     <div id="err-1" class="err" style="display:none"></div>
     <button class="btn-continue" onclick="goStep2()">Continue</button>
   </div>
@@ -225,6 +263,17 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 
 <script>
 let orgValues = [];
+
+function addPreset(value) {
+  const input = document.getElementById('f-values');
+  const current = input.value.trim();
+  const existing = current.split(',').map(v => v.trim()).filter(v => v.length > 0);
+  if (!existing.includes(value)) {
+    input.value = existing.length > 0 ? current + ', ' + value : value;
+    input.dispatchEvent(new Event('input'));
+  }
+}
+
 let lastResult = null;
 
 document.addEventListener('DOMContentLoaded', function() {
