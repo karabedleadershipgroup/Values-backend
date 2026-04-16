@@ -18,7 +18,6 @@
 --r: 8px; --rl: 16px;
 }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-/* Hero */
 .hero { background: var(--navy); padding: 4rem 1.5rem 3.5rem; text-align: center; position: relative; }
 .admin-link {
   position: absolute; top: 20px; right: 24px;
@@ -32,31 +31,27 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .hero .lab { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 400; color: var(--gold); letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 0.6rem; }
 .hero .byline { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 2rem; }
 .hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.7; max-width: 480px; margin: 0 auto; font-weight: 300; }
-/* Main content */
+.confidentiality-bar { background: var(--gold-pale); border-bottom: 1px solid rgba(201,168,76,0.35); padding: 10px 1.5rem; text-align: center; }
+.confidentiality-bar p { font-size: 12px; color: var(--amber); font-weight: 400; }
 .main { max-width: 620px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
-/* Step badge */
 .step-badge { display: inline-block; font-size: 10px; font-weight: 500; color: var(--gold); border: 1px solid var(--gold); border-radius: 999px; padding: 4px 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
-/* Field label */
 .field-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.6rem; }
-/* Input */
 .values-input { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: var(--white); border: 1px solid var(--border2); border-radius: var(--r); padding: 14px 16px; transition: border-color 0.2s; font-weight: 300; }
 .values-input:focus { outline: none; border-color: var(--navy); }
 .values-input::placeholder { color: var(--text3); }
 .field-hint { font-size: 12px; color: var(--text3); margin-top: 6px; text-align: center; font-weight: 300; }
 textarea.values-input { min-height: 120px; resize: vertical; }
-/* Card */
 .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--rl); padding: 2rem; margin-bottom: 1.25rem; }
-/* Button */
 .btn-continue { width: 100%; padding: 14px; background: var(--navy); color: var(--gold); border: none; border-radius: var(--r); font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 1.25rem; letter-spacing: 0.05em; transition: opacity 0.15s; }
 .btn-continue:hover { opacity: 0.88; }
 .btn-continue:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-back { font-size: 13px; color: var(--text3); background: none; border: 1px solid var(--border2); border-radius: var(--r); padding: 8px 18px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 .btn-back:hover { color: var(--text2); }
-/* Loading */
+.preset-pill { font-size: 12px; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 300; transition: all 0.15s; }
+.preset-pill:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
 .loading { display: flex; align-items: center; gap: 12px; color: var(--text3); font-size: 13px; padding: 3rem 0; font-weight: 300; justify-content: center; }
 .spinner { width: 20px; height: 20px; border: 1.5px solid var(--border2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
-/* Results header */
 .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px; }
 .results-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; }
 .header-btns { display: flex; gap: 8px; align-items: center; }
@@ -65,35 +60,30 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .audio-spin { width: 12px; height: 12px; border: 1.5px solid rgba(201,168,76,0.3); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; flex-shrink: 0; }
 .btn-restart { font-size: 13px; color: var(--text3); background: none; border: 1px solid var(--border2); border-radius: var(--r); padding: 8px 16px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 .btn-restart:hover { color: var(--text2); }
-/* Result labels */
 .rlabel { font-size: 10px; font-weight: 500; color: var(--gold); background: var(--gold-pale); border: 1px solid rgba(201,168,76,0.3); border-radius: var(--r); padding: 4px 12px; display: inline-block; margin-bottom: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; }
 .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
 .content { font-size: 14px; color: var(--text2); line-height: 1.75; font-weight: 300; }
-/* Values analysis */
 .vrow { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
 .vrow:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 .vrow-head { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
 .vtag { font-size: 11px; padding: 3px 11px; border-radius: 999px; background: var(--navy); color: var(--gold); font-weight: 500; }
 .mis { font-size: 11px; color: #A32D2D; font-weight: 500; }
 .uph { font-size: 11px; color: var(--green); font-weight: 500; }
-/* Impact grid */
 .igrid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .icard { background: var(--gold-pale); border: 1px solid rgba(201,168,76,0.2); border-radius: var(--r); padding: 12px; }
 .ilabel { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
 .icard p { font-size: 13px; color: var(--text2); line-height: 1.6; font-weight: 300; }
-/* Script blocks */
 .sblock { background: var(--bg); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 12px 16px; font-size: 14px; line-height: 1.75; margin-top: 6px; font-weight: 300; color: var(--text2); }
 .slstep { margin-bottom: 14px; }
 .slstep-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-/* Action chips */
 .chip { display: inline-flex; align-items: center; font-size: 12px; padding: 5px 14px; border-radius: var(--r); font-weight: 500; }
 .coach { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
 .document { background: var(--gold-light); color: var(--amber); border: 1px solid var(--gold); }
 .escalate { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
-/* Audio player */
+.staff-reality { background: #eaf5f0; border: 1px solid #7ecbb0; border-radius: var(--r); padding: 14px 16px; margin-top: 6px; font-size: 14px; line-height: 1.75; font-weight: 300; color: #1a3a2a; }
 .audio-player { background: var(--navy); border-radius: var(--r); padding: 14px 16px; margin-bottom: 1.25rem; display:none; }
 .audio-player.visible { display:block; }
-.audio-controls { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.audio-controls { display: flex; align-items: center; gap: 10px; }
 .audio-ctrl-btn { background: none; border: none; cursor: pointer; color: var(--gold); padding: 4px; display:flex; align-items:center; justify-content:center; opacity:0.85; transition:opacity 0.15s; }
 .audio-ctrl-btn:hover { opacity: 1; }
 .audio-play-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--gold); color: var(--navy); border: none; cursor: pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -101,15 +91,11 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .audio-progress { flex:1; height:3px; background: rgba(201,168,76,0.25); border-radius:999px; cursor:pointer; position:relative; }
 .audio-progress-fill { height:100%; background: var(--gold); border-radius:999px; width:0%; transition: width 0.1s linear; pointer-events:none; }
 .audio-time { font-size:11px; color:rgba(201,168,76,0.6); font-family:'DM Sans',sans-serif; white-space:nowrap; min-width:70px; text-align:right; }
-/* Error */
 .err { font-size: 13px; color: var(--red); background: var(--red-bg); border: 1px solid var(--red-border); border-radius: var(--r); padding: 10px 14px; margin-top: 0.75rem; font-weight: 300; }
-/* Footer */
 .footer { text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
 .footer p { font-size: 11px; color: var(--text3); font-weight: 300; }
 .footer strong { color: var(--gold); font-weight: 500; }
 @media (max-width: 500px) { .hero h1 { font-size: 38px; } .admin-link { font-size: 11px; padding: 5px 10px; } }
-.preset-pill { font-size: 12px; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 300; transition: all 0.15s; }
-.preset-pill:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
 </style>
 </head>
 <body>
@@ -135,12 +121,12 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   <p>A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
 </div>
 
-<div style="background:var(--gold-pale);border-bottom:1px solid rgba(201,168,76,0.35);padding:10px 1.5rem;text-align:center;">
-  <p style="font-size:12px;color:var(--amber);font-weight:400;">This app is currently in a testing phase. Please keep all content and outputs confidential. Thank you for your partnership.</p>
+<div class="confidentiality-bar">
+  <p>This app is currently in a testing phase. Please keep all content and outputs confidential. Thank you for your partnership.</p>
 </div>
+
 <div class="main">
 
-<!-- Step 1: Values -->
 <div id="step-1">
   <div class="card">
     <div class="step-badge">Step 1 of 2</div>
@@ -186,7 +172,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   </div>
 </div>
 
-<!-- Step 2: Situation -->
 <div id="step-2" style="display:none">
   <div class="card">
     <div class="step-badge">Step 2 of 2</div>
@@ -213,12 +198,10 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   </div>
 </div>
 
-<!-- Loading -->
 <div id="loading-view" style="display:none">
   <div class="loading"><div class="spinner"></div><span>Analyzing through a values-based lens...</span></div>
 </div>
 
-<!-- Results -->
 <div id="results-view" style="display:none">
   <div class="results-header">
     <div class="results-label">Leadership guidance</div>
@@ -227,24 +210,16 @@ textarea.values-input { min-height: 120px; resize: vertical; }
         <div class="audio-spin" id="audio-spin"></div>
         <span id="audio-label">&#9654; Listen</span>
       </button>
-      <button class="btn-audio" id="pdf-btn" onclick="downloadPDF()" style="background:var(--gold);color:var(--navy);">
-        &#8595; PDF
-      </button>
+      <button class="btn-audio" id="pdf-btn" onclick="downloadPDF()" style="background:var(--gold);color:var(--navy);">&#8595; PDF</button>
       <button class="btn-restart" onclick="restart()">Start over</button>
     </div>
   </div>
 
   <div class="audio-player" id="audio-player">
     <div class="audio-controls">
-      <button class="audio-ctrl-btn" onclick="seekAudio(-15)" title="Back 15s">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.96"/><text x="8" y="15" font-size="6" fill="currentColor" stroke="none" font-family="sans-serif">15</text></svg>
-      </button>
       <button class="audio-play-btn" id="play-pause-btn" onclick="togglePlayPause()">
         <svg id="play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
         <svg id="pause-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-      </button>
-      <button class="audio-ctrl-btn" onclick="seekAudio(15)" title="Forward 15s">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.96"/><text x="8" y="15" font-size="6" fill="currentColor" stroke="none" font-family="sans-serif">15</text></svg>
       </button>
       <div class="audio-progress-wrap">
         <div class="audio-progress" id="audio-progress" onclick="scrubAudio(event)">
@@ -263,6 +238,8 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 
 <script>
 let orgValues = [];
+let lastResult = null;
+let currentAudio = null;
 
 function addPreset(value) {
   const input = document.getElementById('f-values');
@@ -273,8 +250,6 @@ function addPreset(value) {
     input.dispatchEvent(new Event('input'));
   }
 }
-
-let lastResult = null;
 
 document.addEventListener('DOMContentLoaded', function() {
   const input = document.getElementById('f-values');
@@ -320,8 +295,44 @@ async function generate() {
   err.style.display = 'none';
   document.getElementById('step-2').style.display = 'none';
   document.getElementById('loading-view').style.display = 'block';
+
   const valuesText = orgValues.map(v => `- ${v.toUpperCase()}`).join('\n');
-  const systemPrompt = `Behavior pattern: ${pattern === 'first' ? 'This is the FIRST TIME this behavior has been observed.' : 'This is a REPEATED behavior — it has happened before.'}\n\nYou are a leadership coach trained in values-based, trauma-informed leadership for social services organizations.\n\nAnalyze the staff behavior situation using ONLY these organizational values:\n\n${valuesText}\n\nConstraints: Be specific not generic. Align with trauma-informed care. Do not shame the staff member. Focus on accountability and growth.\n\nIMPORTANT — adjust your response based on behavior pattern:\n\n- If FIRST TIME: use a coaching and curiosity-based tone. Assume positive intent. Focus on awareness and correction. Recommend coaching as the action unless severity requires otherwise.\n\n- If REPEATED: use a firmer accountability tone. Acknowledge the pattern explicitly. Recommend documentation or escalation depending on severity. The conversation script must reflect that this is not the first time.\n\nRespond ONLY in this JSON format with no markdown, no preamble, no backticks:\n\n{\n"behaviorObserved": "string",\n"valuesAnalysis": [{"value": "string", "status": "Misaligned|Upheld", "explanation": "string"}],\n"impact": {"client": "string", "team": "string", "organizational": "string"},\n"correctBehavior": "string",\n"conversationScript": {\n"opening": "string",\n"behaviorImpact": "string",\n"expectation": "string",\n"curiosityQuestion": "string",\n"alignmentStatement": "string"\n},\n"recommendedAction": {"action": "Coach|Document|Escalate", "reasoning": "string"}\n}`;
+  const systemPrompt = `Behavior pattern: ${pattern === 'first' ? 'This is the FIRST TIME this behavior has been observed.' : 'This is a REPEATED behavior — it has happened before.'}
+
+You are a trauma-informed leadership coach supporting supervisors in social services organizations. Your role is to help leaders respond to staff behavior with accountability, compassion, and cultural humility.
+
+Analyze the staff behavior using ONLY these organizational values:
+${valuesText}
+
+Trauma-informed tone guidelines:
+- Assume the staff member may be carrying their own stress, secondary trauma, or unmet needs.
+- Do not shame or pathologize. Focus on behavior, not character.
+- Hold both accountability and compassion simultaneously.
+- Use curious, non-punitive language throughout.
+- Center the dignity of both the client and the staff member.
+
+IMPORTANT — adjust based on behavior pattern:
+- If FIRST TIME: coaching and curiosity-based tone. Assume positive intent. Focus on awareness and correction.
+- If REPEATED: firmer accountability tone. Acknowledge the pattern explicitly. Recommend documentation or escalation depending on severity.
+
+Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
+
+{
+"behaviorObserved": "string",
+"valuesAnalysis": [{"value": "string", "status": "Misaligned|Upheld", "explanation": "string"}],
+"staffReality": "string — a trauma-informed reflection on what might be going on for this staff member. What stressors, secondary trauma, or unmet needs could be contributing to this behavior? This is not an excuse but an invitation to lead with curiosity.",
+"impact": {"client": "string", "team": "string", "organizational": "string"},
+"correctBehavior": "string",
+"conversationScript": {
+"opening": "string",
+"curiosityQuestion": "string",
+"behaviorImpact": "string",
+"expectation": "string",
+"alignmentStatement": "string"
+},
+"recommendedAction": {"action": "Coach|Document|Escalate", "reasoning": "string"}
+}`;
+
   try {
     const res = await fetch('/api/analyze', {
       method: 'POST',
@@ -332,88 +343,12 @@ async function generate() {
     if (!res.ok) throw new Error(data.error || 'Something went wrong.');
     lastResult = data;
     render(data);
-  } catch (err) {
+  } catch (e) {
     document.getElementById('loading-view').style.display = 'none';
     document.getElementById('step-2').style.display = 'block';
-    document.getElementById('err-2').textContent = err.message;
+    document.getElementById('err-2').textContent = e.message;
     document.getElementById('err-2').style.display = 'block';
   }
-}
-
-let currentAudio = null;
-let audioGenerating = false;
-
-function togglePlayPause() {
-  if (window.speechSynthesis.speaking) {
-    if (window.speechSynthesis.paused) {
-      window.speechSynthesis.resume();
-      document.getElementById('play-icon').style.display = 'none';
-      document.getElementById('pause-icon').style.display = 'block';
-    } else {
-      window.speechSynthesis.pause();
-      document.getElementById('play-icon').style.display = 'block';
-      document.getElementById('pause-icon').style.display = 'none';
-    }
-  }
-}
-
-function seekAudio(seconds) {}
-
-function scrubAudio(e) {
-  if (!currentAudio) return;
-  const bar = document.getElementById('audio-progress');
-  const rect = bar.getBoundingClientRect();
-  const pct = (e.clientX - rect.left) / rect.width;
-  currentAudio.currentTime = pct * currentAudio.duration;
-}
-
-function formatTime(s) {
-  if (isNaN(s)) return '0:00';
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return m + ':' + (sec < 10 ? '0' : '') + sec;
-}
-
-function listenToSummary() {
-  if (!lastResult) return;
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-    document.getElementById('audio-label').textContent = '▶ Listen';
-    document.getElementById('audio-player').classList.remove('visible');
-    document.getElementById('play-icon').style.display = 'block';
-    document.getElementById('pause-icon').style.display = 'none';
-    audioGenerating = false;
-    return;
-  }
-  const misaligned = lastResult.valuesAnalysis.filter(v => v.status === 'Misaligned');
-  const misalignedText = misaligned.map(v => v.value).join(', ') || 'none identified';
-  const script = lastResult.conversationScript;
-  const summary = `Here is your leadership guidance summary. ${lastResult.behaviorObserved}. The values that were misaligned are: ${misalignedText}. The impact on the client was: ${lastResult.impact.client}. When you speak with this staff member, open by saying: ${script.opening}. Then say: ${script.behaviorImpact}. Your recommended next step is to ${lastResult.recommendedAction.action.toLowerCase()} this staff member. ${lastResult.recommendedAction.reasoning}.`;
-  const utterance = new SpeechSynthesisUtterance(summary);
-  utterance.rate = 0.92; utterance.pitch = 1; utterance.volume = 1;
-  const doSpeak = () => {
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(v => v.lang.startsWith('en') && v.name.includes('Samantha')) || voices.find(v => v.lang.startsWith('en'));
-    if (preferred) utterance.voice = preferred;
-    window.speechSynthesis.speak(utterance);
-  };
-  utterance.onstart = () => {
-    document.getElementById('audio-label').textContent = '■ Stop';
-    document.getElementById('audio-player').classList.add('visible');
-    document.getElementById('play-icon').style.display = 'none';
-    document.getElementById('pause-icon').style.display = 'block';
-    audioGenerating = true;
-  };
-  utterance.onend = () => {
-    audioGenerating = false;
-    document.getElementById('audio-label').textContent = '▶ Listen';
-    document.getElementById('play-icon').style.display = 'block';
-    document.getElementById('pause-icon').style.display = 'none';
-    document.getElementById('audio-progress-fill').style.width = '100%';
-  };
-  utterance.onerror = () => { audioGenerating = false; document.getElementById('audio-label').textContent = '▶ Listen'; };
-  const voices = window.speechSynthesis.getVoices();
-  if (voices.length > 0) { doSpeak(); } else { window.speechSynthesis.onvoiceschanged = doSpeak; }
 }
 
 function render(d) {
@@ -427,11 +362,24 @@ function render(d) {
       </div>
       <p class="content">${v.explanation}</p>
     </div>`).join('');
-  const steps = [['opening','Opening'],['behaviorImpact','Behavior + impact'],['expectation','Expectation'],['curiosityQuestion','Curiosity question'],['alignmentStatement','Alignment statement']];
+
+  const scriptSteps = [
+    ['opening','Opening'],
+    ['curiosityQuestion','Curiosity question'],
+    ['behaviorImpact','Behavior + impact'],
+    ['expectation','Expectation'],
+    ['alignmentStatement','Alignment statement']
+  ];
+
   document.getElementById('results-card').innerHTML = `
     <div style="margin-bottom:1.5rem"><div class="rlabel">Behavior observed</div><p class="content">${d.behaviorObserved}</p></div>
     <hr class="divider">
     <div style="margin-bottom:1.5rem"><div class="rlabel">Values analysis</div>${valuesHTML}</div>
+    <hr class="divider">
+    <div style="margin-bottom:1.5rem">
+      <div class="rlabel">Staff reality</div>
+      <div class="staff-reality">${d.staffReality}</div>
+    </div>
     <hr class="divider">
     <div style="margin-bottom:1.5rem"><div class="rlabel">Impact</div><div class="igrid">
       <div class="icard"><div class="ilabel">Client</div><p>${d.impact.client}</p></div>
@@ -441,7 +389,9 @@ function render(d) {
     <hr class="divider">
     <div style="margin-bottom:1.5rem"><div class="rlabel">Correct behavior</div><p class="content">${d.correctBehavior}</p></div>
     <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">Conversation script</div>${steps.map(([k,l]) => `<div class="slstep"><div class="slstep-label">${l}</div><div class="sblock">${d.conversationScript[k]}</div></div>`).join('')}</div>
+    <div style="margin-bottom:1.5rem"><div class="rlabel">Conversation script</div>
+      ${scriptSteps.map(([k,l]) => `<div class="slstep"><div class="slstep-label">${l}</div><div class="sblock">${d.conversationScript[k]}</div></div>`).join('')}
+    </div>
     <hr class="divider">
     <div><div class="rlabel">Recommended action</div>
       <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
@@ -449,13 +399,119 @@ function render(d) {
         <p class="content" style="flex:1;min-width:160px;">${d.recommendedAction.reasoning}</p>
       </div>
     </div>`;
+
   document.getElementById('results-view').style.display = 'block';
+}
+
+async function listenToSummary() {
+  if (!lastResult) return;
+  const btn = document.getElementById('audio-btn');
+  const spin = document.getElementById('audio-spin');
+  const label = document.getElementById('audio-label');
+
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+    label.textContent = '▶ Listen';
+    spin.style.display = 'none';
+    document.getElementById('audio-player').classList.remove('visible');
+    document.getElementById('play-icon').style.display = 'block';
+    document.getElementById('pause-icon').style.display = 'none';
+    return;
+  }
+
+  const d = lastResult;
+  const misaligned = d.valuesAnalysis.filter(v => v.status === 'Misaligned').map(v => v.value).join(', ') || 'none identified';
+  const script = d.conversationScript;
+  const text = `Here is your leadership guidance summary. ${d.behaviorObserved}. The values that were misaligned are: ${misaligned}. Regarding what may be going on for this staff member: ${d.staffReality}. The impact on the client was: ${d.impact.client}. When you speak with this staff member, open by saying: ${script.opening}. Then ask: ${script.curiosityQuestion}. Then say: ${script.behaviorImpact}. Your recommended next step is to ${d.recommendedAction.action.toLowerCase()} this staff member. ${d.recommendedAction.reasoning}.`;
+
+  spin.style.display = 'inline-block';
+  label.textContent = 'Loading...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/speak', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+    if (!res.ok) throw new Error('Audio generation failed.');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    currentAudio = new Audio(url);
+
+    currentAudio.addEventListener('timeupdate', () => {
+      if (!currentAudio || !currentAudio.duration) return;
+      const pct = (currentAudio.currentTime / currentAudio.duration) * 100;
+      document.getElementById('audio-progress-fill').style.width = pct + '%';
+      document.getElementById('audio-time').textContent = formatTime(currentAudio.currentTime) + ' / ' + formatTime(currentAudio.duration);
+    });
+
+    currentAudio.addEventListener('ended', () => {
+      label.textContent = '▶ Listen';
+      spin.style.display = 'none';
+      btn.disabled = false;
+      document.getElementById('play-icon').style.display = 'block';
+      document.getElementById('pause-icon').style.display = 'none';
+      document.getElementById('audio-progress-fill').style.width = '100%';
+      currentAudio = null;
+    });
+
+    document.getElementById('audio-player').classList.add('visible');
+    document.getElementById('play-icon').style.display = 'none';
+    document.getElementById('pause-icon').style.display = 'block';
+    spin.style.display = 'none';
+    label.textContent = '■ Stop';
+    btn.disabled = false;
+    currentAudio.play();
+
+  } catch (e) {
+    spin.style.display = 'none';
+    label.textContent = '▶ Listen';
+    btn.disabled = false;
+    alert('Audio unavailable. Please try again.');
+  }
+}
+
+function togglePlayPause() {
+  if (!currentAudio) return;
+  if (currentAudio.paused) {
+    currentAudio.play();
+    document.getElementById('play-icon').style.display = 'none';
+    document.getElementById('pause-icon').style.display = 'block';
+  } else {
+    currentAudio.pause();
+    document.getElementById('play-icon').style.display = 'block';
+    document.getElementById('pause-icon').style.display = 'none';
+  }
+}
+
+function scrubAudio(e) {
+  if (!currentAudio || !currentAudio.duration) return;
+  const bar = document.getElementById('audio-progress');
+  const rect = bar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  currentAudio.currentTime = pct * currentAudio.duration;
+}
+
+function formatTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
 }
 
 function downloadPDF() {
   if (!lastResult) return;
   const d = lastResult;
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');* { box-sizing: border-box; margin: 0; padding: 0; }body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }.header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }.header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }.header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }.header-right { text-align:right; font-size:11px; color:#888; }.section { margin-bottom: 28px; }.section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }.content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }.value-row { padding: 10px 0; border-bottom: 1px solid #eee; }.value-row:last-child { border-bottom: none; }.value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }.uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }.impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }.impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }.impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }.sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }.slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }.action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }.coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }.document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }.escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }.footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }</style></head><body><div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis Report &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div></div><div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div><div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div><div class="section"><div class="section-label">Impact</div><div class="impact-grid"><div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div><div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div><div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div></div></div><div class="section"><div class="section-label">Correct Behavior</div><p class="content">${d.correctBehavior}</p></div><div class="section"><div class="section-label">Conversation Script</div><div class="slabel">Opening</div><div class="sblock">${d.conversationScript.opening}</div><div class="slabel">Behavior + Impact</div><div class="sblock">${d.conversationScript.behaviorImpact}</div><div class="slabel">Expectation</div><div class="sblock">${d.conversationScript.expectation}</div><div class="slabel">Curiosity Question</div><div class="sblock">${d.conversationScript.curiosityQuestion}</div><div class="slabel">Alignment Statement</div><div class="sblock">${d.conversationScript.alignmentStatement}</div></div><div class="section"><div class="section-label">Recommended Action</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div><div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div></body></html>`;
+  const scriptSteps = [
+    ['opening','Opening'],
+    ['curiosityQuestion','Curiosity Question'],
+    ['behaviorImpact','Behavior + Impact'],
+    ['expectation','Expectation'],
+    ['alignmentStatement','Alignment Statement']
+  ];
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');* { box-sizing: border-box; margin: 0; padding: 0; }body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }.header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }.header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }.header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }.header-right { text-align:right; font-size:11px; color:#888; }.section { margin-bottom: 28px; }.section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }.content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }.staff-reality { background: #eaf5f0; border: 1px solid #7ecbb0; border-radius: 6px; padding: 12px 14px; font-size: 13px; color: #1a3a2a; line-height: 1.75; font-weight: 300; }.value-row { padding: 10px 0; border-bottom: 1px solid #eee; }.value-row:last-child { border-bottom: none; }.value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }.uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }.impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }.impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }.impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }.sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }.slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }.action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }.coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }.document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }.escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }.footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }</style></head><body><div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis Report &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div></div><div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div><div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status==='Misaligned'?'mis':'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div><div class="section"><div class="section-label">Staff Reality</div><div class="staff-reality">${d.staffReality}</div></div><div class="section"><div class="section-label">Impact</div><div class="impact-grid"><div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div><div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div><div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div></div></div><div class="section"><div class="section-label">Correct Behavior</div><p class="content">${d.correctBehavior}</p></div><div class="section"><div class="section-label">Conversation Script</div>${scriptSteps.map(([k,l])=>`<div class="slabel">${l}</div><div class="sblock">${d.conversationScript[k]}</div>`).join('')}</div><div class="section"><div class="section-label">Recommended Action</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div><div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div></body></html>`;
   const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
   const win = window.open(url, '_blank');
@@ -463,6 +519,7 @@ function downloadPDF() {
 }
 
 function restart() {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   document.getElementById('results-view').style.display = 'none';
   document.getElementById('f-situation').value = '';
   document.querySelectorAll('input[name="pattern"]').forEach(r => r.checked = false);
@@ -478,8 +535,6 @@ function restart() {
   document.getElementById('audio-time').textContent = '0:00 / 0:00';
   document.getElementById('play-icon').style.display = 'block';
   document.getElementById('pause-icon').style.display = 'none';
-  window.speechSynthesis.cancel();
-  audioGenerating = false;
   document.getElementById('step-1').style.display = 'block';
 }
 </script>
