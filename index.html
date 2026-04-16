@@ -3,200 +3,119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Values Lab — Admin Dashboard</title>
+<title>Values Lab — Karabed Leadership Group</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --navy: #1B2A4A; --gold: #C9A84C; --gold-light: #f5edd8; --gold-pale: #fdf9f0;
-  --bg: #f2efe8; --white: #ffffff;
-  --text: #1a1a1a; --text2: #4a4a48; --text3: #8a8a85;
-  --border: rgba(27,42,74,0.1); --border2: rgba(27,42,74,0.2);
-  --green: #2d7a5f; --green-bg: #eaf5f0; --green-border: #7ecbb0;
-  --amber: #a06020; --amber-bg: #fef3e2; --amber-border: #e8b86d;
-  --red: #8b2020; --red-bg: #fdf0f0; --red-border: #e07070;
-  --r: 8px; --rl: 16px;
+--navy: #1B2A4A; --gold: #C9A84C; --gold-light: #f5edd8; --gold-pale: #fdf9f0;
+--bg: #f2efe8; --white: #ffffff;
+--text: #1a1a1a; --text2: #4a4a48; --text3: #8a8a85;
+--border: rgba(27,42,74,0.1); --border2: rgba(27,42,74,0.2);
+--green: #2d7a5f; --green-bg: #eaf5f0; --green-border: #7ecbb0;
+--amber: #a06020; --amber-bg: #fef3e2; --amber-border: #e8b86d;
+--red: #8b2020; --red-bg: #fdf0f0; --red-border: #e07070;
+--r: 8px; --rl: 16px;
 }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-/* ── LOGIN ── */
-.login-wrap {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1.25rem;
-  background: var(--navy);
+/* Hero */
+.hero { background: var(--navy); padding: 4rem 1.5rem 3.5rem; text-align: center; position: relative; }
+.admin-link {
+  position: absolute; top: 20px; right: 24px;
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.45);
+  text-decoration: none; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px; padding: 6px 14px; letter-spacing: 0.04em;
+  transition: all 0.15s; font-family: 'DM Sans', sans-serif;
 }
-.login-logo { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 2.5rem; }
-.login-logo h1 { font-family: 'Playfair Display', serif; font-size: 44px; font-weight: 700; color: var(--white); line-height: 1; }
-.login-logo .lab { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400; color: var(--gold); letter-spacing: 0.35em; text-transform: uppercase; }
-.login-logo .byline { font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 0.2em; text-transform: uppercase; }
-.login-card {
-  background: var(--white);
-  border-radius: var(--rl);
-  padding: 2rem;
-  width: 100%;
-  max-width: 380px;
-}
-.login-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 1.5rem; text-align: center; }
-.field-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; }
-.login-input {
-  width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text);
-  background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r);
-  padding: 12px 14px; margin-bottom: 1rem; font-weight: 300; transition: border-color 0.2s;
-}
-.login-input:focus { outline: none; border-color: var(--navy); }
-.btn-login {
-  width: 100%; padding: 13px; background: var(--navy); color: var(--gold); border: none;
-  border-radius: var(--r); font-size: 14px; font-weight: 500; cursor: pointer;
-  font-family: 'DM Sans', sans-serif; letter-spacing: 0.05em; transition: opacity 0.15s;
-  margin-top: 0.5rem;
-}
-.btn-login:hover { opacity: 0.88; }
-.btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
-.login-err {
-  font-size: 12px; color: var(--red); background: var(--red-bg);
-  border: 1px solid var(--red-border); border-radius: var(--r);
-  padding: 9px 12px; margin-top: 0.75rem; font-weight: 300; display: none;
-}
-.login-footer { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 2rem; text-align: center; }
-
-/* ── DASHBOARD ── */
-.dash-wrap { display: none; min-height: 100vh; flex-direction: column; }
-
-.dash-header {
-  background: var(--navy); padding: 0 2rem;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 60px; flex-shrink: 0;
-}
-.dash-header-left { display: flex; align-items: center; gap: 14px; }
-.dash-wordmark { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--white); }
-.dash-wordmark span { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 400; color: var(--gold); letter-spacing: 0.3em; text-transform: uppercase; margin-left: 6px; vertical-align: middle; }
-.dash-org-pill {
-  background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.35);
-  color: var(--gold); font-size: 12px; padding: 4px 12px; border-radius: 999px;
-}
-.dash-header-right { display: flex; align-items: center; gap: 12px; }
-.btn-logout {
-  font-size: 12px; color: rgba(255,255,255,0.45); background: none;
-  border: 1px solid rgba(255,255,255,0.15); border-radius: var(--r);
-  padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif;
-  transition: all 0.15s;
-}
-.btn-logout:hover { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.3); }
-
-.dash-preview-bar {
-  background: var(--gold-pale); border-bottom: 1px solid rgba(201,168,76,0.4);
-  padding: 7px 2rem; font-size: 11px; color: var(--amber);
-  display: flex; align-items: center; gap: 6px;
-}
-.preview-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
-
-.dash-body { padding: 2rem; max-width: 1100px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 1.5rem; }
-
-/* Metrics */
-.metrics-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
-.metric-card {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: var(--rl); padding: 18px 20px;
-  border-top: 2px solid var(--gold);
-}
-.metric-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
-.metric-value { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1; }
-.metric-value.sm { font-size: 18px; padding-top: 6px; }
-.metric-sub { font-size: 11px; color: var(--text3); margin-top: 5px; font-weight: 300; }
-
-/* Two-col layout */
-.dash-cols { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.6fr); gap: 16px; }
-.dash-card {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: var(--rl); padding: 20px;
-}
-.card-title { font-size: 12px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
-
-/* Values bar chart */
-.values-list { display: flex; flex-direction: column; gap: 10px; }
-.val-row { display: flex; align-items: center; gap: 10px; }
-.val-name { font-size: 13px; color: var(--text2); min-width: 140px; font-weight: 300; flex-shrink: 0; }
-.val-bar-bg { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; }
-.val-bar { height: 8px; border-radius: 4px; background: var(--navy); transition: width 0.6s ease; }
-.val-count { font-size: 12px; font-weight: 500; color: var(--text3); min-width: 20px; text-align: right; }
-.val-empty { font-size: 13px; color: var(--text3); font-weight: 300; text-align: center; padding: 2rem 0; }
-
-/* Donut */
-.donut-section { display: flex; align-items: center; gap: 20px; }
-.donut-wrap { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
-.donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
-.donut-num { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--navy); line-height: 1; }
-.donut-sub { font-size: 10px; color: var(--text3); }
-.donut-legend { display: flex; flex-direction: column; gap: 8px; }
-.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); font-weight: 300; }
-.legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-
-/* Session list */
-.filter-bar { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
-.filter-btn {
-  font-size: 11px; padding: 5px 14px; border-radius: 999px;
-  border: 1px solid var(--border2); background: transparent;
-  color: var(--text3); cursor: pointer; font-family: 'DM Sans', sans-serif;
-  transition: all 0.12s;
-}
-.filter-btn.active { background: var(--navy); color: var(--gold); border-color: var(--navy); }
-
-.sessions-list { display: flex; flex-direction: column; }
-.session-row {
-  display: flex; gap: 14px; padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-  transition: background 0.1s; cursor: pointer;
-}
-.session-row:last-child { border-bottom: none; }
-.session-row:hover { background: var(--bg); margin: 0 -10px; padding: 14px 10px; border-radius: var(--r); border-bottom: none; }
-.session-date { font-size: 11px; color: var(--text3); min-width: 44px; padding-top: 2px; flex-shrink: 0; font-weight: 300; }
-.session-body { flex: 1; min-width: 0; }
-.session-text { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 8px; font-weight: 300; }
-.session-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-.tag {
-  font-size: 11px; padding: 2px 10px; border-radius: 999px;
-  background: rgba(27,42,74,0.07); color: var(--navy); font-weight: 400;
-}
-.session-action { margin-left: auto; flex-shrink: 0; padding-top: 2px; }
-
-.chip { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 12px; border-radius: var(--r); white-space: nowrap; }
-.chip.coach { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
-.chip.document { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
-.chip.escalate { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
-
-.empty-state { text-align: center; padding: 3rem 1rem; color: var(--text3); font-size: 13px; font-weight: 300; }
-
-/* Loading spinner */
-.spinner { width: 20px; height: 20px; border: 2px solid var(--border2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 3rem auto; display: block; }
+.admin-link:hover { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.35); }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700; color: var(--white); line-height: 1; margin-bottom: 0.2rem; }
+.hero .lab { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 400; color: var(--gold); letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 0.6rem; }
+.hero .byline { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 2rem; }
+.hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.7; max-width: 480px; margin: 0 auto; font-weight: 300; }
+/* Main content */
+.main { max-width: 620px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+/* Step badge */
+.step-badge { display: inline-block; font-size: 10px; font-weight: 500; color: var(--gold); border: 1px solid var(--gold); border-radius: 999px; padding: 4px 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
+/* Field label */
+.field-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.6rem; }
+/* Input */
+.values-input { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: var(--white); border: 1px solid var(--border2); border-radius: var(--r); padding: 14px 16px; transition: border-color 0.2s; font-weight: 300; }
+.values-input:focus { outline: none; border-color: var(--navy); }
+.values-input::placeholder { color: var(--text3); }
+.field-hint { font-size: 12px; color: var(--text3); margin-top: 6px; text-align: center; font-weight: 300; }
+textarea.values-input { min-height: 120px; resize: vertical; }
+/* Card */
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--rl); padding: 2rem; margin-bottom: 1.25rem; }
+/* Button */
+.btn-continue { width: 100%; padding: 14px; background: var(--navy); color: var(--gold); border: none; border-radius: var(--r); font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 1.25rem; letter-spacing: 0.05em; transition: opacity 0.15s; }
+.btn-continue:hover { opacity: 0.88; }
+.btn-continue:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-back { font-size: 13px; color: var(--text3); background: none; border: 1px solid var(--border2); border-radius: var(--r); padding: 8px 18px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.btn-back:hover { color: var(--text2); }
+/* Loading */
+.loading { display: flex; align-items: center; gap: 12px; color: var(--text3); font-size: 13px; padding: 3rem 0; font-weight: 300; justify-content: center; }
+.spinner { width: 20px; height: 20px; border: 1.5px solid var(--border2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-.dash-footer {
-  margin-top: auto; padding: 1.5rem 2rem;
-  border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.dash-footer p { font-size: 11px; color: var(--text3); font-weight: 300; }
-.dash-footer strong { color: var(--gold); font-weight: 500; }
-
-@media (max-width: 700px) {
-  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
-  .dash-cols { grid-template-columns: 1fr; }
-  .dash-body { padding: 1.25rem; }
-}
+/* Results header */
+.results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px; }
+.results-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; }
+.header-btns { display: flex; gap: 8px; align-items: center; }
+.btn-audio { font-size: 13px; background: var(--navy); color: var(--gold); border: none; border-radius: var(--r); padding: 8px 16px; cursor: pointer; font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 6px; }
+.btn-audio:disabled { opacity: 0.5; cursor: not-allowed; }
+.audio-spin { width: 12px; height: 12px; border: 1.5px solid rgba(201,168,76,0.3); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; flex-shrink: 0; }
+.btn-restart { font-size: 13px; color: var(--text3); background: none; border: 1px solid var(--border2); border-radius: var(--r); padding: 8px 16px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.btn-restart:hover { color: var(--text2); }
+/* Result labels */
+.rlabel { font-size: 10px; font-weight: 500; color: var(--gold); background: var(--gold-pale); border: 1px solid rgba(201,168,76,0.3); border-radius: var(--r); padding: 4px 12px; display: inline-block; margin-bottom: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+.content { font-size: 14px; color: var(--text2); line-height: 1.75; font-weight: 300; }
+/* Values analysis */
+.vrow { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.vrow:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.vrow-head { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.vtag { font-size: 11px; padding: 3px 11px; border-radius: 999px; background: var(--navy); color: var(--gold); font-weight: 500; }
+.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }
+.uph { font-size: 11px; color: var(--green); font-weight: 500; }
+/* Impact grid */
+.igrid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.icard { background: var(--gold-pale); border: 1px solid rgba(201,168,76,0.2); border-radius: var(--r); padding: 12px; }
+.ilabel { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+.icard p { font-size: 13px; color: var(--text2); line-height: 1.6; font-weight: 300; }
+/* Script blocks */
+.sblock { background: var(--bg); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 12px 16px; font-size: 14px; line-height: 1.75; margin-top: 6px; font-weight: 300; color: var(--text2); }
+.slstep { margin-bottom: 14px; }
+.slstep-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+/* Action chips */
+.chip { display: inline-flex; align-items: center; font-size: 12px; padding: 5px 14px; border-radius: var(--r); font-weight: 500; }
+.coach { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.document { background: var(--gold-light); color: var(--amber); border: 1px solid var(--gold); }
+.escalate { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+/* Audio player */
+.audio-player { background: var(--navy); border-radius: var(--r); padding: 14px 16px; margin-bottom: 1.25rem; display:none; }
+.audio-player.visible { display:block; }
+.audio-controls { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.audio-ctrl-btn { background: none; border: none; cursor: pointer; color: var(--gold); padding: 4px; display:flex; align-items:center; justify-content:center; opacity:0.85; transition:opacity 0.15s; }
+.audio-ctrl-btn:hover { opacity: 1; }
+.audio-play-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--gold); color: var(--navy); border: none; cursor: pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.audio-progress-wrap { flex: 1; display:flex; align-items:center; gap:8px; }
+.audio-progress { flex:1; height:3px; background: rgba(201,168,76,0.25); border-radius:999px; cursor:pointer; position:relative; }
+.audio-progress-fill { height:100%; background: var(--gold); border-radius:999px; width:0%; transition: width 0.1s linear; pointer-events:none; }
+.audio-time { font-size:11px; color:rgba(201,168,76,0.6); font-family:'DM Sans',sans-serif; white-space:nowrap; min-width:70px; text-align:right; }
+/* Error */
+.err { font-size: 13px; color: var(--red); background: var(--red-bg); border: 1px solid var(--red-border); border-radius: var(--r); padding: 10px 14px; margin-top: 0.75rem; font-weight: 300; }
+/* Footer */
+.footer { text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.footer p { font-size: 11px; color: var(--text3); font-weight: 300; }
+.footer strong { color: var(--gold); font-weight: 500; }
+@media (max-width: 500px) { .hero h1 { font-size: 38px; } .admin-link { font-size: 11px; padding: 5px 10px; } }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div class="login-wrap" id="login-view">
-  <div class="login-logo">
-    <svg width="60" height="60" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<div class="hero">
+  <a href="/admin.html" class="admin-link">Admin login</a>
+  <div style="margin:0 auto 1.5rem; display:flex; flex-direction:column; align-items:center; gap:10px;">
+    <svg width="72" height="72" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="80" height="80" rx="18" fill="#0D1B2A"/>
       <rect x="12" y="12" width="56" height="56" stroke="#F5F1E8" stroke-width="1.5" fill="none"/>
       <line x1="30.67" y1="12" x2="30.67" y2="68" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
@@ -207,324 +126,312 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <line x1="21" y1="21" x2="59" y2="59" stroke="#C6A75E" stroke-width="3" stroke-linecap="round"/>
       <circle cx="40" cy="40" r="4.5" fill="#C6A75E"/>
     </svg>
-    <h1>Values</h1>
-    <div class="lab">Lab</div>
-    <div class="byline">By Karabed Leadership Group</div>
   </div>
-  <div class="login-card">
-    <div class="login-title">Organization sign in</div>
-    <div class="field-label">Username</div>
-    <input type="text" class="login-input" id="login-username" placeholder="e.g. lifemoves" autocomplete="username" />
-    <div class="field-label">Password</div>
-    <input type="password" class="login-input" id="login-password" placeholder="••••••••" autocomplete="current-password" />
-    <button class="btn-login" id="login-btn" onclick="doLogin()">Sign in</button>
-    <div class="login-err" id="login-err"></div>
-  </div>
-  <div class="login-footer">Values Lab · Karabed Leadership Group · Confidential</div>
+  <h1>Values</h1>
+  <div class="lab">Lab</div>
+  <div class="byline">By Karabed Leadership Group</div>
+  <p>A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
 </div>
 
-<!-- DASHBOARD -->
-<div class="dash-wrap" id="dash-view">
-  <div class="dash-header">
-    <div class="dash-header-left">
-      <div class="dash-wordmark">Values <span>Lab</span></div>
-      <div class="dash-org-pill" id="dash-org-name">Organization</div>
-    </div>
-    <div class="dash-header-right">
-      <span style="font-size:11px;color:rgba(255,255,255,0.3);">Organization Dashboard</span>
-      <button class="btn-logout" onclick="doLogout()">Sign out</button>
-    </div>
-  </div>
+<div class="main">
 
-  <div class="dash-preview-bar">
-    <div class="preview-dot"></div>
-    Live data from your Values Lab sessions
-  </div>
-
-  <div class="dash-body">
-
-    <div class="metrics-grid" id="metrics-grid">
-      <div class="metric-card">
-        <div class="metric-label">Total sessions</div>
-        <div class="metric-value" id="m-total"><div class="spinner" style="width:24px;height:24px;margin:0;"></div></div>
-        <div class="metric-sub">All time</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Top misaligned value</div>
-        <div class="metric-value sm" id="m-top">—</div>
-        <div class="metric-sub" id="m-top-sub">&nbsp;</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Escalations</div>
-        <div class="metric-value" id="m-esc">—</div>
-        <div class="metric-sub" id="m-esc-pct">&nbsp;</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Coaching rate</div>
-        <div class="metric-value" id="m-coach">—</div>
-        <div class="metric-sub">of all sessions</div>
-      </div>
-    </div>
-
-    <div class="dash-cols">
-      <div style="display:flex;flex-direction:column;gap:16px;">
-        <div class="dash-card">
-          <div class="card-title">Most misaligned values</div>
-          <div id="values-chart-wrap"><div class="val-empty">Loading...</div></div>
-        </div>
-        <div class="dash-card">
-          <div class="card-title">Recommended actions</div>
-          <div class="donut-section">
-            <div class="donut-wrap">
-              <canvas id="donut-chart" width="120" height="120" role="img" aria-label="Donut chart of recommended actions"></canvas>
-              <div class="donut-center">
-                <div class="donut-num" id="donut-total">—</div>
-                <div class="donut-sub">sessions</div>
-              </div>
-            </div>
-            <div class="donut-legend" id="donut-legend">
-              <div class="legend-item"><div class="legend-dot" style="background:#2d7a5f;"></div><span id="leg-coach">Coach</span></div>
-              <div class="legend-item"><div class="legend-dot" style="background:#a06020;"></div><span id="leg-doc">Document</span></div>
-              <div class="legend-item"><div class="legend-dot" style="background:#8b2020;"></div><span id="leg-esc">Escalate</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dash-card">
-        <div class="card-title">Session history</div>
-        <div class="filter-bar">
-          <button class="filter-btn active" onclick="filterSessions('all',this)">All</button>
-          <button class="filter-btn" onclick="filterSessions('Coach',this)">Coach</button>
-          <button class="filter-btn" onclick="filterSessions('Document',this)">Document</button>
-          <button class="filter-btn" onclick="filterSessions('Escalate',this)">Escalate</button>
-        </div>
-        <div class="sessions-list" id="sessions-list">
-          <div class="empty-state">Loading sessions...</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="dash-footer">
-    <p>Powered by <strong>Karabed Leadership Group</strong> — Values Lab</p>
-    <p id="dash-footer-note" style="font-size:11px;color:var(--text3);"></p>
+<!-- Step 1: Values -->
+<div id="step-1">
+  <div class="card">
+    <div class="step-badge">Step 1 of 2</div>
+    <div class="field-label">What are your organizational values?</div>
+    <input type="text" class="values-input" id="f-values" placeholder="Ex: Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability" />
+    <div class="field-hint">Separate values with commas.</div>
+    <div id="values-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:28px;"></div>
+    <div id="err-1" class="err" style="display:none"></div>
+    <button class="btn-continue" onclick="goStep2()">Continue</button>
   </div>
 </div>
 
-let sb = null;
-let currentOrg = null;
-let allSessions = [];
-let donutChart = null;
+<!-- Step 2: Situation -->
+<div id="step-2" style="display:none">
+  <div class="card">
+    <div class="step-badge">Step 2 of 2</div>
+    <div class="field-label">Describe the staff's behavior</div>
+    <textarea class="values-input" id="f-situation" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID. Other staff witnessed the interaction."></textarea>
+    <div style="margin-top:1.25rem;">
+      <div class="field-label">Is this the first time or a repeated behavior?</div>
+      <div style="display:flex;gap:10px;margin-top:0.5rem;flex-wrap:wrap;">
+        <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;flex:1;min-width:140px;background:var(--white);transition:all 0.15s;" id="pattern-first-label">
+          <input type="radio" name="pattern" value="first" id="pattern-first" style="accent-color:var(--navy);" onchange="selectPattern()">
+          <span style="font-size:13px;font-weight:300;color:var(--text2);">First time</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;flex:1;min-width:140px;background:var(--white);transition:all 0.15s;" id="pattern-repeated-label">
+          <input type="radio" name="pattern" value="repeated" id="pattern-repeated" style="accent-color:var(--navy);" onchange="selectPattern()">
+          <span style="font-size:13px;font-weight:300;color:var(--text2);">Repeated behavior</span>
+        </label>
+      </div>
+    </div>
+    <div id="err-2" class="err" style="display:none"></div>
+    <div style="display:flex;gap:10px;margin-top:1.25rem;">
+      <button class="btn-back" onclick="goStep1()">← Back</button>
+      <button class="btn-continue" style="margin-top:0;flex:1;" onclick="generate()">Get guidance →</button>
+    </div>
+  </div>
+</div>
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const res = await fetch("/api/config");
-  const { supabaseUrl, supabaseKey } = await res.json();
-  sb = supabase.createClient(supabaseUrl, supabaseKey);
-  document.getElementById("login-password").addEventListener("keydown", e => {
-    if (e.key === "Enter") doLogin();
-  });
-  document.getElementById("login-username").addEventListener("keydown", e => {
-    if (e.key === "Enter") document.getElementById("login-password").focus();
-  });
-  const saved = sessionStorage.getItem("vl_org");
-  if (saved) { currentOrg = JSON.parse(saved); showDashboard(); }
+<!-- Loading -->
+<div id="loading-view" style="display:none">
+  <div class="loading"><div class="spinner"></div><span>Analyzing through a values-based lens...</span></div>
+</div>
+
+<!-- Results -->
+<div id="results-view" style="display:none">
+  <div class="results-header">
+    <div class="results-label">Leadership guidance</div>
+    <div class="header-btns">
+      <button class="btn-audio" id="audio-btn" onclick="listenToSummary()">
+        <div class="audio-spin" id="audio-spin"></div>
+        <span id="audio-label">&#9654; Listen</span>
+      </button>
+      <button class="btn-audio" id="pdf-btn" onclick="downloadPDF()" style="background:var(--gold);color:var(--navy);">
+        &#8595; PDF
+      </button>
+      <button class="btn-restart" onclick="restart()">Start over</button>
+    </div>
+  </div>
+
+  <div class="audio-player" id="audio-player">
+    <div class="audio-controls">
+      <button class="audio-ctrl-btn" onclick="seekAudio(-15)" title="Back 15s">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.96"/><text x="8" y="15" font-size="6" fill="currentColor" stroke="none" font-family="sans-serif">15</text></svg>
+      </button>
+      <button class="audio-play-btn" id="play-pause-btn" onclick="togglePlayPause()">
+        <svg id="play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        <svg id="pause-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      </button>
+      <button class="audio-ctrl-btn" onclick="seekAudio(15)" title="Forward 15s">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.96"/><text x="8" y="15" font-size="6" fill="currentColor" stroke="none" font-family="sans-serif">15</text></svg>
+      </button>
+      <div class="audio-progress-wrap">
+        <div class="audio-progress" id="audio-progress" onclick="scrubAudio(event)">
+          <div class="audio-progress-fill" id="audio-progress-fill"></div>
+        </div>
+        <div class="audio-time" id="audio-time">0:00 / 0:00</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="results-card"></div>
+  <div class="footer"><p>Powered by <strong>Karabed Leadership Group</strong> — Values Lab</p></div>
+</div>
+
+</div>
+
+<script>
+let orgValues = [];
+let lastResult = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+  const input = document.getElementById('f-values');
+  const pillsDiv = document.getElementById('values-pills');
+  function renderPills() {
+    const values = input.value.split(',').map(v => v.trim()).filter(v => v.length > 0);
+    pillsDiv.innerHTML = values.map(v => `<span style="font-size:11px;padding:4px 12px;border-radius:999px;background:var(--navy);color:var(--gold);font-weight:500;font-family:'DM Sans',sans-serif;">${v}</span>`).join('');
+  }
+  input.addEventListener('input', renderPills);
+  renderPills();
 });
 
-async function doLogin() {
-  const username = document.getElementById('login-username').value.trim().toLowerCase();
-  const password = document.getElementById('login-password').value.trim();
-  const btn = document.getElementById('login-btn');
-  const err = document.getElementById('login-err');
+function goStep2() {
+  const raw = document.getElementById('f-values').value.trim();
+  const err = document.getElementById('err-1');
+  const values = raw.split(',').map(v => v.trim()).filter(v => v.length > 0);
+  if (values.length < 2) { err.textContent = 'Please enter at least two values separated by commas.'; err.style.display = 'block'; return; }
   err.style.display = 'none';
-  if (!username || !password) { showErr('Please enter your username and password.'); return; }
-  btn.disabled = true;
-  btn.textContent = 'Signing in...';
+  orgValues = values;
+  document.getElementById('step-1').style.display = 'none';
+  document.getElementById('step-2').style.display = 'block';
+}
+
+function selectPattern() {
+  const first = document.getElementById('pattern-first-label');
+  const repeated = document.getElementById('pattern-repeated-label');
+  const val = document.querySelector('input[name="pattern"]:checked')?.value;
+  first.style.borderColor = val === 'first' ? 'var(--navy)' : 'var(--border2)';
+  repeated.style.borderColor = val === 'repeated' ? 'var(--navy)' : 'var(--border2)';
+}
+
+function goStep1() {
+  document.getElementById('step-2').style.display = 'none';
+  document.getElementById('step-1').style.display = 'block';
+}
+
+async function generate() {
+  const situation = document.getElementById('f-situation').value.trim();
+  const pattern = document.querySelector('input[name="pattern"]:checked')?.value;
+  const err = document.getElementById('err-2');
+  if (!situation || situation.length < 15) { err.textContent = "Please describe the staff's behavior in more detail."; err.style.display = 'block'; return; }
+  if (!pattern) { err.textContent = 'Please indicate if this is a first-time or repeated behavior.'; err.style.display = 'block'; return; }
+  err.style.display = 'none';
+  document.getElementById('step-2').style.display = 'none';
+  document.getElementById('loading-view').style.display = 'block';
+  const valuesText = orgValues.map(v => `- ${v.toUpperCase()}`).join('\n');
+  const systemPrompt = `Behavior pattern: ${pattern === 'first' ? 'This is the FIRST TIME this behavior has been observed.' : 'This is a REPEATED behavior — it has happened before.'}\n\nYou are a leadership coach trained in values-based, trauma-informed leadership for social services organizations.\n\nAnalyze the staff behavior situation using ONLY these organizational values:\n\n${valuesText}\n\nConstraints: Be specific not generic. Align with trauma-informed care. Do not shame the staff member. Focus on accountability and growth.\n\nIMPORTANT — adjust your response based on behavior pattern:\n\n- If FIRST TIME: use a coaching and curiosity-based tone. Assume positive intent. Focus on awareness and correction. Recommend coaching as the action unless severity requires otherwise.\n\n- If REPEATED: use a firmer accountability tone. Acknowledge the pattern explicitly. Recommend documentation or escalation depending on severity. The conversation script must reflect that this is not the first time.\n\nRespond ONLY in this JSON format with no markdown, no preamble, no backticks:\n\n{\n"behaviorObserved": "string",\n"valuesAnalysis": [{"value": "string", "status": "Misaligned|Upheld", "explanation": "string"}],\n"impact": {"client": "string", "team": "string", "organizational": "string"},\n"correctBehavior": "string",\n"conversationScript": {\n"opening": "string",\n"behaviorImpact": "string",\n"expectation": "string",\n"curiosityQuestion": "string",\n"alignmentStatement": "string"\n},\n"recommendedAction": {"action": "Coach|Document|Escalate", "reasoning": "string"}\n}`;
   try {
-    const { data, error } = await sb
-      .from('orgs')
-      .select('id, name, username')
-      .eq('username', username)
-      .eq('password', password)
-      .single();
-    if (error || !data) { showErr('Incorrect username or password. Please try again.'); return; }
-    currentOrg = data;
-    sessionStorage.setItem('vl_org', JSON.stringify(data));
-    showDashboard();
-  } catch (e) {
-    showErr('Connection error. Please try again.');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Sign in';
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ situation, pattern, systemPrompt })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+    lastResult = data;
+    render(data);
+  } catch (err) {
+    document.getElementById('loading-view').style.display = 'none';
+    document.getElementById('step-2').style.display = 'block';
+    document.getElementById('err-2').textContent = err.message;
+    document.getElementById('err-2').style.display = 'block';
   }
 }
 
-function showErr(msg) {
-  const err = document.getElementById('login-err');
-  err.textContent = msg;
-  err.style.display = 'block';
-}
+let currentAudio = null;
+let audioGenerating = false;
 
-function doLogout() {
-  sessionStorage.removeItem('vl_org');
-  currentOrg = null;
-  allSessions = [];
-  document.getElementById('login-view').style.display = 'flex';
-  document.getElementById('dash-view').style.display = 'none';
-  document.getElementById('login-username').value = '';
-  document.getElementById('login-password').value = '';
-}
-
-async function showDashboard() {
-  document.getElementById('login-view').style.display = 'none';
-  const dv = document.getElementById('dash-view');
-  dv.style.display = 'flex';
-  document.getElementById('dash-org-name').textContent = currentOrg.name;
-  await loadSessions();
-}
-
-async function loadSessions() {
-  const { data, error } = await sb
-    .from('sessions')
-    .select('*')
-    .eq('org_id', currentOrg.id)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    document.getElementById('sessions-list').innerHTML = '<div class="empty-state">Error loading sessions. Please refresh.</div>';
-    return;
-  }
-
-  allSessions = data || [];
-  renderMetrics();
-  renderValuesChart();
-  renderDonut();
-  renderSessions('all');
-  const note = allSessions.length > 0
-    ? `${allSessions.length} session${allSessions.length !== 1 ? 's' : ''} recorded`
-    : 'No sessions yet';
-  document.getElementById('dash-footer-note').textContent = note;
-}
-
-function renderMetrics() {
-  const total = allSessions.length;
-  document.getElementById('m-total').textContent = total;
-
-  if (total === 0) {
-    document.getElementById('m-top').textContent = '—';
-    document.getElementById('m-top-sub').textContent = 'No sessions yet';
-    document.getElementById('m-esc').textContent = '0';
-    document.getElementById('m-esc-pct').textContent = '0% of sessions';
-    document.getElementById('m-coach').textContent = '0%';
-    return;
-  }
-
-  // Top misaligned value
-  const valMap = {};
-  allSessions.forEach(s => {
-    (s.misaligned_values || []).forEach(v => { valMap[v] = (valMap[v] || 0) + 1; });
-  });
-  const topVal = Object.entries(valMap).sort((a,b) => b[1]-a[1])[0];
-  if (topVal) {
-    document.getElementById('m-top').textContent = topVal[0];
-    document.getElementById('m-top-sub').textContent = `${topVal[1]} session${topVal[1] !== 1 ? 's' : ''}`;
-  }
-
-  const esc = allSessions.filter(s => s.recommended_action === 'Escalate').length;
-  document.getElementById('m-esc').textContent = esc;
-  document.getElementById('m-esc-pct').textContent = `${Math.round(esc / total * 100)}% of sessions`;
-
-  const coach = allSessions.filter(s => s.recommended_action === 'Coach').length;
-  document.getElementById('m-coach').textContent = Math.round(coach / total * 100) + '%';
-}
-
-function renderValuesChart() {
-  const wrap = document.getElementById('values-chart-wrap');
-  const valMap = {};
-  allSessions.forEach(s => {
-    (s.misaligned_values || []).forEach(v => { valMap[v] = (valMap[v] || 0) + 1; });
-  });
-  const sorted = Object.entries(valMap).sort((a,b) => b[1]-a[1]).slice(0, 6);
-  if (sorted.length === 0) {
-    wrap.innerHTML = '<div class="val-empty">No misaligned values recorded yet.</div>';
-    return;
-  }
-  const max = sorted[0][1];
-  wrap.innerHTML = '<div class="values-list">' + sorted.map(([name, count]) => `
-    <div class="val-row">
-      <div class="val-name">${name}</div>
-      <div class="val-bar-bg"><div class="val-bar" style="width:${Math.round(count/max*100)}%"></div></div>
-      <div class="val-count">${count}</div>
-    </div>`).join('') + '</div>';
-}
-
-function renderDonut() {
-  const total = allSessions.length;
-  const coachN = allSessions.filter(s => s.recommended_action === 'Coach').length;
-  const docN = allSessions.filter(s => s.recommended_action === 'Document').length;
-  const escN = allSessions.filter(s => s.recommended_action === 'Escalate').length;
-
-  document.getElementById('donut-total').textContent = total;
-  const pct = n => total > 0 ? Math.round(n/total*100) + '%' : '0%';
-  document.getElementById('leg-coach').textContent = `Coach ${pct(coachN)}`;
-  document.getElementById('leg-doc').textContent = `Document ${pct(docN)}`;
-  document.getElementById('leg-esc').textContent = `Escalate ${pct(escN)}`;
-
-  if (donutChart) donutChart.destroy();
-  donutChart = new Chart(document.getElementById('donut-chart'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Coach','Document','Escalate'],
-      datasets: [{
-        data: total > 0 ? [coachN, docN, escN] : [1,1,1],
-        backgroundColor: total > 0 ? ['#2d7a5f','#a06020','#8b2020'] : ['#e8e6e0','#e8e6e0','#e8e6e0'],
-        borderWidth: 0,
-        hoverOffset: 4
-      }]
-    },
-    options: {
-      responsive: false,
-      cutout: '68%',
-      plugins: { legend: { display: false }, tooltip: { enabled: total > 0 } }
+function togglePlayPause() {
+  if (window.speechSynthesis.speaking) {
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+      document.getElementById('play-icon').style.display = 'none';
+      document.getElementById('pause-icon').style.display = 'block';
+    } else {
+      window.speechSynthesis.pause();
+      document.getElementById('play-icon').style.display = 'block';
+      document.getElementById('pause-icon').style.display = 'none';
     }
-  });
+  }
 }
 
-function renderSessions(filter) {
-  const list = document.getElementById('sessions-list');
-  const filtered = filter === 'all'
-    ? allSessions
-    : allSessions.filter(s => s.recommended_action === filter);
+function seekAudio(seconds) {}
 
-  if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state">No sessions found.</div>';
+function scrubAudio(e) {
+  if (!currentAudio) return;
+  const bar = document.getElementById('audio-progress');
+  const rect = bar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  currentAudio.currentTime = pct * currentAudio.duration;
+}
+
+function formatTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function listenToSummary() {
+  if (!lastResult) return;
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    document.getElementById('audio-label').textContent = '▶ Listen';
+    document.getElementById('audio-player').classList.remove('visible');
+    document.getElementById('play-icon').style.display = 'block';
+    document.getElementById('pause-icon').style.display = 'none';
+    audioGenerating = false;
     return;
   }
-
-  list.innerHTML = filtered.map(s => {
-    const date = new Date(s.created_at);
-    const label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const action = (s.recommended_action || '').toLowerCase();
-    const tags = (s.misaligned_values || []).map(v => `<span class="tag">${v}</span>`).join('');
-    const behavior = s.behavior || (s.result_json?.behaviorObserved) || 'Session recorded';
-    const truncated = behavior.length > 120 ? behavior.slice(0,117) + '...' : behavior;
-    return `
-      <div class="session-row">
-        <div class="session-date">${label}</div>
-        <div class="session-body">
-          <div class="session-text">${truncated}</div>
-          <div class="session-tags">${tags}</div>
-        </div>
-        <div class="session-action"><span class="chip ${action}">${s.recommended_action || '—'}</span></div>
-      </div>`;
-  }).join('');
+  const misaligned = lastResult.valuesAnalysis.filter(v => v.status === 'Misaligned');
+  const misalignedText = misaligned.map(v => v.value).join(', ') || 'none identified';
+  const script = lastResult.conversationScript;
+  const summary = `Here is your leadership guidance summary. ${lastResult.behaviorObserved}. The values that were misaligned are: ${misalignedText}. The impact on the client was: ${lastResult.impact.client}. When you speak with this staff member, open by saying: ${script.opening}. Then say: ${script.behaviorImpact}. Your recommended next step is to ${lastResult.recommendedAction.action.toLowerCase()} this staff member. ${lastResult.recommendedAction.reasoning}.`;
+  const utterance = new SpeechSynthesisUtterance(summary);
+  utterance.rate = 0.92; utterance.pitch = 1; utterance.volume = 1;
+  const doSpeak = () => {
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v => v.lang.startsWith('en') && v.name.includes('Samantha')) || voices.find(v => v.lang.startsWith('en'));
+    if (preferred) utterance.voice = preferred;
+    window.speechSynthesis.speak(utterance);
+  };
+  utterance.onstart = () => {
+    document.getElementById('audio-label').textContent = '■ Stop';
+    document.getElementById('audio-player').classList.add('visible');
+    document.getElementById('play-icon').style.display = 'none';
+    document.getElementById('pause-icon').style.display = 'block';
+    audioGenerating = true;
+  };
+  utterance.onend = () => {
+    audioGenerating = false;
+    document.getElementById('audio-label').textContent = '▶ Listen';
+    document.getElementById('play-icon').style.display = 'block';
+    document.getElementById('pause-icon').style.display = 'none';
+    document.getElementById('audio-progress-fill').style.width = '100%';
+  };
+  utterance.onerror = () => { audioGenerating = false; document.getElementById('audio-label').textContent = '▶ Listen'; };
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) { doSpeak(); } else { window.speechSynthesis.onvoiceschanged = doSpeak; }
 }
 
-function filterSessions(type, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderSessions(type);
+function render(d) {
+  document.getElementById('loading-view').style.display = 'none';
+  const ac = d.recommendedAction.action.toLowerCase();
+  const valuesHTML = d.valuesAnalysis.map(v => `
+    <div class="vrow">
+      <div class="vrow-head">
+        <span class="vtag">${v.value}</span>
+        <span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status}</span>
+      </div>
+      <p class="content">${v.explanation}</p>
+    </div>`).join('');
+  const steps = [['opening','Opening'],['behaviorImpact','Behavior + impact'],['expectation','Expectation'],['curiosityQuestion','Curiosity question'],['alignmentStatement','Alignment statement']];
+  document.getElementById('results-card').innerHTML = `
+    <div style="margin-bottom:1.5rem"><div class="rlabel">Behavior observed</div><p class="content">${d.behaviorObserved}</p></div>
+    <hr class="divider">
+    <div style="margin-bottom:1.5rem"><div class="rlabel">Values analysis</div>${valuesHTML}</div>
+    <hr class="divider">
+    <div style="margin-bottom:1.5rem"><div class="rlabel">Impact</div><div class="igrid">
+      <div class="icard"><div class="ilabel">Client</div><p>${d.impact.client}</p></div>
+      <div class="icard"><div class="ilabel">Team</div><p>${d.impact.team}</p></div>
+      <div class="icard"><div class="ilabel">Organizational</div><p>${d.impact.organizational}</p></div>
+    </div></div>
+    <hr class="divider">
+    <div style="margin-bottom:1.5rem"><div class="rlabel">Correct behavior</div><p class="content">${d.correctBehavior}</p></div>
+    <hr class="divider">
+    <div style="margin-bottom:1.5rem"><div class="rlabel">Conversation script</div>${steps.map(([k,l]) => `<div class="slstep"><div class="slstep-label">${l}</div><div class="sblock">${d.conversationScript[k]}</div></div>`).join('')}</div>
+    <hr class="divider">
+    <div><div class="rlabel">Recommended action</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+        <span class="chip ${ac}">${d.recommendedAction.action}</span>
+        <p class="content" style="flex:1;min-width:160px;">${d.recommendedAction.reasoning}</p>
+      </div>
+    </div>`;
+  document.getElementById('results-view').style.display = 'block';
+}
+
+function downloadPDF() {
+  if (!lastResult) return;
+  const d = lastResult;
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');* { box-sizing: border-box; margin: 0; padding: 0; }body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }.header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }.header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }.header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }.header-right { text-align:right; font-size:11px; color:#888; }.section { margin-bottom: 28px; }.section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }.content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }.value-row { padding: 10px 0; border-bottom: 1px solid #eee; }.value-row:last-child { border-bottom: none; }.value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }.uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }.impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }.impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }.impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }.sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }.slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }.action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }.coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }.document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }.escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }.footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }</style></head><body><div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis Report &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div></div><div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div><div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div><div class="section"><div class="section-label">Impact</div><div class="impact-grid"><div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div><div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div><div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div></div></div><div class="section"><div class="section-label">Correct Behavior</div><p class="content">${d.correctBehavior}</p></div><div class="section"><div class="section-label">Conversation Script</div><div class="slabel">Opening</div><div class="sblock">${d.conversationScript.opening}</div><div class="slabel">Behavior + Impact</div><div class="sblock">${d.conversationScript.behaviorImpact}</div><div class="slabel">Expectation</div><div class="sblock">${d.conversationScript.expectation}</div><div class="slabel">Curiosity Question</div><div class="sblock">${d.conversationScript.curiosityQuestion}</div><div class="slabel">Alignment Statement</div><div class="sblock">${d.conversationScript.alignmentStatement}</div></div><div class="section"><div class="section-label">Recommended Action</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div><div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div></body></html>`;
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, '_blank');
+  if (win) { win.onload = () => { win.print(); }; }
+}
+
+function restart() {
+  document.getElementById('results-view').style.display = 'none';
+  document.getElementById('f-situation').value = '';
+  document.querySelectorAll('input[name="pattern"]').forEach(r => r.checked = false);
+  document.getElementById('pattern-first-label').style.borderColor = 'var(--border2)';
+  document.getElementById('pattern-repeated-label').style.borderColor = 'var(--border2)';
+  document.getElementById('f-values').value = '';
+  lastResult = null; orgValues = [];
+  document.getElementById('audio-btn').disabled = false;
+  document.getElementById('audio-spin').style.display = 'none';
+  document.getElementById('audio-label').textContent = '\u25B6 Listen';
+  document.getElementById('audio-player').classList.remove('visible');
+  document.getElementById('audio-progress-fill').style.width = '0%';
+  document.getElementById('audio-time').textContent = '0:00 / 0:00';
+  document.getElementById('play-icon').style.display = 'block';
+  document.getElementById('pause-icon').style.display = 'none';
+  window.speechSynthesis.cancel();
+  audioGenerating = false;
+  document.getElementById('step-1').style.display = 'block';
 }
 </script>
 </body>
