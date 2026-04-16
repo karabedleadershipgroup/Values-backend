@@ -96,9 +96,70 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .footer p { font-size: 11px; color: var(--text3); font-weight: 300; }
 .footer strong { color: var(--gold); font-weight: 500; }
 @media (max-width: 500px) { .hero h1 { font-size: 38px; } .admin-link { font-size: 11px; padding: 5px 10px; } }
+
+.splash-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--navy); z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+}
+.splash-card {
+  background: var(--white); border-radius: var(--rl);
+  padding: 2.5rem 2rem; max-width: 480px; width: 100%;
+  text-align: center;
+}
+.splash-title {
+  font-family: 'Playfair Display', serif; font-size: 22px;
+  font-weight: 700; color: var(--navy); margin-bottom: 0.5rem;
+}
+.splash-subtitle {
+  font-size: 11px; color: var(--gold); text-transform: uppercase;
+  letter-spacing: 0.2em; margin-bottom: 1.5rem;
+}
+.splash-body {
+  font-size: 13px; color: var(--text2); line-height: 1.75;
+  font-weight: 300; margin-bottom: 1.5rem; text-align: left;
+}
+.splash-agree {
+  display: flex; align-items: flex-start; gap: 10px;
+  text-align: left; margin-bottom: 1.5rem;
+  padding: 14px; background: var(--bg);
+  border-radius: var(--r); border: 1px solid var(--border2);
+}
+.splash-agree input { margin-top: 2px; accent-color: var(--navy); flex-shrink: 0; cursor: pointer; }
+.splash-agree label { font-size: 13px; color: var(--text2); font-weight: 300; line-height: 1.6; cursor: pointer; }
+.btn-enter {
+  width: 100%; padding: 14px; background: var(--navy); color: var(--gold);
+  border: none; border-radius: var(--r); font-size: 14px; font-weight: 500;
+  cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.05em;
+  transition: opacity 0.15s;
+}
+.btn-enter:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-enter:not(:disabled):hover { opacity: 0.88; }
 </style>
 </head>
 <body>
+
+
+<div class="splash-overlay" id="splash-overlay">
+  <div class="splash-card">
+    <div class="splash-title">Values Lab</div>
+    <div class="splash-subtitle">By Karabed Leadership Group</div>
+    <div class="splash-body">
+      <p>This application is currently in a <strong>testing phase</strong>. By entering, you agree to the following:</p>
+      <ul style="margin-top:0.75rem;padding-left:1.25rem;display:flex;flex-direction:column;gap:6px;">
+        <li>All content generated within this app is <strong>strictly confidential</strong>.</li>
+        <li>This tool is to be used <strong>solely for the purpose of providing feedback to Karabed Leadership Group</strong>.</li>
+        <li>You will not use outputs for any other purpose, share them externally, or reproduce them without written permission.</li>
+      </ul>
+    </div>
+    <div class="splash-agree">
+      <input type="checkbox" id="agree-check" onchange="toggleEnter()">
+      <label for="agree-check">I understand and agree to use this app only to provide feedback to Karabed Leadership Group, and to keep all content confidential.</label>
+    </div>
+    <button class="btn-enter" id="enter-btn" disabled onclick="enterApp()">Enter Values Lab</button>
+  </div>
+</div>
 
 <div class="hero">
   <a href="/admin.html" class="admin-link">Admin login</a>
@@ -119,10 +180,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   <div class="lab">Lab</div>
   <div class="byline">By Karabed Leadership Group</div>
   <p>A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
-</div>
-
-<div class="confidentiality-bar">
-  <p>This app is currently in a testing phase. Please keep all content and outputs confidential. Thank you for your partnership.</p>
 </div>
 
 <div class="main">
@@ -237,6 +294,20 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 </div>
 
 <script>
+
+function toggleEnter() {
+  document.getElementById('enter-btn').disabled = !document.getElementById('agree-check').checked;
+}
+function enterApp() {
+  document.getElementById('splash-overlay').style.display = 'none';
+  sessionStorage.setItem('vl_agreed', '1');
+}
+document.addEventListener('DOMContentLoaded', function() {
+  if (sessionStorage.getItem('vl_agreed') === '1') {
+    document.getElementById('splash-overlay').style.display = 'none';
+  }
+});
+
 let orgValues = [];
 let lastResult = null;
 let currentAudio = null;
@@ -387,7 +458,7 @@ function render(d) {
       <div class="icard"><div class="ilabel">Organizational</div><p>${d.impact.organizational}</p></div>
     </div></div>
     <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">Correct behavior</div><p class="content">${d.correctBehavior}</p></div>
+    <div style="margin-bottom:1.5rem"><div class="rlabel">Values-aligned behavior</div><p class="content">${d.correctBehavior}</p></div>
     <hr class="divider">
     <div style="margin-bottom:1.5rem"><div class="rlabel">Conversation script</div>
       ${scriptSteps.map(([k,l]) => `<div class="slstep"><div class="slstep-label">${l}</div><div class="sblock">${d.conversationScript[k]}</div></div>`).join('')}
@@ -511,7 +582,7 @@ function downloadPDF() {
     ['expectation','Expectation'],
     ['alignmentStatement','Alignment Statement']
   ];
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');* { box-sizing: border-box; margin: 0; padding: 0; }body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }.header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }.header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }.header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }.header-right { text-align:right; font-size:11px; color:#888; }.section { margin-bottom: 28px; }.section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }.content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }.staff-reality { background: #eaf5f0; border: 1px solid #7ecbb0; border-radius: 6px; padding: 12px 14px; font-size: 13px; color: #1a3a2a; line-height: 1.75; font-weight: 300; }.value-row { padding: 10px 0; border-bottom: 1px solid #eee; }.value-row:last-child { border-bottom: none; }.value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }.uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }.impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }.impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }.impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }.sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }.slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }.action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }.coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }.document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }.escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }.footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }</style></head><body><div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis Report &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div></div><div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div><div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status==='Misaligned'?'mis':'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div><div class="section"><div class="section-label">Staff Reality</div><div class="staff-reality">${d.staffReality}</div></div><div class="section"><div class="section-label">Impact</div><div class="impact-grid"><div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div><div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div><div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div></div></div><div class="section"><div class="section-label">Correct Behavior</div><p class="content">${d.correctBehavior}</p></div><div class="section"><div class="section-label">Conversation Script</div>${scriptSteps.map(([k,l])=>`<div class="slabel">${l}</div><div class="sblock">${d.conversationScript[k]}</div>`).join('')}</div><div class="section"><div class="section-label">Recommended Action</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div><div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div></body></html>`;
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');* { box-sizing: border-box; margin: 0; padding: 0; }body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }.header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }.header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }.header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }.header-right { text-align:right; font-size:11px; color:#888; }.section { margin-bottom: 28px; }.section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }.content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }.staff-reality { background: #eaf5f0; border: 1px solid #7ecbb0; border-radius: 6px; padding: 12px 14px; font-size: 13px; color: #1a3a2a; line-height: 1.75; font-weight: 300; }.value-row { padding: 10px 0; border-bottom: 1px solid #eee; }.value-row:last-child { border-bottom: none; }.value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }.uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }.impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }.impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }.impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }.sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }.slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }.action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }.coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }.document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }.escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }.footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }</style></head><body><div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis Report &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div></div><div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div><div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status==='Misaligned'?'mis':'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div><div class="section"><div class="section-label">Staff Reality</div><div class="staff-reality">${d.staffReality}</div></div><div class="section"><div class="section-label">Impact</div><div class="impact-grid"><div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div><div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div><div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div></div></div><div class="section"><div class="section-label">Values-Aligned Behavior</div><p class="content">${d.correctBehavior}</p></div><div class="section"><div class="section-label">Conversation Script</div>${scriptSteps.map(([k,l])=>`<div class="slabel">${l}</div><div class="sblock">${d.conversationScript[k]}</div>`).join('')}</div><div class="section"><div class="section-label">Recommended Action</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div><div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div></body></html>`;
   const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
   const win = window.open(url, '_blank');
