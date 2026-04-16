@@ -96,7 +96,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 }
 .preview-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
 
-.dash-body { padding: 2rem; max-width: 1100px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 1.5rem; }
+.dash-body { padding: 2rem; max-width: 100%; margin: 0; width: 100%; display: flex; flex-direction: column; gap: 1.5rem; }
 
 /* Metrics */
 .metrics-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
@@ -227,6 +227,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <div class="dash-wrap" id="dash-view">
   <div class="dash-header">
     <div class="dash-header-left">
+      <svg width="36" height="36" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+        <rect width="80" height="80" rx="18" fill="#0D1B2A"/>
+        <rect x="12" y="12" width="56" height="56" stroke="#F5F1E8" stroke-width="1.5" fill="none"/>
+        <line x1="30.67" y1="12" x2="30.67" y2="68" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+        <line x1="49.33" y1="12" x2="49.33" y2="68" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+        <line x1="12" y1="30.67" x2="68" y2="30.67" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+        <line x1="12" y1="49.33" x2="68" y2="49.33" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
+        <rect x="31" y="12.5" width="18.33" height="55" fill="#C6A75E" opacity="0.2"/>
+        <line x1="21" y1="21" x2="59" y2="59" stroke="#C6A75E" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="40" cy="40" r="4.5" fill="#C6A75E"/>
+      </svg>
       <div class="dash-wordmark">Values <span>Lab</span></div>
       <div class="dash-org-pill" id="dash-org-name">Organization</div>
     </div>
