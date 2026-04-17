@@ -145,23 +145,23 @@ textarea.values-input { min-height: 120px; resize: vertical; }
   <div class="splash-card"><div style="text-align:right; margin-bottom: 0.75rem;">
   <button onclick="toggleLanguage()" id="lang-btn-splash" style="font-size:12px; color:var(--gold); background:none; border:1px solid rgba(201,168,76,0.5); border-radius:6px; padding:5px 12px; cursor:pointer; font-family:'DM Sans',sans-serif;">Español</button>
 </div>
-    <div class="splash-title">Values Lab</div>
-    <div class="splash-subtitle">By Karabed Leadership Group</div>
+    <div class="splash-title" id="splash-title">Values Lab</div>
+    <div class="splash-subtitle" id="splash-subtitle">By Karabed Leadership Group</div>
     <div class="splash-body">
-      <p>Welcome, and thank you for being part of this journey. Values Lab is in its early testing phase, and your presence here is a gift to this work.</p>
-      <p style="margin-top:0.75rem;">This is a shared space of trust. Everything generated inside — the guidance, the scripts, the analysis — is confidential and intended solely to support your feedback to Karabed Leadership Group as we shape this tool together.</p>
-      <p style="margin-top:0.75rem;">We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.</p>
+      <p id="splash-p1">Welcome, and thank you for being part of this journey. Values Lab is in its early testing phase, and your presence here is a gift to this work.</p>
+      <p style="margin-top:0.75rem;" id="splash-p2">This is a shared space of trust. Everything generated inside — the guidance, the scripts, the analysis — is confidential and intended solely to support your feedback to Karabed Leadership Group as we shape this tool together.</p>
+      <p style="margin-top:0.75rem;" id="splash-p3">We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.</p>
     </div>
     <div class="splash-agree">
       <input type="checkbox" id="agree-check" onchange="toggleEnter()">
-      <label for="agree-check">I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.</label>
+      <label for="agree-check" id="splash-agree-label">I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.</label>
     </div>
     <button class="btn-enter" id="enter-btn" disabled onclick="enterApp()">Enter Values Lab</button>
   </div>
 </div>
 
 <div class="hero">
-  <button onclick="toggleLanguage()" id="lang-btn-hero" style="position:absolute; top:20px; left:24px; font-size:12px; font-weight:500; color:var(--gold); background:none; border:1px solid rgba(201,168,76,0.4); border-radius:6px; padding:6px 14px; letter-spacing:0.04em; cursor:pointer; font-family:'DM Sans',sans-serif;">Español</button><a href="/admin.html" class="admin-link">Admin login</a>
+  <button onclick="toggleLanguage()" id="lang-btn-hero" style="position:absolute; top:20px; left:24px; font-size:12px; font-weight:500; color:var(--gold); background:none; border:1px solid rgba(201,168,76,0.4); border-radius:6px; padding:6px 14px; letter-spacing:0.04em; cursor:pointer; font-family:'DM Sans',sans-serif;">Español</button><a href="/admin.html" class="admin-link" id="admin-link">Admin login</a>
   <div style="margin:0 auto 1.5rem; display:flex; flex-direction:column; align-items:center; gap:10px;">
     <svg width="72" height="72" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="80" height="80" rx="18" fill="#0D1B2A"/>
@@ -175,23 +175,23 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       <circle cx="40" cy="40" r="4.5" fill="#C6A75E"/>
     </svg>
   </div>
-  <h1>Values</h1>
-  <div class="lab">Lab</div>
-  <div class="byline">By Karabed Leadership Group</div>
-  <p>A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
+  <h1 id="hero-title">Values</h1>
+  <div class="lab" id="hero-tagline">Lab</div>
+  <div class="byline" id="hero-byline">By Karabed Leadership Group</div>
+  <p id="hero-description">A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
 </div>
 
 <div class="main">
 
 <div id="step-1">
   <div class="card">
-    <div class="step-badge">Step 1 of 2</div>
-    <div class="field-label">What are your organizational values?</div>
+    <div class="step-badge" id="step-1-badge">Step 1 of 2</div>
+    <div class="field-label" id="step-1-label">What are your organizational values?</div>
     <input type="text" class="values-input" id="f-values" placeholder="Ex: Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability" />
-    <div class="field-hint">Type your own or tap values below to add them.</div>
+    <div class="field-hint" id="step-1-hint">Type your own or tap values below to add them.</div>
     <div id="values-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:28px;"></div>
     <div style="margin-top:1rem;">
-      <div class="field-label" style="margin-bottom:8px;">Common nonprofit values — tap to add</div>
+      <div class="field-label" id="common-values-label" style="margin-bottom:8px;">Common nonprofit values — tap to add</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;">
         <button class="preset-pill" onclick="addPreset('Client-Centered')">Client-Centered</button>
         <button class="preset-pill" onclick="addPreset('Respect')">Respect</button>
@@ -224,50 +224,50 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       </div>
     </div>
     <div id="err-1" class="err" style="display:none"></div>
-    <button class="btn-continue" onclick="goStep2()">Continue</button>
+    <button class="btn-continue" id="continue-btn-1" onclick="goStep2()">Continue</button>
   </div>
 </div>
 
 <div id="step-2" style="display:none">
   <div class="card">
-    <div class="step-badge">Step 2 of 2</div>
-    <div class="field-label">Describe the staff's behavior</div>
+    <div class="step-badge" id="step-2-badge">Step 2 of 2</div>
+    <div class="field-label" id="step-2-label">Describe the staff's behavior</div>
     <textarea class="values-input" id="f-situation" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID. Other staff witnessed the interaction."></textarea>
     <div style="margin-top:1.25rem;">
-      <div class="field-label">Is this the first time or a repeated behavior?</div>
+      <div class="field-label" id="pattern-label">Is this the first time or a repeated behavior?</div>
       <div style="display:flex;gap:10px;margin-top:0.5rem;flex-wrap:wrap;">
         <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;flex:1;min-width:140px;background:var(--white);transition:all 0.15s;" id="pattern-first-label">
           <input type="radio" name="pattern" value="first" id="pattern-first" style="accent-color:var(--navy);" onchange="selectPattern()">
-          <span style="font-size:13px;font-weight:300;color:var(--text2);">First time</span>
+          <span id="pattern-first-text" style="font-size:13px;font-weight:300;color:var(--text2);">First time</span>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;flex:1;min-width:140px;background:var(--white);transition:all 0.15s;" id="pattern-repeated-label">
           <input type="radio" name="pattern" value="repeated" id="pattern-repeated" style="accent-color:var(--navy);" onchange="selectPattern()">
-          <span style="font-size:13px;font-weight:300;color:var(--text2);">Repeated behavior</span>
+          <span id="pattern-repeated-text" style="font-size:13px;font-weight:300;color:var(--text2);">Repeated behavior</span>
         </label>
       </div>
     </div>
     <div id="err-2" class="err" style="display:none"></div>
     <div style="display:flex;gap:10px;margin-top:1.25rem;">
-      <button class="btn-back" onclick="goStep1()">← Back</button>
-      <button class="btn-continue" style="margin-top:0;flex:1;" onclick="generate()">Get guidance →</button>
+      <button class="btn-back" id="back-btn" onclick="goStep1()">← Back</button>
+      <button class="btn-continue" id="generate-btn" style="margin-top:0;flex:1;" onclick="generate()">Get guidance →</button>
     </div>
   </div>
 </div>
 
 <div id="loading-view" style="display:none">
-  <div class="loading"><div class="spinner"></div><span>Analyzing through a values-based lens...</span></div>
+  <div class="loading"><div class="spinner"></div><span id="loading-text">Analyzing through a values-based lens...</span></div>
 </div>
 
 <div id="results-view" style="display:none">
   <div class="results-header">
-    <div class="results-label">Leadership guidance</div>
+    <div class="results-label" id="results-label">Leadership guidance</div>
     <div class="header-btns">
       <button class="btn-audio" id="audio-btn" onclick="listenToSummary()">
         <div class="audio-spin" id="audio-spin"></div>
         <span id="audio-label">&#9654; Listen</span>
       </button>
       <button class="btn-audio" id="pdf-btn" onclick="downloadPDF()" style="background:var(--gold);color:var(--navy);">&#8595; PDF</button>
-      <button class="btn-restart" onclick="restart()">Start over</button>
+      <button class="btn-restart" id="restart-btn" onclick="restart()">Start over</button>
     </div>
   </div>
 
@@ -293,6 +293,8 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 </div>
 
 <script>
+
+let currentLang = 'en';
 
 function toggleEnter() {
   document.getElementById('enter-btn').disabled = !document.getElementById('agree-check').checked;
@@ -336,7 +338,7 @@ function goStep2() {
   const raw = document.getElementById('f-values').value.trim();
   const err = document.getElementById('err-1');
   const values = raw.split(',').map(v => v.trim()).filter(v => v.length > 0);
-  if (values.length < 2) { err.textContent = 'Please enter at least two values separated by commas.'; err.style.display = 'block'; return; }
+  if (values.length < 2) { err.textContent = currentLang === 'es' ? 'Por favor ingrese al menos dos valores separados por comas.' : 'Please enter at least two values separated by commas.'; err.style.display = 'block'; return; }
   err.style.display = 'none';
   orgValues = values;
   document.getElementById('step-1').style.display = 'none';
@@ -360,8 +362,8 @@ async function generate() {
   const situation = document.getElementById('f-situation').value.trim();
   const pattern = document.querySelector('input[name="pattern"]:checked')?.value;
   const err = document.getElementById('err-2');
-  if (!situation || situation.length < 15) { err.textContent = "Please describe the staff's behavior in more detail."; err.style.display = 'block'; return; }
-  if (!pattern) { err.textContent = 'Please indicate if this is a first-time or repeated behavior.'; err.style.display = 'block'; return; }
+  if (!situation || situation.length < 15) { err.textContent = currentLang === 'es' ? "Por favor describa el comportamiento del miembro del personal con más detalle." : "Please describe the staff's behavior in more detail."; err.style.display = 'block'; return; }
+  if (!pattern) { err.textContent = currentLang === 'es' ? 'Por favor indique si este es un comportamiento de primera vez o repetido.' : 'Please indicate if this is a first-time or repeated behavior.'; err.style.display = 'block'; return; }
   err.style.display = 'none';
   document.getElementById('step-2').style.display = 'none';
   document.getElementById('loading-view').style.display = 'block';
@@ -388,6 +390,8 @@ Trauma-informed tone guidelines:
 IMPORTANT — adjust based on behavior pattern:
 - If FIRST TIME: coaching and curiosity-based tone. Assume positive intent. Focus on awareness and correction.
 - If REPEATED: firmer accountability tone. Acknowledge the pattern explicitly. Recommend documentation or escalation depending on severity.
+
+${currentLang === 'es' ? 'CRITICAL: Respond entirely in Spanish. All text in the JSON response must be in Spanish, including all explanations, scripts, staffReality, impact descriptions, and reasoning. Use warm, professional Spanish appropriate for social services leadership. Keep the JSON keys in English but all values in Spanish. The "status" field should remain as "Misaligned" or "Upheld" in English (these are internal codes). The "action" field should remain as "Coach", "Document", or "Escalate" in English.' : ''}
 
 Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 
@@ -428,46 +432,84 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 function render(d) {
   document.getElementById('loading-view').style.display = 'none';
   const ac = d.recommendedAction.action.toLowerCase();
+  const L = currentLang === 'es' ? {
+    behaviorObserved: 'Comportamiento observado',
+    valuesAnalysis: 'Análisis de valores',
+    misaligned: 'Desalineado',
+    upheld: 'Sostenido',
+    staffReality: 'Realidad del personal',
+    impact: 'Impacto',
+    client: 'Cliente',
+    team: 'Equipo',
+    organizational: 'Organizacional',
+    correctBehavior: 'Comportamiento alineado con los valores',
+    conversationScript: 'Guion de conversación',
+    opening: 'Apertura',
+    curiosityQuestion: 'Pregunta de curiosidad',
+    behaviorImpact: 'Comportamiento + impacto',
+    expectation: 'Expectativa',
+    alignmentStatement: 'Declaración de alineación',
+    recommendedAction: 'Acción recomendada'
+  } : {
+    behaviorObserved: 'Behavior observed',
+    valuesAnalysis: 'Values analysis',
+    misaligned: 'Misaligned',
+    upheld: 'Upheld',
+    staffReality: 'Staff reality',
+    impact: 'Impact',
+    client: 'Client',
+    team: 'Team',
+    organizational: 'Organizational',
+    correctBehavior: 'Values-aligned behavior',
+    conversationScript: 'Conversation script',
+    opening: 'Opening',
+    curiosityQuestion: 'Curiosity question',
+    behaviorImpact: 'Behavior + impact',
+    expectation: 'Expectation',
+    alignmentStatement: 'Alignment statement',
+    recommendedAction: 'Recommended action'
+  };
+
   const valuesHTML = d.valuesAnalysis.map(v => `
     <div class="vrow">
       <div class="vrow-head">
         <span class="vtag">${v.value}</span>
-        <span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status}</span>
+        <span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status === 'Misaligned' ? L.misaligned : L.upheld}</span>
       </div>
       <p class="content">${v.explanation}</p>
     </div>`).join('');
 
   const scriptSteps = [
-    ['opening','Opening'],
-    ['curiosityQuestion','Curiosity question'],
-    ['behaviorImpact','Behavior + impact'],
-    ['expectation','Expectation'],
-    ['alignmentStatement','Alignment statement']
+    ['opening', L.opening],
+    ['curiosityQuestion', L.curiosityQuestion],
+    ['behaviorImpact', L.behaviorImpact],
+    ['expectation', L.expectation],
+    ['alignmentStatement', L.alignmentStatement]
   ];
 
   document.getElementById('results-card').innerHTML = `
-    <div style="margin-bottom:1.5rem"><div class="rlabel">Behavior observed</div><p class="content">${d.behaviorObserved}</p></div>
+    <div style="margin-bottom:1.5rem"><div class="rlabel">${L.behaviorObserved}</div><p class="content">${d.behaviorObserved}</p></div>
     <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">Values analysis</div>${valuesHTML}</div>
+    <div style="margin-bottom:1.5rem"><div class="rlabel">${L.valuesAnalysis}</div>${valuesHTML}</div>
     <hr class="divider">
     <div style="margin-bottom:1.5rem">
-      <div class="rlabel">Staff reality</div>
+      <div class="rlabel">${L.staffReality}</div>
       <div class="staff-reality">${d.staffReality}</div>
     </div>
     <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">Impact</div><div class="igrid">
-      <div class="icard"><div class="ilabel">Client</div><p>${d.impact.client}</p></div>
-      <div class="icard"><div class="ilabel">Team</div><p>${d.impact.team}</p></div>
-      <div class="icard"><div class="ilabel">Organizational</div><p>${d.impact.organizational}</p></div>
+    <div style="margin-bottom:1.5rem"><div class="rlabel">${L.impact}</div><div class="igrid">
+      <div class="icard"><div class="ilabel">${L.client}</div><p>${d.impact.client}</p></div>
+      <div class="icard"><div class="ilabel">${L.team}</div><p>${d.impact.team}</p></div>
+      <div class="icard"><div class="ilabel">${L.organizational}</div><p>${d.impact.organizational}</p></div>
     </div></div>
     <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">Values-aligned behavior</div><p class="content">${d.correctBehavior}</p></div>
+    <div style="margin-bottom:1.5rem"><div class="rlabel">${L.correctBehavior}</div><p class="content">${d.correctBehavior}</p></div>
     <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">Conversation script</div>
+    <div style="margin-bottom:1.5rem"><div class="rlabel">${L.conversationScript}</div>
       ${scriptSteps.map(([k,l]) => `<div class="slstep"><div class="slstep-label">${l}</div><div class="sblock">${d.conversationScript[k]}</div></div>`).join('')}
     </div>
     <hr class="divider">
-    <div><div class="rlabel">Recommended action</div>
+    <div><div class="rlabel">${L.recommendedAction}</div>
       <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
         <span class="chip ${ac}">${d.recommendedAction.action}</span>
         <p class="content" style="flex:1;min-width:160px;">${d.recommendedAction.reasoning}</p>
@@ -486,7 +528,7 @@ async function listenToSummary() {
   if (currentAudio) {
     currentAudio.pause();
     currentAudio = null;
-    label.textContent = '▶ Listen';
+    label.textContent = currentLang === 'es' ? '▶ Escuchar' : '▶ Listen';
     spin.style.display = 'none';
     document.getElementById('audio-player').classList.remove('visible');
     document.getElementById('play-icon').style.display = 'block';
@@ -495,12 +537,14 @@ async function listenToSummary() {
   }
 
   const d = lastResult;
-  const misaligned = d.valuesAnalysis.filter(v => v.status === 'Misaligned').map(v => v.value).join(', ') || 'none identified';
+  const misaligned = d.valuesAnalysis.filter(v => v.status === 'Misaligned').map(v => v.value).join(', ') || (currentLang === 'es' ? 'ninguno identificado' : 'none identified');
   const script = d.conversationScript;
-  const text = `Here is your leadership guidance summary. ${d.behaviorObserved}. The values that were misaligned are: ${misaligned}. Regarding what may be going on for this staff member: ${d.staffReality}. The impact on the client was: ${d.impact.client}. When you speak with this staff member, open by saying: ${script.opening}. Then ask: ${script.curiosityQuestion}. Then say: ${script.behaviorImpact}. Your recommended next step is to ${d.recommendedAction.action.toLowerCase()} this staff member. ${d.recommendedAction.reasoning}.`;
+  const text = currentLang === 'es'
+    ? `Aquí está el resumen de su guía de liderazgo. ${d.behaviorObserved}. Los valores que estuvieron desalineados son: ${misaligned}. Respecto a lo que puede estar pasando con este miembro del personal: ${d.staffReality}. El impacto en el cliente fue: ${d.impact.client}. Cuando hable con este miembro del personal, abra diciendo: ${script.opening}. Luego pregunte: ${script.curiosityQuestion}. Luego diga: ${script.behaviorImpact}. Su próximo paso recomendado es ${d.recommendedAction.action.toLowerCase()} a este miembro del personal. ${d.recommendedAction.reasoning}.`
+    : `Here is your leadership guidance summary. ${d.behaviorObserved}. The values that were misaligned are: ${misaligned}. Regarding what may be going on for this staff member: ${d.staffReality}. The impact on the client was: ${d.impact.client}. When you speak with this staff member, open by saying: ${script.opening}. Then ask: ${script.curiosityQuestion}. Then say: ${script.behaviorImpact}. Your recommended next step is to ${d.recommendedAction.action.toLowerCase()} this staff member. ${d.recommendedAction.reasoning}.`;
 
   spin.style.display = 'inline-block';
-  label.textContent = 'Loading...';
+  label.textContent = currentLang === 'es' ? 'Cargando...' : 'Loading...';
   btn.disabled = true;
 
   try {
@@ -522,7 +566,7 @@ async function listenToSummary() {
     });
 
     currentAudio.addEventListener('ended', () => {
-      label.textContent = '▶ Listen';
+      label.textContent = currentLang === 'es' ? '▶ Escuchar' : '▶ Listen';
       spin.style.display = 'none';
       btn.disabled = false;
       document.getElementById('play-icon').style.display = 'block';
@@ -535,15 +579,15 @@ async function listenToSummary() {
     document.getElementById('play-icon').style.display = 'none';
     document.getElementById('pause-icon').style.display = 'block';
     spin.style.display = 'none';
-    label.textContent = '■ Stop';
+    label.textContent = currentLang === 'es' ? '■ Detener' : '■ Stop';
     btn.disabled = false;
     currentAudio.play();
 
   } catch (e) {
     spin.style.display = 'none';
-    label.textContent = '▶ Listen';
+    label.textContent = currentLang === 'es' ? '▶ Escuchar' : '▶ Listen';
     btn.disabled = false;
-    alert('Audio unavailable. Please try again.');
+    alert(currentLang === 'es' ? 'Audio no disponible. Por favor intente de nuevo.' : 'Audio unavailable. Please try again.');
   }
 }
 
@@ -603,7 +647,7 @@ function restart() {
   lastResult = null; orgValues = [];
   document.getElementById('audio-btn').disabled = false;
   document.getElementById('audio-spin').style.display = 'none';
-  document.getElementById('audio-label').textContent = '\u25B6 Listen';
+  document.getElementById('audio-label').textContent = currentLang === 'es' ? '\u25B6 Escuchar' : '\u25B6 Listen';
   document.getElementById('audio-player').classList.remove('visible');
   document.getElementById('audio-progress-fill').style.width = '0%';
   document.getElementById('audio-time').textContent = '0:00 / 0:00';
@@ -611,7 +655,82 @@ function restart() {
   document.getElementById('pause-icon').style.display = 'none';
   document.getElementById('step-1').style.display = 'block';
 }
-let currentLang = 'en';
+
+const translations = {
+  'splash-title': { en: 'Values Lab', es: 'Laboratorio de Valores' },
+  'splash-subtitle': { en: 'By Karabed Leadership Group', es: 'Por Karabed Leadership Group' },
+  'splash-p1': {
+    en: 'Welcome, and thank you for being part of this journey. Values Lab is in its early testing phase, and your presence here is a gift to this work.',
+    es: 'Bienvenido, y gracias por ser parte de este camino. Values Lab está en su fase inicial de prueba, y su presencia aquí es un regalo para este trabajo.'
+  },
+  'splash-p2': {
+    en: 'This is a shared space of trust. Everything generated inside — the guidance, the scripts, the analysis — is confidential and intended solely to support your feedback to Karabed Leadership Group as we shape this tool together.',
+    es: 'Este es un espacio compartido de confianza. Todo lo que se genera aquí, la guía, los guiones, el análisis, es confidencial y tiene como único propósito apoyar su retroalimentación a Karabed Leadership Group mientras damos forma a esta herramienta juntos.'
+  },
+  'splash-p3': {
+    en: 'We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.',
+    es: 'Estamos profundamente agradecidos por su colaboración. Lo que comparte aquí nos ayuda a construir algo que verdaderamente sirve a los líderes y a las comunidades que apoyan.'
+  },
+  'splash-agree-label': {
+    en: "I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.",
+    es: 'Estoy aquí para explorar Values Lab y ofrecer mi retroalimentación a Karabed Leadership Group. Mantendré toda la información aquí de manera confidencial y usaré este espacio solo para ese propósito.'
+  },
+  'enter-btn': { en: 'Enter Values Lab', es: 'Entrar a Values Lab' },
+  'admin-link': { en: 'Admin login', es: 'Acceso administrador' },
+  'hero-title': { en: 'Values', es: 'Valores' },
+  'hero-tagline': { en: 'Lab', es: 'Laboratorio' },
+  'hero-byline': { en: 'By Karabed Leadership Group', es: 'Por Karabed Leadership Group' },
+  'hero-description': {
+    en: "A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.",
+    es: 'Una herramienta de respuesta de liderazgo informada por el trauma. Ingrese los valores de su organización, describa el comportamiento de un miembro del personal, y reciba guía estructurada basada en lo que representa su cultura.'
+  },
+  'step-1-badge': { en: 'Step 1 of 2', es: 'Paso 1 de 2' },
+  'step-1-label': { en: 'What are your organizational values?', es: '¿Cuáles son los valores de su organización?' },
+  'step-1-hint': { en: 'Type your own or tap values below to add them.', es: 'Escriba los suyos o toque los valores de abajo para agregarlos.' },
+  'common-values-label': { en: 'Common nonprofit values — tap to add', es: 'Valores comunes en organizaciones — toque para agregar' },
+  'continue-btn-1': { en: 'Continue', es: 'Continuar' },
+  'step-2-badge': { en: 'Step 2 of 2', es: 'Paso 2 de 2' },
+  'step-2-label': { en: "Describe the staff's behavior", es: 'Describa el comportamiento del miembro del personal' },
+  'pattern-label': { en: 'Is this the first time or a repeated behavior?', es: '¿Es la primera vez o un comportamiento repetido?' },
+  'pattern-first-text': { en: 'First time', es: 'Primera vez' },
+  'pattern-repeated-text': { en: 'Repeated behavior', es: 'Comportamiento repetido' },
+  'back-btn': { en: '← Back', es: '← Atrás' },
+  'generate-btn': { en: 'Get guidance →', es: 'Obtener guía →' },
+  'loading-text': { en: 'Analyzing through a values-based lens...', es: 'Analizando a través de un lente basado en valores...' },
+  'results-label': { en: 'Leadership guidance', es: 'Guía de liderazgo' },
+  'restart-btn': { en: 'Start over', es: 'Comenzar de nuevo' }
+};
+
+const valueTranslations = {
+  'Client-Centered': 'Centrado en el Cliente',
+  'Respect': 'Respeto',
+  'Integrity': 'Integridad',
+  'Collaboration': 'Colaboración',
+  'Accountability': 'Responsabilidad',
+  'Equity': 'Equidad',
+  'DEIB': 'DEIP',
+  'Inclusion': 'Inclusión',
+  'Diversity': 'Diversidad',
+  'Belonging': 'Pertenencia',
+  'Transparency': 'Transparencia',
+  'Compassion': 'Compasión',
+  'Empathy': 'Empatía',
+  'Trauma-Informed Care': 'Cuidado Informado por el Trauma',
+  'Adaptability': 'Adaptabilidad',
+  'Innovation': 'Innovación',
+  'Excellence': 'Excelencia',
+  'Stewardship': 'Mayordomía',
+  'Community': 'Comunidad',
+  'Empowerment': 'Empoderamiento',
+  'Dignity': 'Dignidad',
+  'Justice': 'Justicia',
+  'Safety': 'Seguridad',
+  'Servant Leadership': 'Liderazgo de Servicio',
+  'Humility': 'Humildad',
+  'Courage': 'Coraje',
+  'Trust': 'Confianza',
+  'Wellness': 'Bienestar'
+};
 
 function toggleLanguage() {
   currentLang = currentLang === 'en' ? 'es' : 'en';
@@ -620,7 +739,66 @@ function toggleLanguage() {
   const heroBtn = document.getElementById('lang-btn-hero');
   if (splashBtn) splashBtn.textContent = newLabel;
   if (heroBtn) heroBtn.textContent = newLabel;
-  alert(currentLang === 'es' ? 'Spanish mode activated' : 'English mode activated');
-}</script>
+  document.documentElement.lang = currentLang;
+  applyTranslations();
+}
+
+function applyTranslations() {
+  for (const id in translations) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = translations[id][currentLang];
+  }
+  const valuesInput = document.getElementById('f-values');
+  const situationInput = document.getElementById('f-situation');
+  if (valuesInput) {
+    valuesInput.placeholder = currentLang === 'es'
+      ? 'Ej: Centrado en el Cliente, Respeto, DEIP, Integridad, Colaboración, Adaptabilidad'
+      : 'Ex: Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability';
+  }
+  if (situationInput) {
+    situationInput.placeholder = currentLang === 'es'
+      ? 'Ejemplo: Un miembro del personal alzó la voz a un cliente durante la admisión cuando el cliente no podía encontrar su identificación. Otros miembros del personal presenciaron la interacción.'
+      : 'Example: A staff member raised their voice at a client during intake when the client could not locate their ID. Other staff witnessed the interaction.';
+  }
+  const audioLabel = document.getElementById('audio-label');
+  if (audioLabel && !currentAudio) {
+    audioLabel.textContent = currentLang === 'es' ? '▶ Escuchar' : '▶ Listen';
+  }
+
+  // Translate the value preset buttons
+  document.querySelectorAll('.preset-pill').forEach(btn => {
+    const onclickAttr = btn.getAttribute('onclick');
+    const match = onclickAttr && onclickAttr.match(/addPreset\('([^']+)'\)/);
+    if (match) {
+      const currentValue = match[1];
+      if (currentLang === 'es' && valueTranslations[currentValue]) {
+        btn.textContent = valueTranslations[currentValue];
+        btn.setAttribute('onclick', `addPreset('${valueTranslations[currentValue]}')`);
+      } else if (currentLang === 'en') {
+        const englishKey = Object.keys(valueTranslations).find(k => valueTranslations[k] === currentValue);
+        if (englishKey) {
+          btn.textContent = englishKey;
+          btn.setAttribute('onclick', `addPreset('${englishKey}')`);
+        }
+      }
+    }
+  });
+
+  // Also translate any values already in the input field
+  if (valuesInput && valuesInput.value.trim()) {
+    const currentValues = valuesInput.value.split(',').map(v => v.trim()).filter(v => v);
+    const translatedValues = currentValues.map(v => {
+      if (currentLang === 'es') {
+        return valueTranslations[v] || v;
+      } else {
+        const englishKey = Object.keys(valueTranslations).find(k => valueTranslations[k] === v);
+        return englishKey || v;
+      }
+    });
+    valuesInput.value = translatedValues.join(', ');
+    valuesInput.dispatchEvent(new Event('input'));
+  }
+}
+</script>
 </body>
 </html>
