@@ -142,7 +142,9 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 
 
 <div class="splash-overlay" id="splash-overlay">
-  <div class="splash-card">
+  <div class="splash-card"><div style="text-align:right; margin-bottom: 0.75rem;">
+  <button onclick="toggleLanguage()" id="lang-btn-splash" style="font-size:12px; color:var(--gold); background:none; border:1px solid rgba(201,168,76,0.5); border-radius:6px; padding:5px 12px; cursor:pointer; font-family:'DM Sans',sans-serif;">Español</button>
+</div>
     <div class="splash-title">Values Lab</div>
     <div class="splash-subtitle">By Karabed Leadership Group</div>
     <div class="splash-body">
@@ -159,7 +161,7 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 </div>
 
 <div class="hero">
-  <a href="/admin.html" class="admin-link">Admin login</a>
+  <button onclick="toggleLanguage()" id="lang-btn-hero" style="position:absolute; top:20px; left:24px; font-size:12px; font-weight:500; color:var(--gold); background:none; border:1px solid rgba(201,168,76,0.4); border-radius:6px; padding:6px 14px; letter-spacing:0.04em; cursor:pointer; font-family:'DM Sans',sans-serif;">Español</button><a href="/admin.html" class="admin-link">Admin login</a>
   <div style="margin:0 auto 1.5rem; display:flex; flex-direction:column; align-items:center; gap:10px;">
     <svg width="72" height="72" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="80" height="80" rx="18" fill="#0D1B2A"/>
@@ -609,6 +611,16 @@ function restart() {
   document.getElementById('pause-icon').style.display = 'none';
   document.getElementById('step-1').style.display = 'block';
 }
-</script>
+let currentLang = 'en';
+
+function toggleLanguage() {
+  currentLang = currentLang === 'en' ? 'es' : 'en';
+  const newLabel = currentLang === 'en' ? 'Español' : 'English';
+  const splashBtn = document.getElementById('lang-btn-splash');
+  const heroBtn = document.getElementById('lang-btn-hero');
+  if (splashBtn) splashBtn.textContent = newLabel;
+  if (heroBtn) heroBtn.textContent = newLabel;
+  alert(currentLang === 'es' ? 'Spanish mode activated' : 'English mode activated');
+}</script>
 </body>
 </html>
