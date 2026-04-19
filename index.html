@@ -283,7 +283,7 @@ textarea.values-input { min-height: 120px; resize: vertical; }
     <div class="field-hint" id="step-1-hint">Type your own or tap values below to add them.</div>
     <div id="values-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:28px;"></div>
     <div style="margin-top:1rem;">
-      <div class="field-label" id="common-values-label" style="margin-bottom:8px;">Common nonprofit values — tap to add</div>
+      <div class="field-label" id="common-values-label" style="margin-bottom:8px;">Common organizational values — tap to add</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;">
         <button class="preset-pill" onclick="addPreset('Client-Centered')">Client-Centered</button>
         <button class="preset-pill" onclick="addPreset('Respect')">Respect</button>
@@ -325,6 +325,7 @@ textarea.values-input { min-height: 120px; resize: vertical; }
         <button class="sector-pill" data-sector="Faith-Based" onclick="selectSector(this)">Faith-Based</button>
         <button class="sector-pill" data-sector="Government / Public Sector" onclick="selectSector(this)">Government / Public Sector</button>
         <button class="sector-pill" data-sector="Corporate / Business" onclick="selectSector(this)">Corporate / Business</button>
+        <button class="sector-pill" data-sector="Construction / Trades" onclick="selectSector(this)">Construction / Trades</button>
         <button class="sector-pill" data-sector="Other" onclick="selectSector(this)">Other</button>
       </div>
     </div>
@@ -569,6 +570,8 @@ async function generate() {
         return 'Sector context: GOVERNMENT / PUBLIC SECTOR. Center public trust, equitable service delivery, and procedural integrity. Use sector language: "constituent", "the public", "agency", "team member". Reference public service ethics, equity in access, and accountability to the communities served.';
       case 'Corporate / Business':
         return 'Sector context: CORPORATE / BUSINESS. Center customer/client experience, team performance, and operational integrity. Use sector language: "customer", "team", "colleague", "stakeholder". Reference psychological safety, performance management, and the impact on team trust and business outcomes. Avoid social-services framing such as trauma-informed care unless directly relevant.';
+      case 'Construction / Trades':
+        return 'Sector context: CONSTRUCTION / TRADES. Center jobsite safety, crew cohesion, craftsmanship, and accountability to the schedule and the client. Use sector language: "crew", "foreman", "superintendent", "jobsite", "trade partner", "GC", "subcontractor", "pre-task plan", "toolbox talk". Reference safety culture, the duty to look out for one another on site, quality of the work, and the impact on the crew, the schedule, and the client. Recognize that field environments can be physically demanding, high-pressure, and traditionally direct in communication style; coach in a way that respects that culture while still holding the line on respect, safety, and dignity. Avoid social-services framing such as trauma-informed care language unless directly relevant.';
       case 'Other':
         return 'Sector context: OTHER. Use neutral, professional language. Adapt your framing to the specific situation described rather than defaulting to any one industry.';
       default:
@@ -965,7 +968,7 @@ const translations = {
   'step-1-badge': { en: 'Step 1 of 2', es: 'Paso 1 de 2' },
   'step-1-label': { en: 'What are your organizational values?', es: '¿Cuáles son los valores de su organización?' },
   'step-1-hint': { en: 'Type your own or tap values below to add them.', es: 'Escriba los suyos o toque los valores de abajo para agregarlos.' },
-  'common-values-label': { en: 'Common nonprofit values — tap to add', es: 'Valores comunes en organizaciones — toque para agregar' },
+  'common-values-label': { en: 'Common organizational values — tap to add', es: 'Valores organizacionales comunes — toque para agregar' },
   'sector-label': { en: 'What sector are you in?', es: '¿En qué sector se encuentra?' },
   'sector-optional': { en: '(optional)', es: '(opcional)' },
   'tone-label': { en: 'What tone should the coaching language use?', es: '¿Qué tono debe usar el lenguaje del coaching?' },
@@ -993,6 +996,7 @@ const sectorTranslations = {
   'Faith-Based': 'Basado en la Fe',
   'Government / Public Sector': 'Gobierno / Sector Público',
   'Corporate / Business': 'Corporativo / Empresarial',
+  'Construction / Trades': 'Construcción / Oficios',
   'Other': 'Otro'
 };
 
