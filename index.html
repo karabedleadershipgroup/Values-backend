@@ -53,6 +53,11 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .sector-pill { font-size: 12px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 400; transition: all 0.15s; }
 .sector-pill:hover { border-color: var(--navy); color: var(--navy); }
 .sector-pill.selected { background: var(--navy); color: var(--gold); border-color: var(--navy); font-weight: 500; }
+/* Tone picker (NEW) */
+.tone-pill { font-size: 12px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 400; transition: all 0.15s; flex: 1; min-width: 160px; text-align: center; }
+.tone-pill:hover { border-color: var(--navy); color: var(--navy); }
+.tone-pill.selected { background: var(--navy); color: var(--gold); border-color: var(--navy); font-weight: 500; }
+.tone-desc { font-size: 11px; color: var(--text3); margin-top: 4px; font-weight: 300; line-height: 1.4; }
 .loading { display: flex; align-items: center; gap: 12px; color: var(--text3); font-size: 13px; padding: 3rem 0; font-weight: 300; justify-content: center; }
 .spinner { width: 20px; height: 20px; border: 1.5px solid var(--border2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -248,6 +253,21 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       </div>
     </div>
 
+    <!-- NEW: Tone picker (required) -->
+    <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border);">
+      <div class="field-label" id="tone-label" style="margin-bottom:8px;">What tone should the coaching language use?</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;" id="tone-pills">
+        <button class="tone-pill" data-tone="supportive" onclick="selectTone(this)" id="tone-supportive">
+          <div id="tone-supportive-title">Supportive coaching</div>
+          <div class="tone-desc" id="tone-supportive-desc">"We can..." — warm, partnered</div>
+        </button>
+        <button class="tone-pill" data-tone="direct" onclick="selectTone(this)" id="tone-direct">
+          <div id="tone-direct-title">Direct professional</div>
+          <div class="tone-desc" id="tone-direct-desc">"Staff can..." — clear, professional</div>
+        </button>
+      </div>
+    </div>
+
     <div id="err-1" class="err" style="display:none"></div>
     <button class="btn-continue" id="continue-btn-1" onclick="goStep2()">Continue</button>
   </div>
@@ -321,6 +341,7 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 
 let currentLang = 'en';
 let selectedSector = ''; // NEW: chosen sector, '' means none picked
+let selectedTone = ''; // NEW: chosen coaching tone (required) — 'supportive' or 'direct'
 
 function toggleEnter() {
   document.getElementById('enter-btn').disabled = !document.getElementById('agree-check').checked;
@@ -361,6 +382,13 @@ function selectSector(btn) {
   }
 }
 
+// NEW: single-select tone picker (required, cannot deselect once chosen)
+function selectTone(btn) {
+  document.querySelectorAll('.tone-pill').forEach(p => p.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedTone = btn.getAttribute('data-tone');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const input = document.getElementById('f-values');
   const pillsDiv = document.getElementById('values-pills');
@@ -377,6 +405,7 @@ function goStep2() {
   const err = document.getElementById('err-1');
   const values = raw.split(',').map(v => v.trim()).filter(v => v.length > 0);
   if (values.length < 2) { err.textContent = currentLang === 'es' ? 'Por favor ingrese al menos dos valores separados por comas.' : 'Please enter at least two values separated by commas.'; err.style.display = 'block'; return; }
+  if (!selectedTone) { err.textContent = currentLang === 'es' ? 'Por favor seleccione un tono para el lenguaje del coaching.' : 'Please select a tone for the coaching language.'; err.style.display = 'block'; return; }
   err.style.display = 'none';
   orgValues = values;
   document.getElementById('step-1').style.display = 'none';
@@ -456,15 +485,16 @@ IMPORTANT — adjust based on behavior pattern:
 - If REPEATED: firmer accountability tone. Acknowledge the pattern explicitly. Recommend documentation or escalation depending on severity.
 
 CRITICAL — valuesAlignedBehaviors field requirements:
-Produce 4 to 6 short, observable behaviors a staff member could enact in this exact scenario, each paired with EXACTLY ONE value from the organizational values list above.
-- Each behavior must be a single concrete action, 8 to 14 words, present tense, starting with "Staff" (e.g., "Staff de-escalates the situation with a calm, neutral tone").
+Produce 4 to 6 short, specific practices a leader could suggest to a staff member to support them in living the organization's values in this exact scenario, each paired with EXACTLY ONE value from the organizational values list above.
+- These are NOT a checklist of what staff did wrong. They are forward-looking suggestions a supervisor could share in a coaching conversation to support the staff member.
+${selectedTone === 'supportive' ? `- TONE: SUPPORTIVE COACHING. Write each behavior in the FIRST-PERSON PLURAL "we" voice, framing the leader and staff as partners working toward the same values together (e.g., "We can de-escalate by using a calm, neutral tone"). Each behavior is 10 to 16 words, present tense, starting with "We can..." or occasionally "Together we..." for variety. The tone should feel warm, invitational, and supportive — never directive or evaluative. Imagine a leader saying this aloud to a staff member with care.` : `- TONE: DIRECT PROFESSIONAL. Write each behavior as a clear, observable action a staff member can take, in third person starting with "Staff" (e.g., "Staff de-escalates the situation with a calm, neutral tone"). Each behavior is 8 to 14 words, present tense, professional and concise. The tone should feel clear, respectful, and competent — like a thoughtful performance expectation, not a lecture. No softening qualifiers, no demanding language.`}
 - Each behavior must be HIGHLY SPECIFIC to the scenario described — not generic culture statements. If the scenario involves a missed handoff, the behaviors should reference handoff actions; if it involves a client interaction, they should reference that interaction.
 - The value paired with each behavior MUST be drawn verbatim from the organizational values provided above.
 - Even if a behavior could plausibly uphold multiple values, you MUST pick the SINGLE most central value. Do not list two values. Do not write "and". Pick one.
 - Vary the values across the list when possible — do not pair every behavior with the same value.
 - Use 3 only if the scenario truly cannot support more, and 7 only if necessary for completeness; aim for 4 to 6.
 
-${currentLang === 'es' ? 'CRITICAL: Respond entirely in Spanish. All text in the JSON response must be in Spanish, including all explanations, scripts, staffReality, impact descriptions, valuesAlignedBehaviors, and reasoning. Use warm, professional Spanish appropriate for leadership. Keep the JSON keys in English but all values in Spanish. The "status" field should remain as "Misaligned" or "Upheld" in English (these are internal codes). The "action" field should remain as "Coach", "Document", or "Escalate" in English. For valuesAlignedBehaviors, write each "behavior" in Spanish starting with "El personal" (e.g., "El personal desescala la situación...") and the "value" must match verbatim one of the values provided.' : ''}
+${currentLang === 'es' ? 'CRITICAL: Respond entirely in Spanish. All text in the JSON response must be in Spanish, including all explanations, scripts, staffReality, impact descriptions, valuesAlignedBehaviors, and reasoning. Use warm, professional Spanish appropriate for leadership. Keep the JSON keys in English but all values in Spanish. The "status" field should remain as "Misaligned" or "Upheld" in English (these are internal codes). The "action" field should remain as "Coach", "Document", or "Escalate" in English. For valuesAlignedBehaviors: ${selectedTone === 'supportive' ? 'write each "behavior" in Spanish in the first-person plural "we" voice, starting with "Podemos" or "Juntos podemos" (e.g., "Podemos desescalar la situación con un tono calmado y neutral"). The tone should feel warm and invitational.' : 'write each "behavior" in Spanish starting with "El personal" (e.g., "El personal desescala la situación con un tono calmado y neutral"). The tone should feel clear, professional, and concise.'} The "value" must match verbatim one of the values provided.' : ''}
 
 Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 
@@ -488,7 +518,7 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
     const res = await fetch('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ situation, pattern, sector: sectorForPrompt, systemPrompt })
+      body: JSON.stringify({ situation, pattern, sector: sectorForPrompt, tone: selectedTone, systemPrompt })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Something went wrong.');
@@ -761,6 +791,9 @@ function restart() {
   // NEW: clear sector selection on restart
   document.querySelectorAll('.sector-pill').forEach(p => p.classList.remove('selected'));
   selectedSector = '';
+  // NEW: clear tone selection on restart
+  document.querySelectorAll('.tone-pill').forEach(p => p.classList.remove('selected'));
+  selectedTone = '';
   lastResult = null; orgValues = [];
   document.getElementById('audio-btn').disabled = false;
   document.getElementById('audio-spin').style.display = 'none';
@@ -807,6 +840,11 @@ const translations = {
   'common-values-label': { en: 'Common nonprofit values — tap to add', es: 'Valores comunes en organizaciones — toque para agregar' },
   'sector-label': { en: 'What sector are you in?', es: '¿En qué sector se encuentra?' },
   'sector-optional': { en: '(optional)', es: '(opcional)' },
+  'tone-label': { en: 'What tone should the coaching language use?', es: '¿Qué tono debe usar el lenguaje del coaching?' },
+  'tone-supportive-title': { en: 'Supportive coaching', es: 'Coaching de apoyo' },
+  'tone-supportive-desc': { en: '"We can..." — warm, partnered', es: '"Podemos..." — cálido, en equipo' },
+  'tone-direct-title': { en: 'Direct professional', es: 'Profesional directo' },
+  'tone-direct-desc': { en: '"Staff can..." — clear, professional', es: '"El personal..." — claro, profesional' },
   'continue-btn-1': { en: 'Continue', es: 'Continuar' },
   'step-2-badge': { en: 'Step 2 of 2', es: 'Paso 2 de 2' },
   'step-2-label': { en: "Describe the staff's behavior", es: 'Describa el comportamiento del miembro del personal' },
