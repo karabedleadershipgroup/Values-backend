@@ -49,11 +49,9 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .btn-back:hover { color: var(--text2); }
 .preset-pill { font-size: 12px; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 300; transition: all 0.15s; }
 .preset-pill:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
-/* Sector picker (NEW) */
 .sector-pill { font-size: 12px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 400; transition: all 0.15s; }
 .sector-pill:hover { border-color: var(--navy); color: var(--navy); }
 .sector-pill.selected { background: var(--navy); color: var(--gold); border-color: var(--navy); font-weight: 500; }
-/* Tone picker (NEW) */
 .tone-pill { font-size: 12px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 400; transition: all 0.15s; flex: 1; min-width: 160px; text-align: center; }
 .tone-pill:hover { border-color: var(--navy); color: var(--navy); }
 .tone-pill.selected { background: var(--navy); color: var(--gold); border-color: var(--navy); font-weight: 500; }
@@ -78,7 +76,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .vtag { font-size: 11px; padding: 3px 11px; border-radius: 999px; background: var(--navy); color: var(--gold); font-weight: 500; }
 .mis { font-size: 11px; color: #A32D2D; font-weight: 500; }
 .uph { font-size: 11px; color: var(--green); font-weight: 500; }
-/* Behavior to value pair rows (NEW) */
 .brow { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
 .brow:last-child { border-bottom: none; }
 .btext { flex: 1; font-size: 14px; color: var(--text2); line-height: 1.55; font-weight: 300; min-width: 200px; }
@@ -111,6 +108,57 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .footer p { font-size: 11px; color: var(--text3); font-weight: 300; }
 .footer strong { color: var(--gold); font-weight: 500; }
 @media (max-width: 500px) { .hero h1 { font-size: 38px; } .admin-link { font-size: 11px; padding: 5px 10px; } }
+
+.login-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--navy); z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+}
+.login-card {
+  background: var(--white); border-radius: var(--rl);
+  padding: 2.5rem 2rem; max-width: 420px; width: 100%;
+  text-align: center;
+}
+.login-logo { margin: 0 auto 1.25rem; }
+.login-title {
+  font-family: 'Playfair Display', serif; font-size: 28px;
+  font-weight: 700; color: var(--navy); margin-bottom: 0.3rem;
+}
+.login-subtitle {
+  font-size: 11px; color: var(--gold); text-transform: uppercase;
+  letter-spacing: 0.2em; margin-bottom: 2rem;
+}
+.login-field { text-align: left; margin-bottom: 1rem; }
+.login-field label {
+  display: block; font-size: 11px; font-weight: 500;
+  color: var(--text3); text-transform: uppercase;
+  letter-spacing: 0.12em; margin-bottom: 0.5rem;
+}
+.login-input {
+  width: 100%; font-family: 'DM Sans', sans-serif; font-size: 15px;
+  color: var(--text); background: var(--white);
+  border: 1px solid var(--border2); border-radius: var(--r);
+  padding: 12px 14px; transition: border-color 0.2s; font-weight: 300;
+}
+.login-input:focus { outline: none; border-color: var(--navy); }
+.btn-login {
+  width: 100%; padding: 14px; background: var(--navy); color: var(--gold);
+  border: none; border-radius: var(--r); font-size: 14px; font-weight: 500;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.05em; transition: opacity 0.15s; margin-top: 0.5rem;
+}
+.btn-login:hover { opacity: 0.88; }
+.login-error {
+  font-size: 13px; color: var(--red); background: var(--red-bg);
+  border: 1px solid var(--red-border); border-radius: var(--r);
+  padding: 10px 14px; margin-top: 0.75rem; font-weight: 300;
+  display: none; text-align: left;
+}
+.login-footer {
+  font-size: 11px; color: var(--text3); margin-top: 1.5rem;
+  font-weight: 300;
+}
 
 .splash-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -155,6 +203,35 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 </head>
 <body>
 
+
+<div class="login-overlay" id="login-overlay">
+  <div class="login-card">
+    <div style="text-align:right; margin-bottom: 0.5rem;">
+      <button onclick="toggleLanguage()" id="lang-btn-login" style="font-size:12px; color:var(--gold); background:var(--navy); border:1px solid rgba(201,168,76,0.5); border-radius:6px; padding:5px 12px; cursor:pointer; font-family:'DM Sans',sans-serif;">Español</button>
+    </div>
+    <div class="login-logo">
+      <svg width="56" height="56" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="18" fill="#0D1B2A"/>
+        <rect x="12" y="12" width="56" height="56" stroke="#F5F1E8" stroke-width="1.5" fill="none"/>
+        <rect x="31" y="12.5" width="18.33" height="55" fill="#C6A75E" opacity="0.2"/>
+        <line x1="21" y1="21" x2="59" y2="59" stroke="#C6A75E" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="40" cy="40" r="4.5" fill="#C6A75E"/>
+      </svg>
+    </div>
+    <div class="login-title" id="login-title">Values Lab</div>
+    <div class="login-subtitle" id="login-subtitle">By Karabed Leadership Group</div>
+
+    <div class="login-field">
+      <label for="login-pw" id="login-pw-label">Access Code</label>
+      <input type="password" class="login-input" id="login-pw" placeholder="Enter your access code" autocomplete="current-password" />
+    </div>
+
+    <div class="login-error" id="login-error"></div>
+    <button class="btn-login" id="btn-login" onclick="attemptLogin()">Continue</button>
+
+    <div class="login-footer" id="login-footer">Need access? Contact Karabed Leadership Group.</div>
+  </div>
+</div>
 
 <div class="splash-overlay" id="splash-overlay">
   <div class="splash-card"><div style="text-align:right; margin-bottom: 0.75rem;">
@@ -239,7 +316,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       </div>
     </div>
 
-    <!-- NEW: Sector picker -->
     <div style="margin-top:1.75rem; padding-top:1.25rem; border-top:1px solid var(--border);">
       <div class="field-label" id="sector-label" style="margin-bottom:8px;">What sector are you in? <span style="text-transform:none; letter-spacing:0; color:var(--text3); font-weight:300;" id="sector-optional">(optional)</span></div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;" id="sector-pills">
@@ -253,7 +329,6 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       </div>
     </div>
 
-    <!-- NEW: Tone picker (required) -->
     <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border);">
       <div class="field-label" id="tone-label" style="margin-bottom:8px;">What tone should the coaching language use?</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;" id="tone-pills">
@@ -339,9 +414,27 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 
 <script>
 
+const ACCESS_CODE = 'OrgLogin2026!';
+
 let currentLang = 'en';
-let selectedSector = ''; // NEW: chosen sector, '' means none picked
-let selectedTone = ''; // NEW: chosen coaching tone (required) — 'supportive' or 'direct'
+let selectedSector = '';
+let selectedTone = '';
+
+function attemptLogin() {
+  const pwInput = document.getElementById('login-pw').value;
+  const errEl = document.getElementById('login-error');
+
+  if (pwInput !== ACCESS_CODE) {
+    errEl.textContent = currentLang === 'es'
+      ? 'Código de acceso incorrecto. Por favor intente de nuevo.'
+      : 'Incorrect access code. Please try again.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  sessionStorage.setItem('vl_authed', '1');
+  document.getElementById('login-overlay').style.display = 'none';
+}
 
 function toggleEnter() {
   document.getElementById('enter-btn').disabled = !document.getElementById('agree-check').checked;
@@ -351,22 +444,32 @@ function enterApp() {
   sessionStorage.setItem('vl_agreed', '1');
 }
 document.addEventListener('DOMContentLoaded', function() {
+  if (sessionStorage.getItem('vl_authed') === '1') {
+    document.getElementById('login-overlay').style.display = 'none';
+  }
+
+  const pwEl = document.getElementById('login-pw');
+  if (pwEl) {
+    pwEl.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        attemptLogin();
+      }
+    });
+  }
+
   if (sessionStorage.getItem('vl_agreed') === '1') {
     document.getElementById('splash-overlay').style.display = 'none';
   }
-  // NEW: ensure the button state syncs no matter how the checkbox is interacted with
   const agreeCheck = document.getElementById('agree-check');
   if (agreeCheck) {
     agreeCheck.addEventListener('click', toggleEnter);
     agreeCheck.addEventListener('change', toggleEnter);
-    // Also sync on initial load in case the browser remembers the checked state
     toggleEnter();
   }
-  // NEW: clicking the label text also toggles the checkbox and updates the button
   const agreeLabel = document.getElementById('splash-agree-label');
   if (agreeLabel) {
     agreeLabel.addEventListener('click', function(e) {
-      // Let the native label-for behavior fire, then re-sync the button
       setTimeout(toggleEnter, 0);
     });
   }
@@ -386,7 +489,6 @@ function addPreset(value) {
   }
 }
 
-// NEW: single-select sector picker (tap again to deselect)
 function selectSector(btn) {
   const wasSelected = btn.classList.contains('selected');
   document.querySelectorAll('.sector-pill').forEach(p => p.classList.remove('selected'));
@@ -398,7 +500,6 @@ function selectSector(btn) {
   }
 }
 
-// NEW: single-select tone picker (required, cannot deselect once chosen)
 function selectTone(btn) {
   document.querySelectorAll('.tone-pill').forEach(p => p.classList.remove('selected'));
   btn.classList.add('selected');
@@ -453,7 +554,6 @@ async function generate() {
 
   const valuesText = orgValues.map(v => `- ${v.toUpperCase()}`).join('\n');
 
-  // NEW: sector-aware framing (defaults to General when not chosen)
   const sectorForPrompt = selectedSector || 'General';
   const sectorGuidance = (() => {
     switch (sectorForPrompt) {
@@ -476,7 +576,6 @@ async function generate() {
     }
   })();
 
-  // NEW: compute tone-specific instructions BEFORE the template literal to avoid nested backticks
   const toneInstruction = selectedTone === 'supportive'
     ? '- TONE: SUPPORTIVE COACHING. Write each behavior in the FIRST-PERSON PLURAL "we" voice, framing the leader and staff as partners working toward the same values together (e.g., "We can de-escalate by using a calm, neutral tone"). Each behavior is 10 to 16 words, present tense, starting with "We can..." or occasionally "Together we..." for variety. The tone should feel warm, invitational, and supportive — never directive or evaluative. Imagine a leader saying this aloud to a staff member with care.'
     : '- TONE: DIRECT PROFESSIONAL. Write each behavior as a clear, observable action a staff member can take, in third person starting with "Staff" (e.g., "Staff de-escalates the situation with a calm, neutral tone"). Each behavior is 8 to 14 words, present tense, professional and concise. The tone should feel clear, respectful, and competent — like a thoughtful performance expectation, not a lecture. No softening qualifiers, no demanding language.';
@@ -611,8 +710,6 @@ function render(d) {
       <p class="content">${v.explanation}</p>
     </div>`).join('');
 
-  // NEW: behavior to value pairs section (replaces the old single correctBehavior paragraph)
-  // Falls back to d.correctBehavior if model returns the old shape, so nothing breaks.
   let behaviorsHTML = '';
   if (Array.isArray(d.valuesAlignedBehaviors) && d.valuesAlignedBehaviors.length) {
     behaviorsHTML = `<div style="margin-bottom:1.5rem">
@@ -783,7 +880,6 @@ function downloadPDF() {
     ['alignmentStatement','Alignment Statement']
   ];
 
-  // NEW: behavior block for PDF (with fallback to old correctBehavior shape)
   let behaviorsBlockPDF = '';
   if (Array.isArray(d.valuesAlignedBehaviors) && d.valuesAlignedBehaviors.length) {
     behaviorsBlockPDF = `<div class="section">
@@ -817,10 +913,8 @@ function restart() {
   document.getElementById('pattern-first-label').style.borderColor = 'var(--border2)';
   document.getElementById('pattern-repeated-label').style.borderColor = 'var(--border2)';
   document.getElementById('f-values').value = '';
-  // NEW: clear sector selection on restart
   document.querySelectorAll('.sector-pill').forEach(p => p.classList.remove('selected'));
   selectedSector = '';
-  // NEW: clear tone selection on restart
   document.querySelectorAll('.tone-pill').forEach(p => p.classList.remove('selected'));
   selectedTone = '';
   lastResult = null; orgValues = [];
@@ -836,6 +930,11 @@ function restart() {
 }
 
 const translations = {
+  'login-title': { en: 'Values Lab', es: 'Laboratorio de Valores' },
+  'login-subtitle': { en: 'By Karabed Leadership Group', es: 'Por Karabed Leadership Group' },
+  'login-pw-label': { en: 'Access Code', es: 'Código de Acceso' },
+  'btn-login': { en: 'Continue', es: 'Continuar' },
+  'login-footer': { en: 'Need access? Contact Karabed Leadership Group.', es: '¿Necesita acceso? Contacte a Karabed Leadership Group.' },
   'splash-title': { en: 'Values Lab', es: 'Laboratorio de Valores' },
   'splash-subtitle': { en: 'By Karabed Leadership Group', es: 'Por Karabed Leadership Group' },
   'splash-p1': {
@@ -931,8 +1030,10 @@ const valueTranslations = {
 function toggleLanguage() {
   currentLang = currentLang === 'en' ? 'es' : 'en';
   const newLabel = currentLang === 'en' ? 'Español' : 'English';
+  const loginBtn = document.getElementById('lang-btn-login');
   const splashBtn = document.getElementById('lang-btn-splash');
   const heroBtn = document.getElementById('lang-btn-hero');
+  if (loginBtn) loginBtn.textContent = newLabel;
   if (splashBtn) splashBtn.textContent = newLabel;
   if (heroBtn) heroBtn.textContent = newLabel;
   document.documentElement.lang = currentLang;
@@ -943,6 +1044,10 @@ function applyTranslations() {
   for (const id in translations) {
     const el = document.getElementById(id);
     if (el) el.textContent = translations[id][currentLang];
+  }
+  const loginPwInput = document.getElementById('login-pw');
+  if (loginPwInput) {
+    loginPwInput.placeholder = currentLang === 'es' ? 'Ingrese su código de acceso' : 'Enter your access code';
   }
   const valuesInput = document.getElementById('f-values');
   const situationInput = document.getElementById('f-situation');
@@ -961,7 +1066,6 @@ function applyTranslations() {
     audioLabel.textContent = currentLang === 'es' ? '▶ Escuchar' : '▶ Listen';
   }
 
-  // Translate the value preset buttons
   document.querySelectorAll('.preset-pill').forEach(btn => {
     const onclickAttr = btn.getAttribute('onclick');
     const match = onclickAttr && onclickAttr.match(/addPreset\('([^']+)'\)/);
@@ -980,7 +1084,6 @@ function applyTranslations() {
     }
   });
 
-  // NEW: Translate sector pill labels (data-sector key stays in English so prompt logic works)
   document.querySelectorAll('.sector-pill').forEach(btn => {
     const englishKey = btn.getAttribute('data-sector');
     if (currentLang === 'es' && sectorTranslations[englishKey]) {
@@ -990,7 +1093,6 @@ function applyTranslations() {
     }
   });
 
-  // Also translate any values already in the input field
   if (valuesInput && valuesInput.value.trim()) {
     const currentValues = valuesInput.value.split(',').map(v => v.trim()).filter(v => v);
     const translatedValues = currentValues.map(v => {
