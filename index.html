@@ -354,6 +354,22 @@ document.addEventListener('DOMContentLoaded', function() {
   if (sessionStorage.getItem('vl_agreed') === '1') {
     document.getElementById('splash-overlay').style.display = 'none';
   }
+  // NEW: ensure the button state syncs no matter how the checkbox is interacted with
+  const agreeCheck = document.getElementById('agree-check');
+  if (agreeCheck) {
+    agreeCheck.addEventListener('click', toggleEnter);
+    agreeCheck.addEventListener('change', toggleEnter);
+    // Also sync on initial load in case the browser remembers the checked state
+    toggleEnter();
+  }
+  // NEW: clicking the label text also toggles the checkbox and updates the button
+  const agreeLabel = document.getElementById('splash-agree-label');
+  if (agreeLabel) {
+    agreeLabel.addEventListener('click', function(e) {
+      // Let the native label-for behavior fire, then re-sync the button
+      setTimeout(toggleEnter, 0);
+    });
+  }
 });
 
 let orgValues = [];
