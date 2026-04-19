@@ -49,6 +49,10 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .btn-back:hover { color: var(--text2); }
 .preset-pill { font-size: 12px; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 300; transition: all 0.15s; }
 .preset-pill:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
+/* Sector picker (NEW) */
+.sector-pill { font-size: 12px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 400; transition: all 0.15s; }
+.sector-pill:hover { border-color: var(--navy); color: var(--navy); }
+.sector-pill.selected { background: var(--navy); color: var(--gold); border-color: var(--navy); font-weight: 500; }
 .loading { display: flex; align-items: center; gap: 12px; color: var(--text3); font-size: 13px; padding: 3rem 0; font-weight: 300; justify-content: center; }
 .spinner { width: 20px; height: 20px; border: 1.5px solid var(--border2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -69,6 +73,12 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 .vtag { font-size: 11px; padding: 3px 11px; border-radius: 999px; background: var(--navy); color: var(--gold); font-weight: 500; }
 .mis { font-size: 11px; color: #A32D2D; font-weight: 500; }
 .uph { font-size: 11px; color: var(--green); font-weight: 500; }
+/* Behavior to value pair rows (NEW) */
+.brow { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.brow:last-child { border-bottom: none; }
+.btext { flex: 1; font-size: 14px; color: var(--text2); line-height: 1.55; font-weight: 300; min-width: 200px; }
+.barrow { color: var(--text3); font-size: 16px; font-weight: 300; flex-shrink: 0; }
+.bvalue { font-size: 11px; padding: 4px 12px; border-radius: 999px; background: var(--gold-pale); color: var(--navy); font-weight: 500; border: 1px solid rgba(201,168,76,0.3); flex-shrink: 0; }
 .igrid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .icard { background: var(--gold-pale); border: 1px solid rgba(201,168,76,0.2); border-radius: var(--r); padding: 12px; }
 .ilabel { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
@@ -223,6 +233,21 @@ textarea.values-input { min-height: 120px; resize: vertical; }
         <button class="preset-pill" onclick="addPreset('Wellness')">Wellness</button>
       </div>
     </div>
+
+    <!-- NEW: Sector picker -->
+    <div style="margin-top:1.75rem; padding-top:1.25rem; border-top:1px solid var(--border);">
+      <div class="field-label" id="sector-label" style="margin-bottom:8px;">What sector are you in? <span style="text-transform:none; letter-spacing:0; color:var(--text3); font-weight:300;" id="sector-optional">(optional)</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;" id="sector-pills">
+        <button class="sector-pill" data-sector="Social Services / Nonprofit" onclick="selectSector(this)">Social Services / Nonprofit</button>
+        <button class="sector-pill" data-sector="Healthcare" onclick="selectSector(this)">Healthcare</button>
+        <button class="sector-pill" data-sector="Education" onclick="selectSector(this)">Education</button>
+        <button class="sector-pill" data-sector="Faith-Based" onclick="selectSector(this)">Faith-Based</button>
+        <button class="sector-pill" data-sector="Government / Public Sector" onclick="selectSector(this)">Government / Public Sector</button>
+        <button class="sector-pill" data-sector="Corporate / Business" onclick="selectSector(this)">Corporate / Business</button>
+        <button class="sector-pill" data-sector="Other" onclick="selectSector(this)">Other</button>
+      </div>
+    </div>
+
     <div id="err-1" class="err" style="display:none"></div>
     <button class="btn-continue" id="continue-btn-1" onclick="goStep2()">Continue</button>
   </div>
@@ -295,6 +320,7 @@ textarea.values-input { min-height: 120px; resize: vertical; }
 <script>
 
 let currentLang = 'en';
+let selectedSector = ''; // NEW: chosen sector, '' means none picked
 
 function toggleEnter() {
   document.getElementById('enter-btn').disabled = !document.getElementById('agree-check').checked;
@@ -320,6 +346,18 @@ function addPreset(value) {
   if (!existing.includes(value)) {
     input.value = existing.length > 0 ? current + ', ' + value : value;
     input.dispatchEvent(new Event('input'));
+  }
+}
+
+// NEW: single-select sector picker (tap again to deselect)
+function selectSector(btn) {
+  const wasSelected = btn.classList.contains('selected');
+  document.querySelectorAll('.sector-pill').forEach(p => p.classList.remove('selected'));
+  if (!wasSelected) {
+    btn.classList.add('selected');
+    selectedSector = btn.getAttribute('data-sector');
+  } else {
+    selectedSector = '';
   }
 }
 
@@ -369,9 +407,35 @@ async function generate() {
   document.getElementById('loading-view').style.display = 'block';
 
   const valuesText = orgValues.map(v => `- ${v.toUpperCase()}`).join('\n');
+
+  // NEW: sector-aware framing (defaults to General when not chosen)
+  const sectorForPrompt = selectedSector || 'General';
+  const sectorGuidance = (() => {
+    switch (sectorForPrompt) {
+      case 'Social Services / Nonprofit':
+        return 'Sector context: SOCIAL SERVICES / NONPROFIT. Center the wellbeing of clients/participants who may be navigating crisis, poverty, housing instability, recovery, or trauma. Use sector language: "client", "participant", "case", "intake", "frontline staff". Reference trauma-informed care, harm reduction, and equity as foundational frames.';
+      case 'Healthcare':
+        return 'Sector context: HEALTHCARE. Center patient safety, clinical dignity, and care quality. Use sector language: "patient", "care team", "unit", "shift", "clinician". Reference patient-centered care, psychological safety on care teams, and the impact on continuity of care.';
+      case 'Education':
+        return 'Sector context: EDUCATION. Center student learning, belonging, and developmental safety. Use sector language: "student", "classroom", "colleague", "campus", "learning environment". Reference student-centered practice, equity in learning, and the impact on the school community.';
+      case 'Faith-Based':
+        return 'Sector context: FAITH-BASED ORGANIZATION. Honor the spiritual dimension of the work alongside operational accountability. Use sector language: "congregation", "community member", "ministry", "fellow servant". Reference servant leadership, calling, and stewardship of community trust. Avoid prescribing any specific theology.';
+      case 'Government / Public Sector':
+        return 'Sector context: GOVERNMENT / PUBLIC SECTOR. Center public trust, equitable service delivery, and procedural integrity. Use sector language: "constituent", "the public", "agency", "team member". Reference public service ethics, equity in access, and accountability to the communities served.';
+      case 'Corporate / Business':
+        return 'Sector context: CORPORATE / BUSINESS. Center customer/client experience, team performance, and operational integrity. Use sector language: "customer", "team", "colleague", "stakeholder". Reference psychological safety, performance management, and the impact on team trust and business outcomes. Avoid social-services framing such as trauma-informed care unless directly relevant.';
+      case 'Other':
+        return 'Sector context: OTHER. Use neutral, professional language. Adapt your framing to the specific situation described rather than defaulting to any one industry.';
+      default:
+        return 'Sector context: GENERAL. Use neutral, professional language that translates across sectors. Avoid sector-specific jargon (do not assume social services, healthcare, education, etc.). Refer to "the person served", "team members", and "the organization" rather than industry-specific roles.';
+    }
+  })();
+
   const systemPrompt = `Behavior pattern: ${pattern === 'first' ? 'This is the FIRST TIME this behavior has been observed.' : 'This is a REPEATED behavior — it has happened before.'}
 
-You are a trauma-informed leadership coach supporting supervisors in social services organizations. Your role is to help leaders respond to staff behavior with accountability, compassion, and cultural humility.
+${sectorGuidance}
+
+You are a trauma-informed leadership coach supporting supervisors. Your role is to help leaders respond to staff behavior with accountability, compassion, and cultural humility.
 
 Analyze the staff behavior using ONLY these organizational values:
 ${valuesText}
@@ -381,7 +445,7 @@ Trauma-informed tone guidelines:
 - Do not shame or pathologize. Focus on behavior, not character.
 - Hold both accountability and compassion simultaneously.
 - Use curious, non-punitive, invitational language throughout.
-- Center the dignity of both the client and the staff member.
+- Center the dignity of both the person served and the staff member.
 - NEVER use phrases like "I need to be direct", "I need you to", "you must", "you should", "you cannot", "I have to be honest", or any language that positions the supervisor as an authority issuing directives.
 - Instead use phrases like "I want to share something I noticed", "I'm wondering if we can explore", "what I'm hoping for us", "I'd love for us to talk about", "something that feels important to name together".
 - The tone should feel like a caring conversation between two people, not a performance review or disciplinary meeting.
@@ -391,7 +455,16 @@ IMPORTANT — adjust based on behavior pattern:
 - If FIRST TIME: coaching and curiosity-based tone. Assume positive intent. Focus on awareness and correction.
 - If REPEATED: firmer accountability tone. Acknowledge the pattern explicitly. Recommend documentation or escalation depending on severity.
 
-${currentLang === 'es' ? 'CRITICAL: Respond entirely in Spanish. All text in the JSON response must be in Spanish, including all explanations, scripts, staffReality, impact descriptions, and reasoning. Use warm, professional Spanish appropriate for social services leadership. Keep the JSON keys in English but all values in Spanish. The "status" field should remain as "Misaligned" or "Upheld" in English (these are internal codes). The "action" field should remain as "Coach", "Document", or "Escalate" in English.' : ''}
+CRITICAL — valuesAlignedBehaviors field requirements:
+Produce 4 to 6 short, observable behaviors a staff member could enact in this exact scenario, each paired with EXACTLY ONE value from the organizational values list above.
+- Each behavior must be a single concrete action, 8 to 14 words, present tense, starting with "Staff" (e.g., "Staff de-escalates the situation with a calm, neutral tone").
+- Each behavior must be HIGHLY SPECIFIC to the scenario described — not generic culture statements. If the scenario involves a missed handoff, the behaviors should reference handoff actions; if it involves a client interaction, they should reference that interaction.
+- The value paired with each behavior MUST be drawn verbatim from the organizational values provided above.
+- Even if a behavior could plausibly uphold multiple values, you MUST pick the SINGLE most central value. Do not list two values. Do not write "and". Pick one.
+- Vary the values across the list when possible — do not pair every behavior with the same value.
+- Use 3 only if the scenario truly cannot support more, and 7 only if necessary for completeness; aim for 4 to 6.
+
+${currentLang === 'es' ? 'CRITICAL: Respond entirely in Spanish. All text in the JSON response must be in Spanish, including all explanations, scripts, staffReality, impact descriptions, valuesAlignedBehaviors, and reasoning. Use warm, professional Spanish appropriate for leadership. Keep the JSON keys in English but all values in Spanish. The "status" field should remain as "Misaligned" or "Upheld" in English (these are internal codes). The "action" field should remain as "Coach", "Document", or "Escalate" in English. For valuesAlignedBehaviors, write each "behavior" in Spanish starting with "El personal" (e.g., "El personal desescala la situación...") and the "value" must match verbatim one of the values provided.' : ''}
 
 Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 
@@ -400,7 +473,7 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 "valuesAnalysis": [{"value": "string", "status": "Misaligned|Upheld", "explanation": "string"}],
 "staffReality": "string — a trauma-informed reflection on what might be going on for this staff member. What stressors, secondary trauma, or unmet needs could be contributing to this behavior? This is not an excuse but an invitation to lead with curiosity.",
 "impact": {"client": "string", "team": "string", "organizational": "string"},
-"correctBehavior": "string",
+"valuesAlignedBehaviors": [{"behavior": "string", "value": "string"}],
 "conversationScript": {
 "opening": "string",
 "curiosityQuestion": "string",
@@ -415,7 +488,7 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
     const res = await fetch('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ situation, pattern, systemPrompt })
+      body: JSON.stringify({ situation, pattern, sector: sectorForPrompt, systemPrompt })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Something went wrong.');
@@ -442,7 +515,7 @@ function render(d) {
     client: 'Cliente',
     team: 'Equipo',
     organizational: 'Organizacional',
-    correctBehavior: 'Comportamiento alineado con los valores',
+    valuesAlignedBehavior: 'Comportamiento alineado con los valores',
     conversationScript: 'Guion de conversación',
     opening: 'Apertura',
     curiosityQuestion: 'Pregunta de curiosidad',
@@ -460,7 +533,7 @@ function render(d) {
     client: 'Client',
     team: 'Team',
     organizational: 'Organizational',
-    correctBehavior: 'Values-aligned behavior',
+    valuesAlignedBehavior: 'Values-aligned behavior',
     conversationScript: 'Conversation script',
     opening: 'Opening',
     curiosityQuestion: 'Curiosity question',
@@ -478,6 +551,28 @@ function render(d) {
       </div>
       <p class="content">${v.explanation}</p>
     </div>`).join('');
+
+  // NEW: behavior to value pairs section (replaces the old single correctBehavior paragraph)
+  // Falls back to d.correctBehavior if model returns the old shape, so nothing breaks.
+  let behaviorsHTML = '';
+  if (Array.isArray(d.valuesAlignedBehaviors) && d.valuesAlignedBehaviors.length) {
+    behaviorsHTML = `<div style="margin-bottom:1.5rem">
+      <div class="rlabel">${L.valuesAlignedBehavior}</div>
+      ${d.valuesAlignedBehaviors.map(b => `
+        <div class="brow">
+          <div class="btext">${b.behavior}</div>
+          <div class="barrow">→</div>
+          <span class="bvalue">${b.value}</span>
+        </div>`).join('')}
+    </div>
+    <hr class="divider">`;
+  } else if (d.correctBehavior) {
+    behaviorsHTML = `<div style="margin-bottom:1.5rem">
+      <div class="rlabel">${L.valuesAlignedBehavior}</div>
+      <p class="content">${d.correctBehavior}</p>
+    </div>
+    <hr class="divider">`;
+  }
 
   const scriptSteps = [
     ['opening', L.opening],
@@ -503,8 +598,7 @@ function render(d) {
       <div class="icard"><div class="ilabel">${L.organizational}</div><p>${d.impact.organizational}</p></div>
     </div></div>
     <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">${L.correctBehavior}</div><p class="content">${d.correctBehavior}</p></div>
-    <hr class="divider">
+    ${behaviorsHTML}
     <div style="margin-bottom:1.5rem"><div class="rlabel">${L.conversationScript}</div>
       ${scriptSteps.map(([k,l]) => `<div class="slstep"><div class="slstep-label">${l}</div><div class="sblock">${d.conversationScript[k]}</div></div>`).join('')}
     </div>
@@ -629,7 +723,27 @@ function downloadPDF() {
     ['expectation','Expectation'],
     ['alignmentStatement','Alignment Statement']
   ];
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');* { box-sizing: border-box; margin: 0; padding: 0; }body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }.header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }.header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }.header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }.header-right { text-align:right; font-size:11px; color:#888; }.section { margin-bottom: 28px; }.section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }.content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }.staff-reality { background: #eaf5f0; border: 1px solid #7ecbb0; border-radius: 6px; padding: 12px 14px; font-size: 13px; color: #1a3a2a; line-height: 1.75; font-weight: 300; }.value-row { padding: 10px 0; border-bottom: 1px solid #eee; }.value-row:last-child { border-bottom: none; }.value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }.uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }.impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }.impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }.impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }.sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }.slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }.action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }.coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }.document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }.escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }.footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }</style></head><body><div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis Report &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div></div><div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div><div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status==='Misaligned'?'mis':'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div><div class="section"><div class="section-label">Staff Reality</div><div class="staff-reality">${d.staffReality}</div></div><div class="section"><div class="section-label">Impact</div><div class="impact-grid"><div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div><div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div><div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div></div></div><div class="section"><div class="section-label">Values-Aligned Behavior</div><p class="content">${d.correctBehavior}</p></div><div class="section"><div class="section-label">Conversation Script</div>${scriptSteps.map(([k,l])=>`<div class="slabel">${l}</div><div class="sblock">${d.conversationScript[k]}</div>`).join('')}</div><div class="section"><div class="section-label">Recommended Action</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div><div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div></body></html>`;
+
+  // NEW: behavior block for PDF (with fallback to old correctBehavior shape)
+  let behaviorsBlockPDF = '';
+  if (Array.isArray(d.valuesAlignedBehaviors) && d.valuesAlignedBehaviors.length) {
+    behaviorsBlockPDF = `<div class="section">
+      <div class="section-label">Values-Aligned Behavior</div>
+      ${d.valuesAlignedBehaviors.map(b => `
+        <div class="behavior-row">
+          <span class="behavior-text">${b.behavior}</span>
+          <span class="behavior-arrow">&rarr;</span>
+          <span class="behavior-value">${b.value}</span>
+        </div>`).join('')}
+    </div>`;
+  } else if (d.correctBehavior) {
+    behaviorsBlockPDF = `<div class="section">
+      <div class="section-label">Values-Aligned Behavior</div>
+      <p class="content">${d.correctBehavior}</p>
+    </div>`;
+  }
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');* { box-sizing: border-box; margin: 0; padding: 0; }body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }.header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }.header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }.header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }.header-right { text-align:right; font-size:11px; color:#888; }.section { margin-bottom: 28px; }.section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }.content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }.staff-reality { background: #eaf5f0; border: 1px solid #7ecbb0; border-radius: 6px; padding: 12px 14px; font-size: 13px; color: #1a3a2a; line-height: 1.75; font-weight: 300; }.value-row { padding: 10px 0; border-bottom: 1px solid #eee; }.value-row:last-child { border-bottom: none; }.value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }.uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }.impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }.impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }.impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }.behavior-row { padding: 9px 0; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }.behavior-row:last-child { border-bottom: none; }.behavior-text { flex: 1; font-size: 13px; color: #4a4a48; font-weight: 300; }.behavior-arrow { color: #888; font-size: 14px; }.behavior-value { font-size: 11px; font-weight: 500; background: #fdf9f0; color: #1B2A4A; padding: 3px 12px; border-radius: 999px; border: 1px solid rgba(201,168,76,0.3); }.sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }.slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }.action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }.coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }.document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }.escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }.footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }</style></head><body><div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis Report &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div></div><div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div><div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status==='Misaligned'?'mis':'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div><div class="section"><div class="section-label">Staff Reality</div><div class="staff-reality">${d.staffReality}</div></div><div class="section"><div class="section-label">Impact</div><div class="impact-grid"><div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div><div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div><div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div></div></div>${behaviorsBlockPDF}<div class="section"><div class="section-label">Conversation Script</div>${scriptSteps.map(([k,l])=>`<div class="slabel">${l}</div><div class="sblock">${d.conversationScript[k]}</div>`).join('')}</div><div class="section"><div class="section-label">Recommended Action</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div><div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div></body></html>`;
   const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
   const win = window.open(url, '_blank');
@@ -644,6 +758,9 @@ function restart() {
   document.getElementById('pattern-first-label').style.borderColor = 'var(--border2)';
   document.getElementById('pattern-repeated-label').style.borderColor = 'var(--border2)';
   document.getElementById('f-values').value = '';
+  // NEW: clear sector selection on restart
+  document.querySelectorAll('.sector-pill').forEach(p => p.classList.remove('selected'));
+  selectedSector = '';
   lastResult = null; orgValues = [];
   document.getElementById('audio-btn').disabled = false;
   document.getElementById('audio-spin').style.display = 'none';
@@ -688,6 +805,8 @@ const translations = {
   'step-1-label': { en: 'What are your organizational values?', es: '¿Cuáles son los valores de su organización?' },
   'step-1-hint': { en: 'Type your own or tap values below to add them.', es: 'Escriba los suyos o toque los valores de abajo para agregarlos.' },
   'common-values-label': { en: 'Common nonprofit values — tap to add', es: 'Valores comunes en organizaciones — toque para agregar' },
+  'sector-label': { en: 'What sector are you in?', es: '¿En qué sector se encuentra?' },
+  'sector-optional': { en: '(optional)', es: '(opcional)' },
   'continue-btn-1': { en: 'Continue', es: 'Continuar' },
   'step-2-badge': { en: 'Step 2 of 2', es: 'Paso 2 de 2' },
   'step-2-label': { en: "Describe the staff's behavior", es: 'Describa el comportamiento del miembro del personal' },
@@ -699,6 +818,16 @@ const translations = {
   'loading-text': { en: 'Analyzing through a values-based lens...', es: 'Analizando a través de un lente basado en valores...' },
   'results-label': { en: 'Leadership guidance', es: 'Guía de liderazgo' },
   'restart-btn': { en: 'Start over', es: 'Comenzar de nuevo' }
+};
+
+const sectorTranslations = {
+  'Social Services / Nonprofit': 'Servicios Sociales / Sin Fines de Lucro',
+  'Healthcare': 'Salud',
+  'Education': 'Educación',
+  'Faith-Based': 'Basado en la Fe',
+  'Government / Public Sector': 'Gobierno / Sector Público',
+  'Corporate / Business': 'Corporativo / Empresarial',
+  'Other': 'Otro'
 };
 
 const valueTranslations = {
@@ -784,6 +913,16 @@ function applyTranslations() {
     }
   });
 
+  // NEW: Translate sector pill labels (data-sector key stays in English so prompt logic works)
+  document.querySelectorAll('.sector-pill').forEach(btn => {
+    const englishKey = btn.getAttribute('data-sector');
+    if (currentLang === 'es' && sectorTranslations[englishKey]) {
+      btn.textContent = sectorTranslations[englishKey];
+    } else {
+      btn.textContent = englishKey;
+    }
+  });
+
   // Also translate any values already in the input field
   if (valuesInput && valuesInput.value.trim()) {
     const currentValues = valuesInput.value.split(',').map(v => v.trim()).filter(v => v);
@@ -802,4 +941,3 @@ function applyTranslations() {
 </script>
 </body>
 </html>
-
