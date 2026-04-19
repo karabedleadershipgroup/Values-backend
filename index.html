@@ -4,286 +4,1062 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Values Lab — Karabed Leadership Group</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
---navy: #1B2A4A; --gold: #C9A84C; --gold-light: #f5edd8; --gold-pale: #fdf9f0;
---bg: #f2efe8; --white: #ffffff;
---text: #1a1a1a; --text2: #4a4a48; --text3: #8a8a85;
---border: rgba(27,42,74,0.1); --border2: rgba(27,42,74,0.2);
---green: #2d7a5f; --green-bg: #eaf5f0; --green-border: #7ecbb0;
---amber: #a06020; --amber-bg: #fef3e2; --amber-border: #e8b86d;
---red: #8b2020; --red-bg: #fdf0f0; --red-border: #e07070;
---r: 8px; --rl: 16px;
-}
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-.hero { background: var(--navy); padding: 4rem 1.5rem 3.5rem; text-align: center; position: relative; }
-.admin-link {
-  position: absolute; top: 20px; right: 24px;
-  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.45);
-  text-decoration: none; border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 6px; padding: 6px 14px; letter-spacing: 0.04em;
-  transition: all 0.15s; font-family: 'DM Sans', sans-serif;
-}
-.admin-link:hover { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.35); }
-.hero h1 { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700; color: var(--white); line-height: 1; margin-bottom: 0.2rem; }
-.hero .lab { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 400; color: var(--gold); letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 0.6rem; }
-.hero .byline { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 2rem; }
-.hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.7; max-width: 480px; margin: 0 auto; font-weight: 300; }
-.confidentiality-bar { background: var(--gold-pale); border-bottom: 1px solid rgba(201,168,76,0.35); padding: 10px 1.5rem; text-align: center; }
-.confidentiality-bar p { font-size: 12px; color: var(--amber); font-weight: 400; }
-.main { max-width: 620px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
-.step-badge { display: inline-block; font-size: 10px; font-weight: 500; color: var(--gold); border: 1px solid var(--gold); border-radius: 999px; padding: 4px 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
-.field-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.6rem; }
-.values-input { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: var(--white); border: 1px solid var(--border2); border-radius: var(--r); padding: 14px 16px; transition: border-color 0.2s; font-weight: 300; }
-.values-input:focus { outline: none; border-color: var(--navy); }
-.values-input::placeholder { color: var(--text3); }
-.field-hint { font-size: 12px; color: var(--text3); margin-top: 6px; text-align: center; font-weight: 300; }
-textarea.values-input { min-height: 120px; resize: vertical; }
-.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--rl); padding: 2rem; margin-bottom: 1.25rem; }
-.btn-continue { width: 100%; padding: 14px; background: var(--navy); color: var(--gold); border: none; border-radius: var(--r); font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 1.25rem; letter-spacing: 0.05em; transition: opacity 0.15s; }
-.btn-continue:hover { opacity: 0.88; }
-.btn-continue:disabled { opacity: 0.4; cursor: not-allowed; }
-.btn-back { font-size: 13px; color: var(--text3); background: none; border: 1px solid var(--border2); border-radius: var(--r); padding: 8px 18px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-.btn-back:hover { color: var(--text2); }
-.preset-pill { font-size: 12px; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 300; transition: all 0.15s; }
-.preset-pill:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
-.sector-pill { font-size: 12px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 400; transition: all 0.15s; }
-.sector-pill:hover { border-color: var(--navy); color: var(--navy); }
-.sector-pill.selected { background: var(--navy); color: var(--gold); border-color: var(--navy); font-weight: 500; }
-.tone-pill { font-size: 12px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border2); background: var(--white); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 400; transition: all 0.15s; flex: 1; min-width: 160px; text-align: center; }
-.tone-pill:hover { border-color: var(--navy); color: var(--navy); }
-.tone-pill.selected { background: var(--navy); color: var(--gold); border-color: var(--navy); font-weight: 500; }
-.tone-desc { font-size: 11px; color: var(--text3); margin-top: 4px; font-weight: 300; line-height: 1.4; }
-.loading { display: flex; align-items: center; gap: 12px; color: var(--text3); font-size: 13px; padding: 3rem 0; font-weight: 300; justify-content: center; }
-.spinner { width: 20px; height: 20px; border: 1.5px solid var(--border2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px; }
-.results-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; }
-.header-btns { display: flex; gap: 8px; align-items: center; }
-.btn-audio { font-size: 13px; background: var(--navy); color: var(--gold); border: none; border-radius: var(--r); padding: 8px 16px; cursor: pointer; font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 6px; }
-.btn-audio:disabled { opacity: 0.5; cursor: not-allowed; }
-.audio-spin { width: 12px; height: 12px; border: 1.5px solid rgba(201,168,76,0.3); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; flex-shrink: 0; }
-.btn-restart { font-size: 13px; color: var(--text3); background: none; border: 1px solid var(--border2); border-radius: var(--r); padding: 8px 16px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-.btn-restart:hover { color: var(--text2); }
-.rlabel { font-size: 10px; font-weight: 500; color: var(--gold); background: var(--gold-pale); border: 1px solid rgba(201,168,76,0.3); border-radius: var(--r); padding: 4px 12px; display: inline-block; margin-bottom: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; }
-.divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
-.content { font-size: 14px; color: var(--text2); line-height: 1.75; font-weight: 300; }
-.vrow { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-.vrow:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.vrow-head { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
-.vtag { font-size: 11px; padding: 3px 11px; border-radius: 999px; background: var(--navy); color: var(--gold); font-weight: 500; }
-.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }
-.uph { font-size: 11px; color: var(--green); font-weight: 500; }
-.brow { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
-.brow:last-child { border-bottom: none; }
-.btext { flex: 1; font-size: 14px; color: var(--text2); line-height: 1.55; font-weight: 300; min-width: 200px; }
-.barrow { color: var(--text3); font-size: 16px; font-weight: 300; flex-shrink: 0; }
-.bvalue { font-size: 11px; padding: 4px 12px; border-radius: 999px; background: var(--gold-pale); color: var(--navy); font-weight: 500; border: 1px solid rgba(201,168,76,0.3); flex-shrink: 0; }
-.igrid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-.icard { background: var(--gold-pale); border: 1px solid rgba(201,168,76,0.2); border-radius: var(--r); padding: 12px; }
-.ilabel { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
-.icard p { font-size: 13px; color: var(--text2); line-height: 1.6; font-weight: 300; }
-.sblock { background: var(--bg); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 12px 16px; font-size: 14px; line-height: 1.75; margin-top: 6px; font-weight: 300; color: var(--text2); }
-.slstep { margin-bottom: 14px; }
-.slstep-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-.chip { display: inline-flex; align-items: center; font-size: 12px; padding: 5px 14px; border-radius: var(--r); font-weight: 500; }
-.coach { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
-.document { background: var(--gold-light); color: var(--amber); border: 1px solid var(--gold); }
-.escalate { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
-.staff-reality { background: #eaf5f0; border: 1px solid #7ecbb0; border-radius: var(--r); padding: 14px 16px; margin-top: 6px; font-size: 14px; line-height: 1.75; font-weight: 300; color: #1a3a2a; }
-.audio-player { background: var(--navy); border-radius: var(--r); padding: 14px 16px; margin-bottom: 1.25rem; display:none; }
-.audio-player.visible { display:block; }
-.audio-controls { display: flex; align-items: center; gap: 10px; }
-.audio-ctrl-btn { background: none; border: none; cursor: pointer; color: var(--gold); padding: 4px; display:flex; align-items:center; justify-content:center; opacity:0.85; transition:opacity 0.15s; }
-.audio-ctrl-btn:hover { opacity: 1; }
-.audio-play-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--gold); color: var(--navy); border: none; cursor: pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.audio-progress-wrap { flex: 1; display:flex; align-items:center; gap:8px; }
-.audio-progress { flex:1; height:3px; background: rgba(201,168,76,0.25); border-radius:999px; cursor:pointer; position:relative; }
-.audio-progress-fill { height:100%; background: var(--gold); border-radius:999px; width:0%; transition: width 0.1s linear; pointer-events:none; }
-.audio-time { font-size:11px; color:rgba(201,168,76,0.6); font-family:'DM Sans',sans-serif; white-space:nowrap; min-width:70px; text-align:right; }
-.err { font-size: 13px; color: var(--red); background: var(--red-bg); border: 1px solid var(--red-border); border-radius: var(--r); padding: 10px 14px; margin-top: 0.75rem; font-weight: 300; }
-.footer { text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
-.footer p { font-size: 11px; color: var(--text3); font-weight: 300; }
-.footer strong { color: var(--gold); font-weight: 500; }
-@media (max-width: 500px) { .hero h1 { font-size: 38px; } .admin-link { font-size: 11px; padding: 5px 10px; } }
 
-.login-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: var(--navy); z-index: 10000;
-  display: flex; align-items: center; justify-content: center;
-  padding: 1.5rem;
+:root {
+  /* Brand */
+  --navy: #1B2A4A;
+  --navy-deep: #131F38;
+  --navy-soft: #2A3A5C;
+  --gold: #C9A84C;
+  --gold-deep: #A88835;
+  --gold-soft: #E5D5A0;
+  --gold-pale: #FBF6E8;
+
+  /* Neutrals — warm, paper-like */
+  --paper: #F7F5EF;
+  --paper-warm: #F2EFE6;
+  --white: #FFFFFF;
+  --stone-50: #FAFAF7;
+  --stone-100: #F1EFE9;
+  --stone-200: #E4E1D8;
+  --stone-300: #C9C5B8;
+  --stone-400: #9C988A;
+  --stone-500: #6E6B5F;
+  --stone-600: #4A4843;
+  --stone-700: #2C2B27;
+  --ink: #1A1A17;
+
+  /* Semantic */
+  --success: #2E6B52;
+  --success-bg: #E8F1EC;
+  --warning: #8C5520;
+  --warning-bg: #F7EFE0;
+  --danger: #7A2424;
+  --danger-bg: #F5E5E5;
+
+  /* Geometry */
+  --r-sm: 4px;
+  --r: 6px;
+  --r-lg: 10px;
+  --r-xl: 14px;
+
+  /* Type scale */
+  --display: 'Playfair Display', Georgia, serif;
+  --body: 'DM Sans', -apple-system, system-ui, sans-serif;
 }
-.login-card {
-  background: var(--white); border-radius: var(--rl);
-  padding: 2.5rem 2rem; max-width: 420px; width: 100%;
+
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { font-family: var(--body); background: var(--paper); color: var(--ink); min-height: 100vh; font-weight: 400; line-height: 1.5; }
+
+/* ==================== HERO ==================== */
+.hero {
+  background: var(--navy);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(201,168,76,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(201,168,76,0.04) 0%, transparent 50%);
+  padding: 5rem 1.5rem 4.5rem;
   text-align: center;
+  position: relative;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
 }
-.login-logo { margin: 0 auto 1.25rem; }
-.login-title {
-  font-family: 'Playfair Display', serif; font-size: 28px;
-  font-weight: 700; color: var(--navy); margin-bottom: 0.3rem;
+.hero-nav {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.login-subtitle {
-  font-size: 11px; color: var(--gold); text-transform: uppercase;
-  letter-spacing: 0.2em; margin-bottom: 2rem;
+.lang-btn {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold-soft);
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: var(--r);
+  padding: 6px 14px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  font-family: var(--body);
+  transition: all 0.2s ease;
+  text-transform: uppercase;
 }
-.login-field { text-align: left; margin-bottom: 1rem; }
-.login-field label {
-  display: block; font-size: 11px; font-weight: 500;
-  color: var(--text3); text-transform: uppercase;
-  letter-spacing: 0.12em; margin-bottom: 0.5rem;
+.lang-btn:hover { background: rgba(201,168,76,0.08); border-color: var(--gold); color: var(--gold); }
+.admin-link {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(247,245,239,0.45);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
 }
-.login-input {
-  width: 100%; font-family: 'DM Sans', sans-serif; font-size: 15px;
-  color: var(--text); background: var(--white);
-  border: 1px solid var(--border2); border-radius: var(--r);
-  padding: 12px 14px; transition: border-color 0.2s; font-weight: 300;
+.admin-link:hover { color: rgba(247,245,239,0.85); }
+
+.hero-mark {
+  margin: 0 auto 2rem;
+  display: flex;
+  justify-content: center;
 }
-.login-input:focus { outline: none; border-color: var(--navy); }
-.btn-login {
-  width: 100%; padding: 14px; background: var(--navy); color: var(--gold);
-  border: none; border-radius: var(--r); font-size: 14px; font-weight: 500;
-  cursor: pointer; font-family: 'DM Sans', sans-serif;
-  letter-spacing: 0.05em; transition: opacity 0.15s; margin-top: 0.5rem;
+.hero h1 {
+  font-family: var(--display);
+  font-size: clamp(48px, 7vw, 64px);
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
 }
-.btn-login:hover { opacity: 0.88; }
-.login-error {
-  font-size: 13px; color: var(--red); background: var(--red-bg);
-  border: 1px solid var(--red-border); border-radius: var(--r);
-  padding: 10px 14px; margin-top: 0.75rem; font-weight: 300;
-  display: none; text-align: left;
+.hero h1 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--gold-soft);
 }
-.login-footer {
-  font-size: 11px; color: var(--text3); margin-top: 1.5rem;
+.hero .lab {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  padding-left: 0.5em;
+}
+.hero .byline {
+  font-size: 10px;
+  color: rgba(247,245,239,0.4);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+  font-weight: 500;
+}
+.hero p {
+  font-size: 15px;
+  color: rgba(247,245,239,0.72);
+  line-height: 1.75;
+  max-width: 480px;
+  margin: 0 auto;
   font-weight: 300;
 }
 
-.splash-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: var(--navy); z-index: 9999;
-  display: flex; align-items: center; justify-content: center;
-  padding: 1.5rem;
+/* ==================== MAIN ==================== */
+.main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
 }
-.splash-card {
-  background: var(--white); border-radius: var(--rl);
-  padding: 2.5rem 2rem; max-width: 480px; width: 100%;
+
+/* Section progress indicator */
+.progress-rail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2rem;
+  padding: 0 4px;
+}
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.progress-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--body);
+  border: 1px solid var(--stone-300);
+  color: var(--stone-500);
+  background: var(--white);
+  transition: all 0.2s ease;
+}
+.progress-step.active .progress-num {
+  background: var(--navy);
+  color: var(--gold);
+  border-color: var(--navy);
+}
+.progress-step.complete .progress-num {
+  background: var(--gold);
+  color: var(--navy);
+  border-color: var(--gold);
+}
+.progress-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--stone-500);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.progress-step.active .progress-label { color: var(--ink); }
+.progress-divider {
+  flex: 1;
+  height: 1px;
+  background: var(--stone-200);
+}
+
+/* Card */
+.card {
+  background: var(--white);
+  border: 1px solid var(--stone-200);
+  border-radius: var(--r-xl);
+  padding: 2.5rem;
+  box-shadow:
+    0 1px 2px rgba(27,42,74,0.02),
+    0 8px 24px rgba(27,42,74,0.04);
+  transition: box-shadow 0.3s ease;
+}
+.card-head {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--stone-100);
+}
+.card-eyebrow {
+  font-family: var(--body);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold-deep);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.card-title {
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin-bottom: 0.4rem;
+}
+.card-subtitle {
+  font-size: 13px;
+  color: var(--stone-500);
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* Field group */
+.field-group { margin-bottom: 1.75rem; }
+.field-group:last-of-type { margin-bottom: 0; }
+
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--stone-700);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.65rem;
+}
+.field-label .optional {
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--stone-400);
+  font-weight: 400;
+  margin-left: 6px;
+}
+
+/* Inputs */
+.values-input {
+  width: 100%;
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--stone-200);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.values-input:hover { border-color: var(--stone-300); }
+.values-input:focus {
+  outline: none;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(27,42,74,0.08);
+}
+.values-input::placeholder { color: var(--stone-400); font-weight: 300; }
+
+textarea.values-input {
+  min-height: 180px;
+  resize: vertical;
+  font-size: 15px;
+  line-height: 1.7;
+  padding: 18px 18px;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--stone-500);
+  margin-top: 8px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+/* Pills container */
+.pills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 24px;
+}
+.value-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--navy);
+  color: var(--gold);
+  font-weight: 500;
+  font-family: var(--body);
+  letter-spacing: 0.01em;
+}
+
+/* Preset / sector / tone pills */
+.preset-pill {
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--stone-200);
+  background: var(--white);
+  color: var(--stone-600);
+  cursor: pointer;
+  font-family: var(--body);
+  font-weight: 400;
+  transition: all 0.15s ease;
+  letter-spacing: 0.01em;
+}
+.preset-pill:hover {
+  background: var(--navy);
+  color: var(--gold-soft);
+  border-color: var(--navy);
+}
+
+.sector-pill {
+  font-size: 12.5px;
+  padding: 8px 16px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--stone-200);
+  background: var(--white);
+  color: var(--stone-600);
+  cursor: pointer;
+  font-family: var(--body);
+  font-weight: 400;
+  transition: all 0.15s ease;
+}
+.sector-pill:hover { border-color: var(--navy); color: var(--navy); background: var(--stone-50); }
+.sector-pill.selected {
+  background: var(--navy);
+  color: var(--gold);
+  border-color: var(--navy);
+  font-weight: 500;
+}
+
+.tone-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.tone-pill {
+  font-size: 13px;
+  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--stone-200);
+  background: var(--white);
+  color: var(--stone-700);
+  cursor: pointer;
+  font-family: var(--body);
+  font-weight: 500;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+.tone-pill:hover { border-color: var(--navy); background: var(--stone-50); }
+.tone-pill.selected {
+  background: var(--navy);
+  color: var(--gold);
+  border-color: var(--navy);
+}
+.tone-pill.selected .tone-desc { color: var(--gold-soft); }
+.tone-desc {
+  font-size: 11.5px;
+  color: var(--stone-500);
+  margin-top: 4px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+/* Section divider inside a card */
+.field-divider {
+  height: 1px;
+  background: var(--stone-100);
+  margin: 1.75rem 0;
+}
+
+/* Buttons */
+.btn-primary {
+  width: 100%;
+  padding: 15px 20px;
+  background: var(--navy);
+  color: var(--gold);
+  border: none;
+  border-radius: var(--r-lg);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  margin-top: 2rem;
+}
+.btn-primary:hover { background: var(--navy-deep); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(27,42,74,0.15); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-secondary {
+  font-size: 12px;
+  color: var(--stone-600);
+  background: var(--white);
+  border: 1px solid var(--stone-200);
+  border-radius: var(--r-lg);
+  padding: 13px 22px;
+  cursor: pointer;
+  font-family: var(--body);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
+}
+.btn-secondary:hover { background: var(--stone-50); color: var(--ink); border-color: var(--stone-300); }
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 2rem;
+  align-items: stretch;
+}
+.btn-row .btn-primary { margin-top: 0; flex: 1; }
+
+/* Step 2 specific — segmented control for pattern */
+.segment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--stone-50);
+  border: 1px solid var(--stone-200);
+  border-radius: var(--r-lg);
+  padding: 4px;
+  gap: 4px;
+}
+.segment-option {
+  position: relative;
+  padding: 12px 16px;
+  border-radius: var(--r);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--stone-600);
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+}
+.segment-option:hover { color: var(--ink); }
+.segment-option.selected {
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(27,42,74,0.08), 0 0 0 1px rgba(27,42,74,0.06);
+}
+.segment-option .seg-title { font-weight: 600; font-size: 13px; }
+.segment-option .seg-desc { font-size: 11px; font-weight: 300; color: var(--stone-500); }
+.segment-option.selected .seg-desc { color: var(--stone-600); }
+.segment-option input { position: absolute; opacity: 0; pointer-events: none; }
+
+/* Loading */
+.loading-card {
+  background: var(--white);
+  border: 1px solid var(--stone-200);
+  border-radius: var(--r-xl);
+  padding: 3.5rem 2rem;
   text-align: center;
 }
-.splash-title {
-  font-family: 'Playfair Display', serif; font-size: 22px;
-  font-weight: 700; color: var(--navy); margin-bottom: 0.5rem;
+.loading-mark {
+  margin: 0 auto 1.5rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
-.splash-subtitle {
-  font-size: 11px; color: var(--gold); text-transform: uppercase;
-  letter-spacing: 0.2em; margin-bottom: 1.5rem;
+.loading-mark::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--gold);
+  animation: spin 1s linear infinite;
 }
+.loading-mark svg { color: var(--gold); }
+.loading-title {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+.loading-sub {
+  font-size: 13px;
+  color: var(--stone-500);
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 360px;
+  margin: 0 auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Errors */
+.err {
+  font-size: 13px;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid rgba(122,36,36,0.2);
+  border-radius: var(--r);
+  padding: 11px 14px;
+  margin-top: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ==================== RESULTS ==================== */
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.results-eyebrow {
+  font-family: var(--body);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold-deep);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.results-title {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-top: 4px;
+}
+.header-btns { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.btn-action {
+  font-size: 12px;
+  background: var(--white);
+  color: var(--stone-700);
+  border: 1px solid var(--stone-200);
+  border-radius: var(--r);
+  padding: 8px 14px;
+  cursor: pointer;
+  font-family: var(--body);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  letter-spacing: 0.02em;
+}
+.btn-action:hover { background: var(--stone-50); border-color: var(--stone-300); color: var(--ink); }
+.btn-action.primary {
+  background: var(--navy);
+  color: var(--gold);
+  border-color: var(--navy);
+}
+.btn-action.primary:hover { background: var(--navy-deep); color: var(--gold-soft); }
+.btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.audio-spin {
+  width: 12px; height: 12px;
+  border: 1.5px solid rgba(201,168,76,0.3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: none;
+  flex-shrink: 0;
+}
+
+.results-card {
+  background: var(--white);
+  border: 1px solid var(--stone-200);
+  border-radius: var(--r-xl);
+  padding: 2.75rem 2.5rem;
+  box-shadow: 0 1px 2px rgba(27,42,74,0.02), 0 8px 24px rgba(27,42,74,0.04);
+}
+
+.r-section { margin-bottom: 2.25rem; }
+.r-section:last-child { margin-bottom: 0; }
+.r-label {
+  font-family: var(--body);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold-deep);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+  display: block;
+}
+.r-divider {
+  height: 1px;
+  background: var(--stone-100);
+  margin: 2.25rem 0;
+}
+.content {
+  font-size: 14.5px;
+  color: var(--stone-700);
+  line-height: 1.75;
+  font-weight: 400;
+}
+
+/* Values analysis */
+.vrow {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--stone-100);
+}
+.vrow:first-child { padding-top: 0; }
+.vrow:last-child { border-bottom: none; padding-bottom: 0; }
+.vrow-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.vtag {
+  font-size: 11px;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: var(--navy);
+  color: var(--gold);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.status-pill {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+.status-pill.mis { background: var(--danger-bg); color: var(--danger); }
+.status-pill.uph { background: var(--success-bg); color: var(--success); }
+
+/* Behaviors */
+.brow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--stone-100);
+  flex-wrap: wrap;
+}
+.brow:first-child { padding-top: 0; }
+.brow:last-child { border-bottom: none; padding-bottom: 0; }
+.btext { flex: 1; font-size: 14.5px; color: var(--stone-700); line-height: 1.6; min-width: 220px; font-weight: 400; }
+.barrow { color: var(--stone-300); font-size: 14px; flex-shrink: 0; }
+.bvalue {
+  font-size: 11px;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: var(--gold-pale);
+  color: var(--navy);
+  font-weight: 500;
+  border: 1px solid rgba(201,168,76,0.25);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+/* Impact grid */
+.igrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+.icard {
+  background: var(--stone-50);
+  border: 1px solid var(--stone-100);
+  border-radius: var(--r-lg);
+  padding: 16px 18px;
+}
+.ilabel {
+  font-size: 10px;
+  color: var(--stone-500);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.icard p { font-size: 13.5px; color: var(--stone-700); line-height: 1.65; font-weight: 400; }
+
+/* Staff reality block */
+.staff-reality {
+  background: var(--success-bg);
+  border-left: 3px solid var(--success);
+  border-radius: 0 var(--r-lg) var(--r-lg) 0;
+  padding: 16px 20px;
+  font-size: 14px;
+  line-height: 1.75;
+  font-weight: 400;
+  color: #1a3a2a;
+}
+
+/* Conversation script */
+.slstep { margin-bottom: 18px; }
+.slstep:last-child { margin-bottom: 0; }
+.slstep-label {
+  font-size: 10px;
+  color: var(--stone-500);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.sblock {
+  background: var(--paper-warm);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 14px 18px;
+  font-size: 14px;
+  line-height: 1.75;
+  font-weight: 400;
+  color: var(--stone-700);
+}
+
+/* Action chip */
+.action-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: var(--r);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.chip.coach { background: var(--success-bg); color: var(--success); border: 1px solid rgba(46,107,82,0.2); }
+.chip.document { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(140,85,32,0.2); }
+.chip.escalate { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(122,36,36,0.2); }
+
+/* Audio player */
+.audio-player {
+  background: var(--navy);
+  border-radius: var(--r-lg);
+  padding: 14px 18px;
+  margin-bottom: 1.25rem;
+  display: none;
+}
+.audio-player.visible { display: block; }
+.audio-controls { display: flex; align-items: center; gap: 12px; }
+.audio-play-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--navy);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+.audio-play-btn:hover { background: var(--gold-soft); }
+.audio-progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; }
+.audio-progress {
+  flex: 1;
+  height: 3px;
+  background: rgba(201,168,76,0.2);
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+}
+.audio-progress-fill { height: 100%; background: var(--gold); border-radius: 999px; width: 0%; transition: width 0.1s linear; pointer-events: none; }
+.audio-time { font-size: 11px; color: rgba(201,168,76,0.65); font-family: var(--body); white-space: nowrap; min-width: 70px; text-align: right; }
+
+/* Footer */
+.footer { text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--stone-200); }
+.footer p { font-size: 11px; color: var(--stone-500); font-weight: 400; letter-spacing: 0.04em; }
+.footer strong { color: var(--gold-deep); font-weight: 600; }
+
+@media (max-width: 560px) {
+  .hero { padding: 4rem 1.25rem 3.5rem; }
+  .card, .results-card { padding: 1.75rem 1.5rem; }
+  .main { padding: 2rem 1rem 4rem; }
+  .progress-rail { gap: 8px; }
+  .progress-label { font-size: 10px; }
+  .tone-grid { grid-template-columns: 1fr; }
+}
+
+/* ==================== OVERLAYS (login + splash) ==================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--navy);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(201,168,76,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(201,168,76,0.04) 0%, transparent 50%);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.overlay-card {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  padding: 3rem 2.5rem 2.5rem;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  position: relative;
+}
+.overlay-lang {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--stone-500);
+  background: transparent;
+  border: 1px solid var(--stone-200);
+  border-radius: var(--r);
+  padding: 5px 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: var(--body);
+  transition: all 0.15s ease;
+}
+.overlay-lang:hover { color: var(--ink); border-color: var(--stone-300); background: var(--stone-50); }
+
+.overlay-mark { margin: 0 auto 1.5rem; }
+.overlay-title {
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.4rem;
+}
+.overlay-title em { font-style: italic; color: var(--gold-deep); font-weight: 500; }
+.overlay-sub {
+  font-size: 10px;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.login-field { text-align: left; margin-bottom: 1rem; }
+.login-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--stone-700);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.login-error {
+  font-size: 13px;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid rgba(122,36,36,0.2);
+  border-radius: var(--r);
+  padding: 10px 14px;
+  margin-top: 0.75rem;
+  font-weight: 400;
+  display: none;
+  text-align: left;
+}
+.overlay-footer {
+  font-size: 11px;
+  color: var(--stone-500);
+  margin-top: 1.5rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
 .splash-body {
-  font-size: 13px; color: var(--text2); line-height: 1.75;
-  font-weight: 300; margin-bottom: 1.5rem; text-align: left;
+  font-size: 13.5px;
+  color: var(--stone-600);
+  line-height: 1.75;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+  text-align: left;
 }
+.splash-body p + p { margin-top: 0.85rem; }
+
 .splash-agree {
-  display: flex; align-items: flex-start; gap: 10px;
-  text-align: left; margin-bottom: 1.5rem;
-  padding: 14px; background: var(--bg);
-  border-radius: var(--r); border: 1px solid var(--border2);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  text-align: left;
+  margin-bottom: 1.5rem;
+  padding: 16px;
+  background: var(--stone-50);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--stone-200);
 }
-.splash-agree input { margin-top: 2px; accent-color: var(--navy); flex-shrink: 0; cursor: pointer; }
-.splash-agree label { font-size: 13px; color: var(--text2); font-weight: 300; line-height: 1.6; cursor: pointer; }
-.btn-enter {
-  width: 100%; padding: 14px; background: var(--navy); color: var(--gold);
-  border: none; border-radius: var(--r); font-size: 14px; font-weight: 500;
-  cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.05em;
-  transition: opacity 0.15s;
-}
-.btn-enter:disabled { opacity: 0.35; cursor: not-allowed; }
-.btn-enter:not(:disabled):hover { opacity: 0.88; }
+.splash-agree input { margin-top: 3px; accent-color: var(--navy); flex-shrink: 0; cursor: pointer; width: 14px; height: 14px; }
+.splash-agree label { font-size: 13px; color: var(--stone-700); font-weight: 400; line-height: 1.65; cursor: pointer; }
 </style>
 </head>
 <body>
 
-
-<div class="login-overlay" id="login-overlay">
-  <div class="login-card">
-    <div style="text-align:right; margin-bottom: 0.5rem;">
-      <button onclick="toggleLanguage()" id="lang-btn-login" style="font-size:12px; color:var(--gold); background:var(--navy); border:1px solid rgba(201,168,76,0.5); border-radius:6px; padding:5px 12px; cursor:pointer; font-family:'DM Sans',sans-serif;">Español</button>
-    </div>
-    <div class="login-logo">
+<!-- ==================== LOGIN OVERLAY ==================== -->
+<div class="overlay" id="login-overlay">
+  <div class="overlay-card">
+    <button onclick="toggleLanguage()" id="lang-btn-login" class="overlay-lang">Español</button>
+    <div class="overlay-mark">
       <svg width="56" height="56" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="80" height="80" rx="18" fill="#0D1B2A"/>
-        <rect x="12" y="12" width="56" height="56" stroke="#F5F1E8" stroke-width="1.5" fill="none"/>
-        <rect x="31" y="12.5" width="18.33" height="55" fill="#C6A75E" opacity="0.2"/>
-        <line x1="21" y1="21" x2="59" y2="59" stroke="#C6A75E" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="40" cy="40" r="4.5" fill="#C6A75E"/>
+        <rect width="80" height="80" rx="16" fill="#1B2A4A"/>
+        <rect x="12" y="12" width="56" height="56" stroke="#F7F5EF" stroke-width="1" fill="none" opacity="0.5"/>
+        <rect x="31" y="12.5" width="18.33" height="55" fill="#C9A84C" opacity="0.18"/>
+        <line x1="21" y1="21" x2="59" y2="59" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="40" cy="40" r="4" fill="#C9A84C"/>
       </svg>
     </div>
-    <div class="login-title" id="login-title">Values Lab</div>
-    <div class="login-subtitle" id="login-subtitle">By Karabed Leadership Group</div>
+    <div class="overlay-title" id="login-title">Values<em> Lab</em></div>
+    <div class="overlay-sub" id="login-subtitle">Karabed Leadership Group</div>
 
     <div class="login-field">
       <label for="login-pw" id="login-pw-label">Access Code</label>
-      <input type="password" class="login-input" id="login-pw" placeholder="Enter your access code" autocomplete="current-password" />
+      <input type="password" class="values-input" id="login-pw" placeholder="Enter your access code" autocomplete="current-password" />
     </div>
 
     <div class="login-error" id="login-error"></div>
-    <button class="btn-login" id="btn-login" onclick="attemptLogin()">Continue</button>
+    <button class="btn-primary" id="btn-login" onclick="attemptLogin()" style="margin-top:1rem;">Continue</button>
 
-    <div class="login-footer" id="login-footer">Need access? Contact Karabed Leadership Group.</div>
+    <div class="overlay-footer" id="login-footer">Need access? Contact Karabed Leadership Group.</div>
   </div>
 </div>
 
-<div class="splash-overlay" id="splash-overlay">
-  <div class="splash-card"><div style="text-align:right; margin-bottom: 0.75rem;">
-  <button onclick="toggleLanguage()" id="lang-btn-splash" style="font-size:12px; color:var(--gold); background:none; border:1px solid rgba(201,168,76,0.5); border-radius:6px; padding:5px 12px; cursor:pointer; font-family:'DM Sans',sans-serif;">Español</button>
-</div>
-    <div class="splash-title" id="splash-title">Values Lab</div>
-    <div class="splash-subtitle" id="splash-subtitle">By Karabed Leadership Group</div>
+<!-- ==================== SPLASH OVERLAY ==================== -->
+<div class="overlay" id="splash-overlay">
+  <div class="overlay-card">
+    <button onclick="toggleLanguage()" id="lang-btn-splash" class="overlay-lang">Español</button>
+    <div class="overlay-mark">
+      <svg width="48" height="48" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="16" fill="#1B2A4A"/>
+        <rect x="12" y="12" width="56" height="56" stroke="#F7F5EF" stroke-width="1" fill="none" opacity="0.5"/>
+        <rect x="31" y="12.5" width="18.33" height="55" fill="#C9A84C" opacity="0.18"/>
+        <line x1="21" y1="21" x2="59" y2="59" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="40" cy="40" r="4" fill="#C9A84C"/>
+      </svg>
+    </div>
+    <div class="overlay-title" id="splash-title" style="font-size:24px;">A note before we begin</div>
+    <div class="overlay-sub" id="splash-subtitle">Values Lab Preview</div>
     <div class="splash-body">
       <p id="splash-p1">Welcome, and thank you for being part of this journey. Values Lab is in its early testing phase, and your presence here is a gift to this work.</p>
-      <p style="margin-top:0.75rem;" id="splash-p2">This is a shared space of trust. Everything generated inside — the guidance, the scripts, the analysis — is confidential and intended solely to support your feedback to Karabed Leadership Group as we shape this tool together.</p>
-      <p style="margin-top:0.75rem;" id="splash-p3">We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.</p>
+      <p id="splash-p2">This is a shared space of trust. Everything generated inside, the guidance, the scripts, the analysis, is confidential and intended solely to support your feedback to Karabed Leadership Group as we shape this tool together.</p>
+      <p id="splash-p3">We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.</p>
     </div>
     <div class="splash-agree">
       <input type="checkbox" id="agree-check" onchange="toggleEnter()">
       <label for="agree-check" id="splash-agree-label">I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.</label>
     </div>
-    <button class="btn-enter" id="enter-btn" disabled onclick="enterApp()">Enter Values Lab</button>
+    <button class="btn-primary" id="enter-btn" disabled onclick="enterApp()" style="margin-top:0;">Enter Values Lab</button>
   </div>
 </div>
 
+<!-- ==================== HERO ==================== -->
 <div class="hero">
-  <button onclick="toggleLanguage()" id="lang-btn-hero" style="position:absolute; top:20px; left:24px; font-size:12px; font-weight:500; color:var(--gold); background:none; border:1px solid rgba(201,168,76,0.4); border-radius:6px; padding:6px 14px; letter-spacing:0.04em; cursor:pointer; font-family:'DM Sans',sans-serif;">Español</button><a href="/admin.html" class="admin-link" id="admin-link">Admin login</a>
-  <div style="margin:0 auto 1.5rem; display:flex; flex-direction:column; align-items:center; gap:10px;">
-    <svg width="72" height="72" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="80" height="80" rx="18" fill="#0D1B2A"/>
-      <rect x="12" y="12" width="56" height="56" stroke="#F5F1E8" stroke-width="1.5" fill="none"/>
-      <line x1="30.67" y1="12" x2="30.67" y2="68" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
-      <line x1="49.33" y1="12" x2="49.33" y2="68" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
-      <line x1="12" y1="30.67" x2="68" y2="30.67" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
-      <line x1="12" y1="49.33" x2="68" y2="49.33" stroke="#F5F1E8" stroke-width="1" opacity="0.4"/>
-      <rect x="31" y="12.5" width="18.33" height="55" fill="#C6A75E" opacity="0.2"/>
-      <line x1="21" y1="21" x2="59" y2="59" stroke="#C6A75E" stroke-width="3" stroke-linecap="round"/>
-      <circle cx="40" cy="40" r="4.5" fill="#C6A75E"/>
+  <div class="hero-nav">
+    <button onclick="toggleLanguage()" id="lang-btn-hero" class="lang-btn">Español</button>
+    <a href="/admin.html" class="admin-link" id="admin-link">Admin</a>
+  </div>
+  <div class="hero-mark">
+    <svg width="64" height="64" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="80" height="80" rx="16" fill="#131F38"/>
+      <rect x="12" y="12" width="56" height="56" stroke="#F7F5EF" stroke-width="1" fill="none" opacity="0.4"/>
+      <line x1="30.67" y1="12" x2="30.67" y2="68" stroke="#F7F5EF" stroke-width="0.75" opacity="0.3"/>
+      <line x1="49.33" y1="12" x2="49.33" y2="68" stroke="#F7F5EF" stroke-width="0.75" opacity="0.3"/>
+      <line x1="12" y1="30.67" x2="68" y2="30.67" stroke="#F7F5EF" stroke-width="0.75" opacity="0.3"/>
+      <line x1="12" y1="49.33" x2="68" y2="49.33" stroke="#F7F5EF" stroke-width="0.75" opacity="0.3"/>
+      <rect x="31" y="12.5" width="18.33" height="55" fill="#C9A84C" opacity="0.2"/>
+      <line x1="21" y1="21" x2="59" y2="59" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="40" cy="40" r="4" fill="#C9A84C"/>
     </svg>
   </div>
-  <h1 id="hero-title">Values</h1>
-  <div class="lab" id="hero-tagline">Lab</div>
-  <div class="byline" id="hero-byline">By Karabed Leadership Group</div>
-  <p id="hero-description">A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.</p>
+  <h1 id="hero-title">Values<em> Lab</em></h1>
+  <div class="lab" id="hero-tagline">Leadership Response</div>
+  <div class="byline" id="hero-byline">Karabed Leadership Group</div>
+  <p id="hero-description">A trauma-informed leadership response tool. Enter your organization's values, describe a staff behavior, and receive structured guidance grounded in what your culture stands for.</p>
 </div>
 
 <div class="main">
 
+<!-- ==================== STEP 1 ==================== -->
 <div id="step-1">
+  <div class="progress-rail">
+    <div class="progress-step active">
+      <div class="progress-num">1</div>
+      <div class="progress-label" id="prog-1-label">Your values</div>
+    </div>
+    <div class="progress-divider"></div>
+    <div class="progress-step">
+      <div class="progress-num">2</div>
+      <div class="progress-label" id="prog-2-label">The situation</div>
+    </div>
+  </div>
+
   <div class="card">
-    <div class="step-badge" id="step-1-badge">Step 1 of 2</div>
-    <div class="field-label" id="step-1-label">What are your organizational values?</div>
-    <input type="text" class="values-input" id="f-values" placeholder="Ex: Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability" />
-    <div class="field-hint" id="step-1-hint">Type your own or tap values below to add them.</div>
-    <div id="values-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:28px;"></div>
-    <div style="margin-top:1rem;">
-      <div class="field-label" id="common-values-label" style="margin-bottom:8px;">Common organizational values — tap to add</div>
+    <div class="card-head">
+      <div class="card-eyebrow" id="step-1-eyebrow">Step One</div>
+      <div class="card-title" id="step-1-title">Begin with your values</div>
+      <div class="card-subtitle" id="step-1-subtitle">The values you enter here become the lens through which the situation is read. Add the ones your organization actually names.</div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" id="step-1-label">Organizational values</label>
+      <input type="text" class="values-input" id="f-values" placeholder="e.g., Client-Centered, Respect, Integrity, Collaboration" />
+      <div class="field-hint" id="step-1-hint">Type your own, or tap from the common values below.</div>
+      <div id="values-pills" class="pills-wrap" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" id="common-values-label">Common organizational values</label>
       <div style="display:flex;flex-wrap:wrap;gap:6px;">
         <button class="preset-pill" onclick="addPreset('Client-Centered')">Client-Centered</button>
         <button class="preset-pill" onclick="addPreset('Respect')">Respect</button>
@@ -316,8 +1092,10 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       </div>
     </div>
 
-    <div style="margin-top:1.75rem; padding-top:1.25rem; border-top:1px solid var(--border);">
-      <div class="field-label" id="sector-label" style="margin-bottom:8px;">What sector are you in? <span style="text-transform:none; letter-spacing:0; color:var(--text3); font-weight:300;" id="sector-optional">(optional)</span></div>
+    <div class="field-divider"></div>
+
+    <div class="field-group">
+      <label class="field-label" id="sector-label">Sector <span class="optional" id="sector-optional">optional</span></label>
       <div style="display:flex;flex-wrap:wrap;gap:6px;" id="sector-pills">
         <button class="sector-pill" data-sector="Social Services / Nonprofit" onclick="selectSector(this)">Social Services / Nonprofit</button>
         <button class="sector-pill" data-sector="Healthcare" onclick="selectSector(this)">Healthcare</button>
@@ -330,65 +1108,108 @@ textarea.values-input { min-height: 120px; resize: vertical; }
       </div>
     </div>
 
-    <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border);">
-      <div class="field-label" id="tone-label" style="margin-bottom:8px;">What tone should the coaching language use?</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;" id="tone-pills">
+    <div class="field-divider"></div>
+
+    <div class="field-group">
+      <label class="field-label" id="tone-label">Coaching tone</label>
+      <div class="tone-grid" id="tone-pills">
         <button class="tone-pill" data-tone="supportive" onclick="selectTone(this)" id="tone-supportive">
           <div id="tone-supportive-title">Supportive coaching</div>
-          <div class="tone-desc" id="tone-supportive-desc">"We can..." — warm, partnered</div>
+          <div class="tone-desc" id="tone-supportive-desc">"We can…" — warm, partnered language</div>
         </button>
         <button class="tone-pill" data-tone="direct" onclick="selectTone(this)" id="tone-direct">
           <div id="tone-direct-title">Direct professional</div>
-          <div class="tone-desc" id="tone-direct-desc">"Staff can..." — clear, professional</div>
+          <div class="tone-desc" id="tone-direct-desc">"Staff can…" — clear, professional language</div>
         </button>
       </div>
     </div>
 
     <div id="err-1" class="err" style="display:none"></div>
-    <button class="btn-continue" id="continue-btn-1" onclick="goStep2()">Continue</button>
+    <button class="btn-primary" id="continue-btn-1" onclick="goStep2()">Continue to the situation</button>
   </div>
 </div>
 
+<!-- ==================== STEP 2 (REDESIGNED) ==================== -->
 <div id="step-2" style="display:none">
+  <div class="progress-rail">
+    <div class="progress-step complete">
+      <div class="progress-num">✓</div>
+      <div class="progress-label" id="prog-1-label-2">Your values</div>
+    </div>
+    <div class="progress-divider"></div>
+    <div class="progress-step active">
+      <div class="progress-num">2</div>
+      <div class="progress-label" id="prog-2-label-2">The situation</div>
+    </div>
+  </div>
+
   <div class="card">
-    <div class="step-badge" id="step-2-badge">Step 2 of 2</div>
-    <div class="field-label" id="step-2-label">Describe the staff's behavior</div>
-    <textarea class="values-input" id="f-situation" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID. Other staff witnessed the interaction."></textarea>
-    <div style="margin-top:1.25rem;">
-      <div class="field-label" id="pattern-label">Is this the first time or a repeated behavior?</div>
-      <div style="display:flex;gap:10px;margin-top:0.5rem;flex-wrap:wrap;">
-        <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;flex:1;min-width:140px;background:var(--white);transition:all 0.15s;" id="pattern-first-label">
-          <input type="radio" name="pattern" value="first" id="pattern-first" style="accent-color:var(--navy);" onchange="selectPattern()">
-          <span id="pattern-first-text" style="font-size:13px;font-weight:300;color:var(--text2);">First time</span>
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;flex:1;min-width:140px;background:var(--white);transition:all 0.15s;" id="pattern-repeated-label">
-          <input type="radio" name="pattern" value="repeated" id="pattern-repeated" style="accent-color:var(--navy);" onchange="selectPattern()">
-          <span id="pattern-repeated-text" style="font-size:13px;font-weight:300;color:var(--text2);">Repeated behavior</span>
-        </label>
+    <div class="card-head">
+      <div class="card-eyebrow" id="step-2-eyebrow">Step Two</div>
+      <div class="card-title" id="step-2-title">Describe what you observed</div>
+      <div class="card-subtitle" id="step-2-subtitle">Write the situation as you would describe it to a trusted colleague. The more specific your account, the more grounded the guidance will be.</div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" id="step-2-label">The behavior</label>
+      <textarea class="values-input" id="f-situation" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID. Other staff witnessed the interaction."></textarea>
+      <div class="field-hint" id="step-2-hint">Include who was involved, what was said or done, and the context. Avoid identifying details if you'd prefer.</div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" id="pattern-label">Pattern</label>
+      <div class="segment" id="pattern-segment">
+        <button type="button" class="segment-option" data-pattern="first" onclick="selectPattern('first')" id="seg-first">
+          <input type="radio" name="pattern" value="first" id="pattern-first">
+          <span class="seg-title" id="pattern-first-text">First time</span>
+          <span class="seg-desc" id="pattern-first-desc">This is the first observed instance</span>
+        </button>
+        <button type="button" class="segment-option" data-pattern="repeated" onclick="selectPattern('repeated')" id="seg-repeated">
+          <input type="radio" name="pattern" value="repeated" id="pattern-repeated">
+          <span class="seg-title" id="pattern-repeated-text">Repeated</span>
+          <span class="seg-desc" id="pattern-repeated-desc">This has happened before</span>
+        </button>
       </div>
     </div>
+
     <div id="err-2" class="err" style="display:none"></div>
-    <div style="display:flex;gap:10px;margin-top:1.25rem;">
-      <button class="btn-back" id="back-btn" onclick="goStep1()">← Back</button>
-      <button class="btn-continue" id="generate-btn" style="margin-top:0;flex:1;" onclick="generate()">Get guidance →</button>
+    <div class="btn-row">
+      <button class="btn-secondary" id="back-btn" onclick="goStep1()">Back</button>
+      <button class="btn-primary" id="generate-btn" onclick="generate()">Get guidance</button>
     </div>
   </div>
 </div>
 
+<!-- ==================== LOADING ==================== -->
 <div id="loading-view" style="display:none">
-  <div class="loading"><div class="spinner"></div><span id="loading-text">This may take 30 seconds to a minute. Your Values Lab analysis will be here shortly.</span></div>
+  <div class="loading-card">
+    <div class="loading-mark">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="6" y1="3" x2="6" y2="15"/>
+        <circle cx="18" cy="6" r="3"/>
+        <circle cx="6" cy="18" r="3"/>
+        <path d="M18 9a9 9 0 0 1-9 9"/>
+      </svg>
+    </div>
+    <div class="loading-title" id="loading-title">Reading the situation through your values</div>
+    <div class="loading-sub" id="loading-text">This may take 30 to 60 seconds. Your guidance will appear here.</div>
+  </div>
 </div>
 
+<!-- ==================== RESULTS ==================== -->
 <div id="results-view" style="display:none">
   <div class="results-header">
-    <div class="results-label" id="results-label">Leadership guidance</div>
+    <div>
+      <div class="results-eyebrow" id="results-eyebrow">Leadership Response</div>
+      <div class="results-title" id="results-title">Your guidance</div>
+    </div>
     <div class="header-btns">
-      <button class="btn-audio" id="audio-btn" onclick="listenToSummary()">
+      <button class="btn-action" id="audio-btn" onclick="listenToSummary()">
         <div class="audio-spin" id="audio-spin"></div>
-        <span id="audio-label">&#9654; Listen</span>
+        <span id="audio-label">▶ Listen</span>
       </button>
-      <button class="btn-audio" id="pdf-btn" onclick="downloadPDF()" style="background:var(--gold);color:var(--navy);">&#8595; PDF</button>
-      <button class="btn-restart" id="restart-btn" onclick="restart()">Start over</button>
+      <button class="btn-action" id="pdf-btn" onclick="downloadPDF()">↓ PDF</button>
+      <button class="btn-action" id="restart-btn" onclick="restart()">Start over</button>
     </div>
   </div>
 
@@ -407,19 +1228,19 @@ textarea.values-input { min-height: 120px; resize: vertical; }
     </div>
   </div>
 
-  <div class="card" id="results-card"></div>
+  <div class="results-card" id="results-card"></div>
   <div class="footer"><p>Powered by <strong>Karabed Leadership Group</strong> — Values Lab</p></div>
 </div>
 
 </div>
 
 <script>
-
 const ACCESS_CODE = 'OrgLogin2026!';
 
 let currentLang = 'en';
 let selectedSector = '';
 let selectedTone = '';
+let selectedPattern = '';
 
 function attemptLogin() {
   const pwInput = document.getElementById('login-pw').value;
@@ -444,21 +1265,17 @@ function enterApp() {
   document.getElementById('splash-overlay').style.display = 'none';
   sessionStorage.setItem('vl_agreed', '1');
 }
+
 document.addEventListener('DOMContentLoaded', function() {
   if (sessionStorage.getItem('vl_authed') === '1') {
     document.getElementById('login-overlay').style.display = 'none';
   }
-
   const pwEl = document.getElementById('login-pw');
   if (pwEl) {
     pwEl.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        attemptLogin();
-      }
+      if (e.key === 'Enter') { e.preventDefault(); attemptLogin(); }
     });
   }
-
   if (sessionStorage.getItem('vl_agreed') === '1') {
     document.getElementById('splash-overlay').style.display = 'none';
   }
@@ -467,12 +1284,6 @@ document.addEventListener('DOMContentLoaded', function() {
     agreeCheck.addEventListener('click', toggleEnter);
     agreeCheck.addEventListener('change', toggleEnter);
     toggleEnter();
-  }
-  const agreeLabel = document.getElementById('splash-agree-label');
-  if (agreeLabel) {
-    agreeLabel.addEventListener('click', function(e) {
-      setTimeout(toggleEnter, 0);
-    });
   }
 });
 
@@ -507,12 +1318,20 @@ function selectTone(btn) {
   selectedTone = btn.getAttribute('data-tone');
 }
 
+function selectPattern(val) {
+  selectedPattern = val;
+  document.getElementById('pattern-first').checked = (val === 'first');
+  document.getElementById('pattern-repeated').checked = (val === 'repeated');
+  document.getElementById('seg-first').classList.toggle('selected', val === 'first');
+  document.getElementById('seg-repeated').classList.toggle('selected', val === 'repeated');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const input = document.getElementById('f-values');
   const pillsDiv = document.getElementById('values-pills');
   function renderPills() {
     const values = input.value.split(',').map(v => v.trim()).filter(v => v.length > 0);
-    pillsDiv.innerHTML = values.map(v => `<span style="font-size:11px;padding:4px 12px;border-radius:999px;background:var(--navy);color:var(--gold);font-weight:500;font-family:'DM Sans',sans-serif;">${v}</span>`).join('');
+    pillsDiv.innerHTML = values.map(v => `<span class="value-chip">${v}</span>`).join('');
   }
   input.addEventListener('input', renderPills);
   renderPills();
@@ -528,30 +1347,25 @@ function goStep2() {
   orgValues = values;
   document.getElementById('step-1').style.display = 'none';
   document.getElementById('step-2').style.display = 'block';
-}
-
-function selectPattern() {
-  const first = document.getElementById('pattern-first-label');
-  const repeated = document.getElementById('pattern-repeated-label');
-  const val = document.querySelector('input[name="pattern"]:checked')?.value;
-  first.style.borderColor = val === 'first' ? 'var(--navy)' : 'var(--border2)';
-  repeated.style.borderColor = val === 'repeated' ? 'var(--navy)' : 'var(--border2)';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goStep1() {
   document.getElementById('step-2').style.display = 'none';
   document.getElementById('step-1').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function generate() {
   const situation = document.getElementById('f-situation').value.trim();
-  const pattern = document.querySelector('input[name="pattern"]:checked')?.value;
+  const pattern = selectedPattern;
   const err = document.getElementById('err-2');
   if (!situation || situation.length < 15) { err.textContent = currentLang === 'es' ? "Por favor describa el comportamiento del miembro del personal con más detalle." : "Please describe the staff's behavior in more detail."; err.style.display = 'block'; return; }
   if (!pattern) { err.textContent = currentLang === 'es' ? 'Por favor indique si este es un comportamiento de primera vez o repetido.' : 'Please indicate if this is a first-time or repeated behavior.'; err.style.display = 'block'; return; }
   err.style.display = 'none';
   document.getElementById('step-2').style.display = 'none';
   document.getElementById('loading-view').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const valuesText = orgValues.map(v => `- ${v.toUpperCase()}`).join('\n');
 
@@ -580,18 +1394,18 @@ async function generate() {
   })();
 
   const toneInstruction = selectedTone === 'supportive'
-    ? '- TONE: SUPPORTIVE COACHING. Write each behavior in the FIRST-PERSON PLURAL "we" voice, framing the leader and staff as partners working toward the same values together (e.g., "We can de-escalate by using a calm, neutral tone"). Each behavior is 10 to 16 words, present tense, starting with "We can..." or occasionally "Together we..." for variety. The tone should feel warm, invitational, and supportive — never directive or evaluative. Imagine a leader saying this aloud to a staff member with care.'
-    : '- TONE: DIRECT PROFESSIONAL. Write each behavior as a clear, observable action a staff member can take, in third person starting with "Staff" (e.g., "Staff de-escalates the situation with a calm, neutral tone"). Each behavior is 8 to 14 words, present tense, professional and concise. The tone should feel clear, respectful, and competent — like a thoughtful performance expectation, not a lecture. No softening qualifiers, no demanding language.';
+    ? '- TONE: SUPPORTIVE COACHING. Write each behavior in the FIRST-PERSON PLURAL "we" voice, framing the leader and staff as partners working toward the same values together (e.g., "We can de-escalate by using a calm, neutral tone"). Each behavior is 10 to 16 words, present tense, starting with "We can..." or occasionally "Together we..." for variety. The tone should feel warm, invitational, and supportive, never directive or evaluative.'
+    : '- TONE: DIRECT PROFESSIONAL. Write each behavior as a clear, observable action a staff member can take, in third person starting with "Staff" (e.g., "Staff de-escalates the situation with a calm, neutral tone"). Each behavior is 8 to 14 words, present tense, professional and concise.';
 
   const spanishToneInstruction = selectedTone === 'supportive'
-    ? 'write each "behavior" in Spanish in the first-person plural "we" voice, starting with "Podemos" or "Juntos podemos" (e.g., "Podemos desescalar la situación con un tono calmado y neutral"). The tone should feel warm and invitational.'
-    : 'write each "behavior" in Spanish starting with "El personal" (e.g., "El personal desescala la situación con un tono calmado y neutral"). The tone should feel clear, professional, and concise.';
+    ? 'write each "behavior" in Spanish in the first-person plural "we" voice, starting with "Podemos" or "Juntos podemos" (e.g., "Podemos desescalar la situación con un tono calmado y neutral").'
+    : 'write each "behavior" in Spanish starting with "El personal" (e.g., "El personal desescala la situación con un tono calmado y neutral").';
 
   const spanishBlock = currentLang === 'es'
     ? 'CRITICAL: Respond entirely in Spanish. All text in the JSON response must be in Spanish, including all explanations, scripts, staffReality, impact descriptions, valuesAlignedBehaviors, and reasoning. Use warm, professional Spanish appropriate for leadership. Keep the JSON keys in English but all values in Spanish. The "status" field should remain as "Misaligned" or "Upheld" in English (these are internal codes). The "action" field should remain as "Coach", "Document", or "Escalate" in English. For valuesAlignedBehaviors: ' + spanishToneInstruction + ' The "value" must match verbatim one of the values provided.'
     : '';
 
-  const systemPrompt = `Behavior pattern: ${pattern === 'first' ? 'This is the FIRST TIME this behavior has been observed.' : 'This is a REPEATED behavior — it has happened before.'}
+  const systemPrompt = `Behavior pattern: ${pattern === 'first' ? 'This is the FIRST TIME this behavior has been observed.' : 'This is a REPEATED behavior, it has happened before.'}
 
 ${sectorGuidance}
 
@@ -611,19 +1425,19 @@ Trauma-informed tone guidelines:
 - The tone should feel like a caring conversation between two people, not a performance review or disciplinary meeting.
 - For the expectation step specifically: never say "I need this to change", "this needs to stop", or any demand-based language. Instead frame it as a shared hope or invitation, e.g. "What I'm hoping we can move toward together is..." or "Going forward, what I'd love for us to hold onto is...".
 
-IMPORTANT — adjust based on behavior pattern:
+IMPORTANT, adjust based on behavior pattern:
 - If FIRST TIME: coaching and curiosity-based tone. Assume positive intent. Focus on awareness and correction.
 - If REPEATED: firmer accountability tone. Acknowledge the pattern explicitly. Recommend documentation or escalation depending on severity.
 
-CRITICAL — valuesAlignedBehaviors field requirements:
+CRITICAL, valuesAlignedBehaviors field requirements:
 Produce 4 to 6 short, specific practices a leader could suggest to a staff member to support them in living the organization's values in this exact scenario, each paired with EXACTLY ONE value from the organizational values list above.
 - These are NOT a checklist of what staff did wrong. They are forward-looking suggestions a supervisor could share in a coaching conversation to support the staff member.
 ${toneInstruction}
-- Each behavior must be HIGHLY SPECIFIC to the scenario described — not generic culture statements. If the scenario involves a missed handoff, the behaviors should reference handoff actions; if it involves a client interaction, they should reference that interaction.
+- Each behavior must be HIGHLY SPECIFIC to the scenario described.
 - The value paired with each behavior MUST be drawn verbatim from the organizational values provided above.
 - Even if a behavior could plausibly uphold multiple values, you MUST pick the SINGLE most central value. Do not list two values. Do not write "and". Pick one.
-- Vary the values across the list when possible — do not pair every behavior with the same value.
-- Use 3 only if the scenario truly cannot support more, and 7 only if necessary for completeness; aim for 4 to 6.
+- Vary the values across the list when possible.
+- Aim for 4 to 6.
 
 ${spanishBlock}
 
@@ -632,7 +1446,7 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 {
 "behaviorObserved": "string",
 "valuesAnalysis": [{"value": "string", "status": "Misaligned|Upheld", "explanation": "string"}],
-"staffReality": "string — a trauma-informed reflection on what might be going on for this staff member. What stressors, secondary trauma, or unmet needs could be contributing to this behavior? This is not an excuse but an invitation to lead with curiosity.",
+"staffReality": "string",
 "impact": {"client": "string", "team": "string", "organizational": "string"},
 "valuesAlignedBehaviors": [{"behavior": "string", "value": "string"}],
 "conversationScript": {
@@ -669,38 +1483,23 @@ function render(d) {
   const L = currentLang === 'es' ? {
     behaviorObserved: 'Comportamiento observado',
     valuesAnalysis: 'Análisis de valores',
-    misaligned: 'Desalineado',
-    upheld: 'Sostenido',
-    staffReality: 'Considere la posible realidad del personal',
-    impact: 'Impacto',
-    client: 'Cliente',
-    team: 'Equipo',
-    organizational: 'Organizacional',
+    misaligned: 'Desalineado', upheld: 'Sostenido',
+    staffReality: 'La posible realidad del personal',
+    impact: 'Impacto', client: 'Cliente', team: 'Equipo', organizational: 'Organizacional',
     valuesAlignedBehavior: 'Comportamiento alineado con los valores',
     conversationScript: 'Guion de conversación',
-    opening: 'Apertura',
-    curiosityQuestion: 'Pregunta de curiosidad',
-    behaviorImpact: 'Comportamiento + impacto',
-    expectation: 'Expectativa',
-    alignmentStatement: 'Declaración de alineación',
+    opening: 'Apertura', curiosityQuestion: 'Pregunta de curiosidad', behaviorImpact: 'Comportamiento e impacto',
+    expectation: 'Expectativa', alignmentStatement: 'Declaración de alineación',
     recommendedAction: 'Acción recomendada'
   } : {
-    behaviorObserved: 'Behavior observed',
-    valuesAnalysis: 'Values analysis',
-    misaligned: 'Misaligned',
-    upheld: 'Upheld',
-    staffReality: "Consider Staff's Possible Reality",
-    impact: 'Impact',
-    client: 'Client',
-    team: 'Team',
-    organizational: 'Organizational',
+    behaviorObserved: 'Behavior observed', valuesAnalysis: 'Values analysis',
+    misaligned: 'Misaligned', upheld: 'Upheld',
+    staffReality: "What may be going on for this staff member",
+    impact: 'Impact', client: 'Client', team: 'Team', organizational: 'Organizational',
     valuesAlignedBehavior: 'Values-aligned behavior',
     conversationScript: 'Conversation script',
-    opening: 'Opening',
-    curiosityQuestion: 'Curiosity question',
-    behaviorImpact: 'Behavior + impact',
-    expectation: 'Expectation',
-    alignmentStatement: 'Alignment statement',
+    opening: 'Opening', curiosityQuestion: 'Curiosity question', behaviorImpact: 'Behavior and impact',
+    expectation: 'Expectation', alignmentStatement: 'Alignment statement',
     recommendedAction: 'Recommended action'
   };
 
@@ -708,15 +1507,15 @@ function render(d) {
     <div class="vrow">
       <div class="vrow-head">
         <span class="vtag">${v.value}</span>
-        <span class="${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status === 'Misaligned' ? L.misaligned : L.upheld}</span>
+        <span class="status-pill ${v.status === 'Misaligned' ? 'mis' : 'uph'}">${v.status === 'Misaligned' ? L.misaligned : L.upheld}</span>
       </div>
       <p class="content">${v.explanation}</p>
     </div>`).join('');
 
   let behaviorsHTML = '';
   if (Array.isArray(d.valuesAlignedBehaviors) && d.valuesAlignedBehaviors.length) {
-    behaviorsHTML = `<div style="margin-bottom:1.5rem">
-      <div class="rlabel">${L.valuesAlignedBehavior}</div>
+    behaviorsHTML = `<div class="r-section">
+      <div class="r-label">${L.valuesAlignedBehavior}</div>
       ${d.valuesAlignedBehaviors.map(b => `
         <div class="brow">
           <div class="btext">${b.behavior}</div>
@@ -724,48 +1523,57 @@ function render(d) {
           <span class="bvalue">${b.value}</span>
         </div>`).join('')}
     </div>
-    <hr class="divider">`;
+    <div class="r-divider"></div>`;
   } else if (d.correctBehavior) {
-    behaviorsHTML = `<div style="margin-bottom:1.5rem">
-      <div class="rlabel">${L.valuesAlignedBehavior}</div>
+    behaviorsHTML = `<div class="r-section">
+      <div class="r-label">${L.valuesAlignedBehavior}</div>
       <p class="content">${d.correctBehavior}</p>
     </div>
-    <hr class="divider">`;
+    <div class="r-divider"></div>`;
   }
 
   const scriptSteps = [
-    ['opening', L.opening],
-    ['curiosityQuestion', L.curiosityQuestion],
-    ['behaviorImpact', L.behaviorImpact],
-    ['expectation', L.expectation],
+    ['opening', L.opening], ['curiosityQuestion', L.curiosityQuestion],
+    ['behaviorImpact', L.behaviorImpact], ['expectation', L.expectation],
     ['alignmentStatement', L.alignmentStatement]
   ];
 
   document.getElementById('results-card').innerHTML = `
-    <div style="margin-bottom:1.5rem"><div class="rlabel">${L.behaviorObserved}</div><p class="content">${d.behaviorObserved}</p></div>
-    <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">${L.valuesAnalysis}</div>${valuesHTML}</div>
-    <hr class="divider">
-    <div style="margin-bottom:1.5rem">
-      <div class="rlabel">${L.staffReality}</div>
+    <div class="r-section">
+      <div class="r-label">${L.behaviorObserved}</div>
+      <p class="content">${d.behaviorObserved}</p>
+    </div>
+    <div class="r-divider"></div>
+    <div class="r-section">
+      <div class="r-label">${L.valuesAnalysis}</div>
+      ${valuesHTML}
+    </div>
+    <div class="r-divider"></div>
+    <div class="r-section">
+      <div class="r-label">${L.staffReality}</div>
       <div class="staff-reality">${d.staffReality}</div>
     </div>
-    <hr class="divider">
-    <div style="margin-bottom:1.5rem"><div class="rlabel">${L.impact}</div><div class="igrid">
-      <div class="icard"><div class="ilabel">${L.client}</div><p>${d.impact.client}</p></div>
-      <div class="icard"><div class="ilabel">${L.team}</div><p>${d.impact.team}</p></div>
-      <div class="icard"><div class="ilabel">${L.organizational}</div><p>${d.impact.organizational}</p></div>
-    </div></div>
-    <hr class="divider">
+    <div class="r-divider"></div>
+    <div class="r-section">
+      <div class="r-label">${L.impact}</div>
+      <div class="igrid">
+        <div class="icard"><div class="ilabel">${L.client}</div><p>${d.impact.client}</p></div>
+        <div class="icard"><div class="ilabel">${L.team}</div><p>${d.impact.team}</p></div>
+        <div class="icard"><div class="ilabel">${L.organizational}</div><p>${d.impact.organizational}</p></div>
+      </div>
+    </div>
+    <div class="r-divider"></div>
     ${behaviorsHTML}
-    <div style="margin-bottom:1.5rem"><div class="rlabel">${L.conversationScript}</div>
+    <div class="r-section">
+      <div class="r-label">${L.conversationScript}</div>
       ${scriptSteps.map(([k,l]) => `<div class="slstep"><div class="slstep-label">${l}</div><div class="sblock">${d.conversationScript[k]}</div></div>`).join('')}
     </div>
-    <hr class="divider">
-    <div><div class="rlabel">${L.recommendedAction}</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+    <div class="r-divider"></div>
+    <div class="r-section">
+      <div class="r-label">${L.recommendedAction}</div>
+      <div class="action-block">
         <span class="chip ${ac}">${d.recommendedAction.action}</span>
-        <p class="content" style="flex:1;min-width:160px;">${d.recommendedAction.reasoning}</p>
+        <p class="content" style="flex:1;min-width:200px;">${d.recommendedAction.reasoning}</p>
       </div>
     </div>`;
 
@@ -832,7 +1640,7 @@ async function listenToSummary() {
     document.getElementById('play-icon').style.display = 'none';
     document.getElementById('pause-icon').style.display = 'block';
     spin.style.display = 'none';
-    label.textContent = currentLang === 'es' ? '■ Detener' : '■ Stop';
+    label.textContent = currentLang === 'es' ? '■ Stop' : '■ Stop';
     btn.disabled = false;
     currentAudio.play();
 
@@ -876,32 +1684,19 @@ function downloadPDF() {
   if (!lastResult) return;
   const d = lastResult;
   const scriptSteps = [
-    ['opening','Opening'],
-    ['curiosityQuestion','Curiosity Question'],
-    ['behaviorImpact','Behavior + Impact'],
-    ['expectation','Expectation'],
+    ['opening','Opening'], ['curiosityQuestion','Curiosity Question'],
+    ['behaviorImpact','Behavior and Impact'], ['expectation','Expectation'],
     ['alignmentStatement','Alignment Statement']
   ];
 
   let behaviorsBlockPDF = '';
   if (Array.isArray(d.valuesAlignedBehaviors) && d.valuesAlignedBehaviors.length) {
-    behaviorsBlockPDF = `<div class="section">
-      <div class="section-label">Values-Aligned Behavior</div>
-      ${d.valuesAlignedBehaviors.map(b => `
-        <div class="behavior-row">
-          <span class="behavior-text">${b.behavior}</span>
-          <span class="behavior-arrow">&rarr;</span>
-          <span class="behavior-value">${b.value}</span>
-        </div>`).join('')}
-    </div>`;
+    behaviorsBlockPDF = `<div class="section"><div class="section-label">Values-Aligned Behavior</div>${d.valuesAlignedBehaviors.map(b => `<div class="behavior-row"><span class="behavior-text">${b.behavior}</span><span class="behavior-arrow">&rarr;</span><span class="behavior-value">${b.value}</span></div>`).join('')}</div>`;
   } else if (d.correctBehavior) {
-    behaviorsBlockPDF = `<div class="section">
-      <div class="section-label">Values-Aligned Behavior</div>
-      <p class="content">${d.correctBehavior}</p>
-    </div>`;
+    behaviorsBlockPDF = `<div class="section"><div class="section-label">Values-Aligned Behavior</div><p class="content">${d.correctBehavior}</p></div>`;
   }
 
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');* { box-sizing: border-box; margin: 0; padding: 0; }body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }.header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }.header-left h1 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #1B2A4A; }.header-left p { font-size: 11px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }.header-right { text-align:right; font-size:11px; color:#888; }.section { margin-bottom: 28px; }.section-label { font-size: 9px; font-weight: 500; color: #C9A84C; text-transform: uppercase; letter-spacing: 0.15em; background: #fdf9f0; border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3px 10px; display:inline-block; margin-bottom: 10px; }.content { font-size: 13px; color: #4a4a48; line-height: 1.75; font-weight: 300; }.staff-reality { background: #eaf5f0; border: 1px solid #7ecbb0; border-radius: 6px; padding: 12px 14px; font-size: 13px; color: #1a3a2a; line-height: 1.75; font-weight: 300; }.value-row { padding: 10px 0; border-bottom: 1px solid #eee; }.value-row:last-child { border-bottom: none; }.value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 2px 10px; border-radius: 999px; display:inline-block; margin-right: 8px; }.mis { font-size: 11px; color: #A32D2D; font-weight: 500; }.uph { font-size: 11px; color: #2d7a5f; font-weight: 500; }.impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }.impact-card { background: #fdf9f0; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px; }.impact-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }.behavior-row { padding: 9px 0; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }.behavior-row:last-child { border-bottom: none; }.behavior-text { flex: 1; font-size: 13px; color: #4a4a48; font-weight: 300; }.behavior-arrow { color: #888; font-size: 14px; }.behavior-value { font-size: 11px; font-weight: 500; background: #fdf9f0; color: #1B2A4A; padding: 3px 12px; border-radius: 999px; border: 1px solid rgba(201,168,76,0.3); }.sblock { background: #f7f6f3; border-left: 3px solid #C9A84C; padding: 10px 14px; margin-top: 6px; border-radius: 0 4px 4px 0; font-weight: 300; color: #4a4a48; }.slabel { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; margin-bottom: 3px; }.action-chip { display:inline-block; font-size: 11px; font-weight: 500; padding: 4px 14px; border-radius: 4px; margin-right: 10px; }.coach { background: #eaf5f0; color: #2d7a5f; border: 1px solid #7ecbb0; }.document { background: #fdf9f0; color: #a06020; border: 1px solid #C9A84C; }.escalate { background: #fdf0f0; color: #8b2020; border: 1px solid #e07070; }.footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; }</style></head><body><div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis Report &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div></div><div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div><div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status==='Misaligned'?'mis':'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div><div class="section"><div class="section-label">Consider Staff's Possible Reality</div><div class="staff-reality">${d.staffReality}</div></div><div class="section"><div class="section-label">Impact</div><div class="impact-grid"><div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div><div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div><div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div></div></div>${behaviorsBlockPDF}<div class="section"><div class="section-label">Conversation Script</div>${scriptSteps.map(([k,l])=>`<div class="slabel">${l}</div><div class="sblock">${d.conversationScript[k]}</div>`).join('')}</div><div class="section"><div class="section-label">Recommended Action</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div><div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div></body></html>`;
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Values Lab — Leadership Analysis</title><style>@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap');* { box-sizing: border-box; margin: 0; padding: 0; }body { font-family: 'DM Sans', sans-serif; color: #1a1a17; background: #fff; padding: 48px; font-size: 13px; line-height: 1.7; }.header { border-bottom: 2px solid #1B2A4A; padding-bottom: 24px; margin-bottom: 32px; display:flex; align-items:flex-start; justify-content:space-between; }.header-left h1 { font-family: 'Playfair Display', serif; font-size: 28px; color: #1B2A4A; font-weight: 600; }.header-left p { font-size: 10px; color: #888; letter-spacing: 0.18em; text-transform: uppercase; margin-top: 6px; font-weight: 600; }.header-right { text-align:right; font-size:11px; color:#888; }.section { margin-bottom: 28px; }.section-label { font-size: 9px; font-weight: 600; color: #A88835; text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 10px; }.content { font-size: 13px; color: #4a4843; line-height: 1.75; font-weight: 400; }.staff-reality { background: #E8F1EC; border-left: 3px solid #2E6B52; padding: 14px 16px; font-size: 13px; color: #1a3a2a; line-height: 1.75; font-weight: 400; }.value-row { padding: 12px 0; border-bottom: 1px solid #eee; }.value-row:last-child { border-bottom: none; }.value-name { font-size: 11px; font-weight: 500; background: #1B2A4A; color: #C9A84C; padding: 3px 11px; border-radius: 999px; display:inline-block; margin-right: 8px; }.mis { font-size: 11px; color: #7A2424; font-weight: 500; }.uph { font-size: 11px; color: #2E6B52; font-weight: 500; }.impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }.impact-card { background: #FAFAF7; border: 1px solid #E4E1D8; border-radius: 6px; padding: 14px 16px; }.impact-label { font-size: 9px; color: #6E6B5F; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; font-weight: 600; }.behavior-row { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }.behavior-row:last-child { border-bottom: none; }.behavior-text { flex: 1; font-size: 13px; color: #4a4843; font-weight: 400; }.behavior-arrow { color: #C9C5B8; font-size: 14px; }.behavior-value { font-size: 11px; font-weight: 500; background: #FBF6E8; color: #1B2A4A; padding: 3px 12px; border-radius: 999px; border: 1px solid rgba(201,168,76,0.25); }.sblock { background: #F2EFE6; border-left: 3px solid #C9A84C; padding: 12px 16px; margin-top: 6px; font-weight: 400; color: #4a4843; }.slabel { font-size: 9px; color: #6E6B5F; text-transform: uppercase; letter-spacing: 0.12em; margin-top: 14px; margin-bottom: 4px; font-weight: 600; }.action-chip { display:inline-block; font-size: 11px; font-weight: 600; padding: 5px 14px; border-radius: 4px; margin-right: 12px; letter-spacing: 0.05em; text-transform: uppercase; }.coach { background: #E8F1EC; color: #2E6B52; }.document { background: #F7EFE0; color: #8C5520; }.escalate { background: #F5E5E5; color: #7A2424; }.footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align:center; letter-spacing: 0.05em; }</style></head><body><div class="header"><div class="header-left"><h1>Values Lab</h1><p>Leadership Analysis &mdash; Karabed Leadership Group</p></div><div class="header-right">${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</div></div><div class="section"><div class="section-label">Behavior Observed</div><p class="content">${d.behaviorObserved}</p></div><div class="section"><div class="section-label">Values Analysis</div>${d.valuesAnalysis.map(v => `<div class="value-row"><span class="value-name">${v.value}</span><span class="${v.status==='Misaligned'?'mis':'uph'}">${v.status}</span><br><span class="content">${v.explanation}</span></div>`).join('')}</div><div class="section"><div class="section-label">What May Be Going On for This Staff Member</div><div class="staff-reality">${d.staffReality}</div></div><div class="section"><div class="section-label">Impact</div><div class="impact-grid"><div class="impact-card"><div class="impact-label">Client</div><p class="content">${d.impact.client}</p></div><div class="impact-card"><div class="impact-label">Team</div><p class="content">${d.impact.team}</p></div><div class="impact-card"><div class="impact-label">Organizational</div><p class="content">${d.impact.organizational}</p></div></div></div>${behaviorsBlockPDF}<div class="section"><div class="section-label">Conversation Script</div>${scriptSteps.map(([k,l])=>`<div class="slabel">${l}</div><div class="sblock">${d.conversationScript[k]}</div>`).join('')}</div><div class="section"><div class="section-label">Recommended Action</div><span class="action-chip ${d.recommendedAction.action.toLowerCase()}">${d.recommendedAction.action}</span><span class="content">${d.recommendedAction.reasoning}</span></div><div class="footer">Generated by Values Lab &mdash; Karabed Leadership Group &mdash; Confidential</div></body></html>`;
   const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
   const win = window.open(url, '_blank');
@@ -913,8 +1708,9 @@ function restart() {
   document.getElementById('results-view').style.display = 'none';
   document.getElementById('f-situation').value = '';
   document.querySelectorAll('input[name="pattern"]').forEach(r => r.checked = false);
-  document.getElementById('pattern-first-label').style.borderColor = 'var(--border2)';
-  document.getElementById('pattern-repeated-label').style.borderColor = 'var(--border2)';
+  document.getElementById('seg-first').classList.remove('selected');
+  document.getElementById('seg-repeated').classList.remove('selected');
+  selectedPattern = '';
   document.getElementById('f-values').value = '';
   document.querySelectorAll('.sector-pill').forEach(p => p.classList.remove('selected'));
   selectedSector = '';
@@ -930,62 +1726,62 @@ function restart() {
   document.getElementById('play-icon').style.display = 'block';
   document.getElementById('pause-icon').style.display = 'none';
   document.getElementById('step-1').style.display = 'block';
+  document.getElementById('values-pills').innerHTML = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 const translations = {
-  'login-title': { en: 'Values Lab', es: 'Laboratorio de Valores' },
-  'login-subtitle': { en: 'By Karabed Leadership Group', es: 'Por Karabed Leadership Group' },
+  'login-title': { en: 'Values<em> Lab</em>', es: 'Laboratorio<em> de Valores</em>' },
+  'login-subtitle': { en: 'Karabed Leadership Group', es: 'Karabed Leadership Group' },
   'login-pw-label': { en: 'Access Code', es: 'Código de Acceso' },
   'btn-login': { en: 'Continue', es: 'Continuar' },
   'login-footer': { en: 'Need access? Contact Karabed Leadership Group.', es: '¿Necesita acceso? Contacte a Karabed Leadership Group.' },
-  'splash-title': { en: 'Values Lab', es: 'Laboratorio de Valores' },
-  'splash-subtitle': { en: 'By Karabed Leadership Group', es: 'Por Karabed Leadership Group' },
-  'splash-p1': {
-    en: 'Welcome, and thank you for being part of this journey. Values Lab is in its early testing phase, and your presence here is a gift to this work.',
-    es: 'Bienvenido, y gracias por ser parte de este camino. Values Lab está en su fase inicial de prueba, y su presencia aquí es un regalo para este trabajo.'
-  },
-  'splash-p2': {
-    en: 'This is a shared space of trust. Everything generated inside — the guidance, the scripts, the analysis — is confidential and intended solely to support your feedback to Karabed Leadership Group as we shape this tool together.',
-    es: 'Este es un espacio compartido de confianza. Todo lo que se genera aquí, la guía, los guiones, el análisis, es confidencial y tiene como único propósito apoyar su retroalimentación a Karabed Leadership Group mientras damos forma a esta herramienta juntos.'
-  },
-  'splash-p3': {
-    en: 'We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.',
-    es: 'Estamos profundamente agradecidos por su colaboración. Lo que comparte aquí nos ayuda a construir algo que verdaderamente sirve a los líderes y a las comunidades que apoyan.'
-  },
-  'splash-agree-label': {
-    en: "I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.",
-    es: 'Estoy aquí para explorar Values Lab y ofrecer mi retroalimentación a Karabed Leadership Group. Mantendré toda la información aquí de manera confidencial y usaré este espacio solo para ese propósito.'
-  },
+  'splash-title': { en: 'A note before we begin', es: 'Una nota antes de comenzar' },
+  'splash-subtitle': { en: 'Values Lab Preview', es: 'Vista Previa de Values Lab' },
+  'splash-p1': { en: 'Welcome, and thank you for being part of this journey. Values Lab is in its early testing phase, and your presence here is a gift to this work.', es: 'Bienvenido, y gracias por ser parte de este camino. Values Lab está en su fase inicial de prueba, y su presencia aquí es un regalo para este trabajo.' },
+  'splash-p2': { en: 'This is a shared space of trust. Everything generated inside, the guidance, the scripts, the analysis, is confidential and intended solely to support your feedback to Karabed Leadership Group as we shape this tool together.', es: 'Este es un espacio compartido de confianza. Todo lo que se genera aquí, la guía, los guiones, el análisis, es confidencial y tiene como único propósito apoyar su retroalimentación a Karabed Leadership Group mientras damos forma a esta herramienta juntos.' },
+  'splash-p3': { en: 'We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.', es: 'Estamos profundamente agradecidos por su colaboración. Lo que comparte aquí nos ayuda a construir algo que verdaderamente sirve a los líderes y a las comunidades que apoyan.' },
+  'splash-agree-label': { en: "I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.", es: 'Estoy aquí para explorar Values Lab y ofrecer mi retroalimentación a Karabed Leadership Group. Mantendré toda la información aquí de manera confidencial y usaré este espacio solo para ese propósito.' },
   'enter-btn': { en: 'Enter Values Lab', es: 'Entrar a Values Lab' },
-  'admin-link': { en: 'Admin login', es: 'Acceso administrador' },
-  'hero-title': { en: 'Values', es: 'Valores' },
-  'hero-tagline': { en: 'Lab', es: 'Laboratorio' },
-  'hero-byline': { en: 'By Karabed Leadership Group', es: 'Por Karabed Leadership Group' },
-  'hero-description': {
-    en: "A trauma-informed leadership response tool. Enter your organization's values, describe a staff's behavior, and receive structured guidance grounded in what your culture stands for.",
-    es: 'Una herramienta de respuesta de liderazgo informada por el trauma. Ingrese los valores de su organización, describa el comportamiento de un miembro del personal, y reciba guía estructurada basada en lo que representa su cultura.'
-  },
-  'step-1-badge': { en: 'Step 1 of 2', es: 'Paso 1 de 2' },
-  'step-1-label': { en: 'What are your organizational values?', es: '¿Cuáles son los valores de su organización?' },
-  'step-1-hint': { en: 'Type your own or tap values below to add them.', es: 'Escriba los suyos o toque los valores de abajo para agregarlos.' },
-  'common-values-label': { en: 'Common organizational values — tap to add', es: 'Valores organizacionales comunes — toque para agregar' },
-  'sector-label': { en: 'What sector are you in?', es: '¿En qué sector se encuentra?' },
-  'sector-optional': { en: '(optional)', es: '(opcional)' },
-  'tone-label': { en: 'What tone should the coaching language use?', es: '¿Qué tono debe usar el lenguaje del coaching?' },
+  'admin-link': { en: 'Admin', es: 'Administrador' },
+  'hero-title': { en: 'Values<em> Lab</em>', es: 'Laboratorio<em> de Valores</em>' },
+  'hero-tagline': { en: 'Leadership Response', es: 'Respuesta de Liderazgo' },
+  'hero-byline': { en: 'Karabed Leadership Group', es: 'Karabed Leadership Group' },
+  'hero-description': { en: "A trauma-informed leadership response tool. Enter your organization's values, describe a staff behavior, and receive structured guidance grounded in what your culture stands for.", es: 'Una herramienta de respuesta de liderazgo informada por el trauma. Ingrese los valores de su organización, describa el comportamiento de un miembro del personal, y reciba guía estructurada basada en lo que representa su cultura.' },
+  'prog-1-label': { en: 'Your values', es: 'Sus valores' },
+  'prog-2-label': { en: 'The situation', es: 'La situación' },
+  'prog-1-label-2': { en: 'Your values', es: 'Sus valores' },
+  'prog-2-label-2': { en: 'The situation', es: 'La situación' },
+  'step-1-eyebrow': { en: 'Step One', es: 'Paso Uno' },
+  'step-1-title': { en: 'Begin with your values', es: 'Comience con sus valores' },
+  'step-1-subtitle': { en: 'The values you enter here become the lens through which the situation is read. Add the ones your organization actually names.', es: 'Los valores que ingresa aquí se convierten en el lente a través del cual se lee la situación. Agregue los que su organización realmente nombra.' },
+  'step-1-label': { en: 'Organizational values', es: 'Valores organizacionales' },
+  'step-1-hint': { en: 'Type your own, or tap from the common values below.', es: 'Escriba los suyos, o toque los valores comunes a continuación.' },
+  'common-values-label': { en: 'Common organizational values', es: 'Valores organizacionales comunes' },
+  'sector-label': { en: 'Sector', es: 'Sector' },
+  'sector-optional': { en: 'optional', es: 'opcional' },
+  'tone-label': { en: 'Coaching tone', es: 'Tono del coaching' },
   'tone-supportive-title': { en: 'Supportive coaching', es: 'Coaching de apoyo' },
-  'tone-supportive-desc': { en: '"We can..." — warm, partnered', es: '"Podemos..." — cálido, en equipo' },
+  'tone-supportive-desc': { en: '"We can…" — warm, partnered language', es: '"Podemos…" — cálido y en equipo' },
   'tone-direct-title': { en: 'Direct professional', es: 'Profesional directo' },
-  'tone-direct-desc': { en: '"Staff can..." — clear, professional', es: '"El personal..." — claro, profesional' },
-  'continue-btn-1': { en: 'Continue', es: 'Continuar' },
-  'step-2-badge': { en: 'Step 2 of 2', es: 'Paso 2 de 2' },
-  'step-2-label': { en: "Describe the staff's behavior", es: 'Describa el comportamiento del miembro del personal' },
-  'pattern-label': { en: 'Is this the first time or a repeated behavior?', es: '¿Es la primera vez o un comportamiento repetido?' },
+  'tone-direct-desc': { en: '"Staff can…" — clear, professional language', es: '"El personal…" — claro y profesional' },
+  'continue-btn-1': { en: 'Continue to the situation', es: 'Continuar a la situación' },
+  'step-2-eyebrow': { en: 'Step Two', es: 'Paso Dos' },
+  'step-2-title': { en: 'Describe what you observed', es: 'Describa lo que observó' },
+  'step-2-subtitle': { en: 'Write the situation as you would describe it to a trusted colleague. The more specific your account, the more grounded the guidance will be.', es: 'Describa la situación como lo haría con un colega de confianza. Cuanto más específica sea su descripción, más fundamentada será la guía.' },
+  'step-2-label': { en: 'The behavior', es: 'El comportamiento' },
+  'step-2-hint': { en: "Include who was involved, what was said or done, and the context. Avoid identifying details if you'd prefer.", es: 'Incluya quién estuvo involucrado, qué se dijo o hizo, y el contexto. Evite detalles identificables si prefiere.' },
+  'pattern-label': { en: 'Pattern', es: 'Patrón' },
   'pattern-first-text': { en: 'First time', es: 'Primera vez' },
-  'pattern-repeated-text': { en: 'Repeated behavior', es: 'Comportamiento repetido' },
-  'back-btn': { en: '← Back', es: '← Atrás' },
-  'generate-btn': { en: 'Get guidance →', es: 'Obtener guía →' },
-  'loading-text': { en: 'Analyzing through a values-based lens...', es: 'Analizando a través de un lente basado en valores...' },
-  'results-label': { en: 'Leadership guidance', es: 'Guía de liderazgo' },
+  'pattern-first-desc': { en: 'This is the first observed instance', es: 'Es la primera instancia observada' },
+  'pattern-repeated-text': { en: 'Repeated', es: 'Repetido' },
+  'pattern-repeated-desc': { en: 'This has happened before', es: 'Esto ha sucedido antes' },
+  'back-btn': { en: 'Back', es: 'Atrás' },
+  'generate-btn': { en: 'Get guidance', es: 'Obtener guía' },
+  'loading-title': { en: 'Reading the situation through your values', es: 'Leyendo la situación a través de sus valores' },
+  'loading-text': { en: 'This may take 30 to 60 seconds. Your guidance will appear here.', es: 'Esto puede tardar de 30 a 60 segundos. Su guía aparecerá aquí.' },
+  'results-eyebrow': { en: 'Leadership Response', es: 'Respuesta de Liderazgo' },
+  'results-title': { en: 'Your guidance', es: 'Su guía' },
   'restart-btn': { en: 'Start over', es: 'Comenzar de nuevo' }
 };
 
@@ -1001,45 +1797,24 @@ const sectorTranslations = {
 };
 
 const valueTranslations = {
-  'Client-Centered': 'Centrado en el Cliente',
-  'Respect': 'Respeto',
-  'Integrity': 'Integridad',
-  'Collaboration': 'Colaboración',
-  'Accountability': 'Responsabilidad',
-  'Equity': 'Equidad',
-  'DEIB': 'DEIP',
-  'Inclusion': 'Inclusión',
-  'Diversity': 'Diversidad',
-  'Belonging': 'Pertenencia',
-  'Transparency': 'Transparencia',
-  'Compassion': 'Compasión',
-  'Empathy': 'Empatía',
-  'Trauma-Informed Care': 'Cuidado Informado por el Trauma',
-  'Adaptability': 'Adaptabilidad',
-  'Innovation': 'Innovación',
-  'Excellence': 'Excelencia',
-  'Stewardship': 'Mayordomía',
-  'Community': 'Comunidad',
-  'Empowerment': 'Empoderamiento',
-  'Dignity': 'Dignidad',
-  'Justice': 'Justicia',
-  'Safety': 'Seguridad',
-  'Servant Leadership': 'Liderazgo de Servicio',
-  'Humility': 'Humildad',
-  'Courage': 'Coraje',
-  'Trust': 'Confianza',
-  'Wellness': 'Bienestar'
+  'Client-Centered': 'Centrado en el Cliente', 'Respect': 'Respeto', 'Integrity': 'Integridad',
+  'Collaboration': 'Colaboración', 'Accountability': 'Responsabilidad', 'Equity': 'Equidad',
+  'DEIB': 'DEIP', 'Inclusion': 'Inclusión', 'Diversity': 'Diversidad', 'Belonging': 'Pertenencia',
+  'Transparency': 'Transparencia', 'Compassion': 'Compasión', 'Empathy': 'Empatía',
+  'Trauma-Informed Care': 'Cuidado Informado por el Trauma', 'Adaptability': 'Adaptabilidad',
+  'Innovation': 'Innovación', 'Excellence': 'Excelencia', 'Stewardship': 'Mayordomía',
+  'Community': 'Comunidad', 'Empowerment': 'Empoderamiento', 'Dignity': 'Dignidad',
+  'Justice': 'Justicia', 'Safety': 'Seguridad', 'Servant Leadership': 'Liderazgo de Servicio',
+  'Humility': 'Humildad', 'Courage': 'Coraje', 'Trust': 'Confianza', 'Wellness': 'Bienestar'
 };
 
 function toggleLanguage() {
   currentLang = currentLang === 'en' ? 'es' : 'en';
   const newLabel = currentLang === 'en' ? 'Español' : 'English';
-  const loginBtn = document.getElementById('lang-btn-login');
-  const splashBtn = document.getElementById('lang-btn-splash');
-  const heroBtn = document.getElementById('lang-btn-hero');
-  if (loginBtn) loginBtn.textContent = newLabel;
-  if (splashBtn) splashBtn.textContent = newLabel;
-  if (heroBtn) heroBtn.textContent = newLabel;
+  ['lang-btn-login','lang-btn-splash','lang-btn-hero'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = newLabel;
+  });
   document.documentElement.lang = currentLang;
   applyTranslations();
 }
@@ -1047,7 +1822,14 @@ function toggleLanguage() {
 function applyTranslations() {
   for (const id in translations) {
     const el = document.getElementById(id);
-    if (el) el.textContent = translations[id][currentLang];
+    if (el) {
+      // Allow simple <em> tags in display titles
+      if (translations[id][currentLang].includes('<em>')) {
+        el.innerHTML = translations[id][currentLang];
+      } else {
+        el.textContent = translations[id][currentLang];
+      }
+    }
   }
   const loginPwInput = document.getElementById('login-pw');
   if (loginPwInput) {
@@ -1057,8 +1839,8 @@ function applyTranslations() {
   const situationInput = document.getElementById('f-situation');
   if (valuesInput) {
     valuesInput.placeholder = currentLang === 'es'
-      ? 'Ej: Centrado en el Cliente, Respeto, DEIP, Integridad, Colaboración, Adaptabilidad'
-      : 'Ex: Client-Centered, Respect, DEIB, Integrity, Collaboration, Adaptability';
+      ? 'Ej: Centrado en el Cliente, Respeto, Integridad, Colaboración'
+      : 'e.g., Client-Centered, Respect, Integrity, Collaboration';
   }
   if (situationInput) {
     situationInput.placeholder = currentLang === 'es'
@@ -1100,9 +1882,8 @@ function applyTranslations() {
   if (valuesInput && valuesInput.value.trim()) {
     const currentValues = valuesInput.value.split(',').map(v => v.trim()).filter(v => v);
     const translatedValues = currentValues.map(v => {
-      if (currentLang === 'es') {
-        return valueTranslations[v] || v;
-      } else {
+      if (currentLang === 'es') return valueTranslations[v] || v;
+      else {
         const englishKey = Object.keys(valueTranslations).find(k => valueTranslations[k] === v);
         return englishKey || v;
       }
