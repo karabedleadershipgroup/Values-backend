@@ -1160,7 +1160,7 @@ textarea.values-input {
 /* ==================== TAB BUTTONS FOR ON-THE-GO ==================== */
 .qv-tab-group {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 1rem;
 }
@@ -1895,6 +1895,11 @@ function render(d) {
           <div class="qv-tab-dot"></div>
           <span>${L.watchForThis}</span>
         </button>
+        ${showSaveCard && qv.saveThis ? `
+        <button class="qv-tab-btn" role="tab" data-tab="save" onclick="switchQvTab('save')">
+          <div class="qv-tab-dot"></div>
+          <span>${L.saveThis}</span>
+        </button>` : ''}
       </div>
 
       <div class="qv-tab-panel" data-panel="do">
@@ -1929,12 +1934,14 @@ function render(d) {
       </div>
 
       ${showSaveCard && qv.saveThis ? `
-      <div class="qv-card">
-        <div class="qv-card-header">
-          <div class="qv-card-dot"></div>
-          <div class="qv-card-label">${L.saveThis}</div>
+      <div class="qv-tab-panel" data-panel="save">
+        <div class="qv-card">
+          <div class="qv-card-header">
+            <div class="qv-card-dot"></div>
+            <div class="qv-card-label">${L.saveThis}</div>
+          </div>
+          <div class="qv-card-text">${qv.saveThis}</div>
         </div>
-        <div class="qv-card-text">${qv.saveThis}</div>
       </div>` : ''}
     </div>
 
