@@ -1156,6 +1156,78 @@ textarea.values-input {
   padding-bottom: 0.85rem;
   border-bottom: 2px solid var(--navy);
 }
+
+/* ==================== TAB BUTTONS FOR ON-THE-GO ==================== */
+.qv-tab-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.qv-tab-btn {
+  background: var(--white);
+  border: 1px solid var(--stone-200);
+  border-radius: var(--r-lg);
+  padding: 12px 10px;
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--stone-500);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  line-height: 1.25;
+}
+.qv-tab-btn:hover {
+  border-color: var(--navy);
+  color: var(--navy);
+  background: var(--stone-50);
+}
+.qv-tab-btn.active {
+  background: var(--navy);
+  color: var(--gold);
+  border-color: var(--navy);
+}
+.qv-tab-btn .qv-tab-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--gold-deep);
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+.qv-tab-btn.active .qv-tab-dot {
+  background: var(--gold);
+}
+.qv-tab-btn:hover .qv-tab-dot {
+  background: var(--navy);
+}
+.qv-tab-btn.active:hover .qv-tab-dot {
+  background: var(--gold);
+}
+.qv-tab-panel {
+  display: none;
+}
+.qv-tab-panel.active {
+  display: block;
+}
+@media (max-width: 560px) {
+  .qv-tab-group {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .qv-tab-btn {
+    padding: 11px 14px;
+    justify-content: flex-start;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1810,29 +1882,50 @@ function render(d) {
         <div class="qv-action-reasoning">${d.recommendedAction.reasoning}</div>
       </div>
 
-      <div class="qv-card">
-        <div class="qv-card-header">
-          <div class="qv-card-dot"></div>
-          <div class="qv-card-label">${L.doThis}</div>
-        </div>
-        <div class="qv-card-text">${qv.doThis || ''}</div>
+      <div class="qv-tab-group" role="tablist">
+        <button class="qv-tab-btn" role="tab" data-tab="do" onclick="switchQvTab('do')">
+          <div class="qv-tab-dot"></div>
+          <span>${L.doThis}</span>
+        </button>
+        <button class="qv-tab-btn active" role="tab" data-tab="say" onclick="switchQvTab('say')">
+          <div class="qv-tab-dot"></div>
+          <span>${L.sayThis}</span>
+        </button>
+        <button class="qv-tab-btn" role="tab" data-tab="watch" onclick="switchQvTab('watch')">
+          <div class="qv-tab-dot"></div>
+          <span>${L.watchForThis}</span>
+        </button>
       </div>
 
-      <div class="qv-card script">
-        <div class="qv-card-header">
-          <div class="qv-card-dot"></div>
-          <div class="qv-card-label">${L.sayThis}</div>
+      <div class="qv-tab-panel" data-panel="do">
+        <div class="qv-card">
+          <div class="qv-card-header">
+            <div class="qv-card-dot"></div>
+            <div class="qv-card-label">${L.doThis}</div>
+          </div>
+          <div class="qv-card-text">${qv.doThis || ''}</div>
         </div>
-        <div class="qv-card-text italic">"${qv.sayThis || ''}"</div>
-        <div class="qv-script-note">${scriptNoteHTML}</div>
       </div>
 
-      <div class="qv-card">
-        <div class="qv-card-header">
-          <div class="qv-card-dot"></div>
-          <div class="qv-card-label">${L.watchForThis}</div>
+      <div class="qv-tab-panel active" data-panel="say">
+        <div class="qv-card script">
+          <div class="qv-card-header">
+            <div class="qv-card-dot"></div>
+            <div class="qv-card-label">${L.sayThis}</div>
+          </div>
+          <div class="qv-card-text italic">"${qv.sayThis || ''}"</div>
+          <div class="qv-script-note">${scriptNoteHTML}</div>
         </div>
-        <div class="qv-card-text">${qv.watchForThis || ''}</div>
+      </div>
+
+      <div class="qv-tab-panel" data-panel="watch">
+        <div class="qv-card">
+          <div class="qv-card-header">
+            <div class="qv-card-dot"></div>
+            <div class="qv-card-label">${L.watchForThis}</div>
+          </div>
+          <div class="qv-card-text">${qv.watchForThis || ''}</div>
+        </div>
       </div>
 
       ${showSaveCard && qv.saveThis ? `
@@ -1928,6 +2021,15 @@ function render(d) {
 
   document.getElementById('results-card').innerHTML = quickViewHTML + fullAnalysisHTML;
   document.getElementById('results-view').style.display = 'block';
+}
+
+function switchQvTab(tab) {
+  document.querySelectorAll('.qv-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-tab') === tab);
+  });
+  document.querySelectorAll('.qv-tab-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.getAttribute('data-panel') === tab);
+  });
 }
 
 function toggleFullAnalysis(forceOpen) {
