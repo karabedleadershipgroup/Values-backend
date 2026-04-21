@@ -900,15 +900,48 @@ textarea.values-input {
 .footer strong { color: var(--gold-deep); font-weight: 600; }
 
 @media (max-width: 560px) {
-  .hero { padding: 4rem 1.25rem 3.5rem; }
+  .hero { padding: 4.5rem 1.25rem 3.5rem; }
   .card, .results-card { padding: 1.75rem 1.5rem; }
   .main { padding: 2rem 1rem 4rem; }
   .progress-rail { gap: 8px; }
   .progress-label { font-size: 10px; }
   .tone-grid { grid-template-columns: 1fr; }
+  .segment { grid-template-columns: 1fr !important; }
   .big-section-header { font-size: 26px !important; }
   .section-hero-img { height: 140px !important; }
   .tool-section { padding: 1.25rem !important; }
+  
+  /* Shrink nav buttons on mobile so they don't overflow */
+  .hero-nav { padding: 14px 16px !important; gap: 10px !important; }
+  .text-size-btn.size-s { font-size: 13px !important; padding: 6px 9px !important; }
+  .text-size-btn.size-m { font-size: 16px !important; padding: 6px 9px !important; }
+  .text-size-btn.size-l { font-size: 19px !important; padding: 6px 9px !important; }
+  .lang-btn {
+    font-size: 11px !important;
+    padding: 8px 14px !important;
+    border-width: 1px !important;
+    letter-spacing: 0.06em !important;
+  }
+  .admin-link {
+    font-size: 11px !important;
+    padding: 8px 12px !important;
+    border-width: 1px !important;
+    letter-spacing: 0.06em !important;
+  }
+  /* Stack the left group tighter on mobile */
+  .hero-nav > div:first-child { gap: 8px !important; }
+  
+  /* Card overrides for mobile - undo the desktop !important rules */
+  .main-inner .card,
+  .main-inner .results-card {
+    padding: 1.75rem 1.25rem !important;
+  }
+  
+  /* Splash card - stay narrower on mobile */
+  #splash-overlay .overlay-card {
+    max-width: 100% !important;
+    padding: 2.5rem 1.5rem 2rem !important;
+  }
 }
 
 /* ==================== OVERLAYS (login + splash) ==================== */
@@ -1486,6 +1519,324 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
 
 
 
+
+
+/* ==================== MOBILE OVERRIDES (under 768px) ==================== */
+@media (max-width: 768px) {
+  /* Body text scales down on mobile across all size tiers */
+  html[data-text-size="s"] body { font-size: 14px; }
+  html[data-text-size="m"] body { font-size: 15px; }
+  html[data-text-size="l"] body { font-size: 17px; }
+
+  /* Nav layout: stack the controls cleanly, not overlapping the logo */
+  .hero { padding: 4.5rem 1rem 2.5rem; }
+  .hero-nav {
+    padding: 14px 16px;
+    gap: 8px;
+  }
+  .hero-mark {
+    margin-top: 1.5rem;
+  }
+
+  /* A toggle buttons: small but tappable */
+  .text-size-btn.size-s { font-size: 12px !important; padding: 6px 9px !important; }
+  .text-size-btn.size-m { font-size: 15px !important; padding: 6px 9px !important; }
+  .text-size-btn.size-l { font-size: 18px !important; padding: 6px 9px !important; }
+
+  /* ESPAÑOL: small enough to fit beside the A buttons */
+  .lang-btn {
+    font-size: 11px !important;
+    padding: 7px 12px !important;
+    border-width: 1px !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  /* ADMIN: small */
+  .admin-link {
+    font-size: 11px !important;
+    padding: 7px 10px !important;
+    border-width: 1px !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  /* Hero logo and title scale down */
+  .hero h1 { font-size: clamp(36px, 11vw, 44px) !important; }
+  html[data-text-size="l"] .hero h1 { font-size: clamp(38px, 12vw, 48px) !important; }
+
+  .hero p { font-size: 13px !important; line-height: 1.65 !important; }
+
+  /* Card padding shrinks */
+  .main-inner .card,
+  .main-inner .results-card {
+    padding: 1.5rem 1.25rem !important;
+  }
+
+  /* Step header sizes */
+  .card-title { font-size: 22px !important; }
+  .card-subtitle { font-size: 13px !important; }
+
+  /* Big section headers */
+  .big-section-header { font-size: 24px !important; }
+  html[data-text-size="l"] .big-section-header { font-size: 28px !important; }
+
+  /* Tab buttons stack vertically — already done, but enforce smaller text */
+  .qv-tab-btn {
+    font-size: 11px !important;
+    padding: 10px 12px !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  /* Tone and pattern selector cards: stack vertically on mobile */
+  .tone-grid,
+  .segment {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .tone-pill,
+  .segment-option {
+    min-height: auto !important;
+    padding: 16px 18px !important;
+  }
+
+  /* Reduce internal padding inside tinted sections */
+  .tool-section.on-the-go,
+  .tool-section.full-tool {
+    padding: 1.25rem !important;
+  }
+
+  /* Hero section image height shorter on mobile */
+  .section-hero-img { height: 140px !important; }
+
+  /* Main outer padding tighter on mobile */
+  .main { padding: 2rem 1rem 3.5rem !important; }
+}
+
+/* ==================== EXTRA SMALL (under 420px) ==================== */
+@media (max-width: 420px) {
+  .hero h1 { font-size: 36px !important; }
+  .hero { padding: 4rem 0.75rem 2rem; }
+  .text-size-btn.size-s { font-size: 11px !important; padding: 5px 8px !important; }
+  .text-size-btn.size-m { font-size: 13px !important; padding: 5px 8px !important; }
+  .text-size-btn.size-l { font-size: 16px !important; padding: 5px 8px !important; }
+  .lang-btn { font-size: 10px !important; padding: 6px 10px !important; }
+  .admin-link { font-size: 10px !important; padding: 6px 8px !important; }
+}
+
+
+/* ==================== MOBILE RESPONSIVENESS ==================== */
+@media (max-width: 768px) {
+  /* Main container — tight padding for phones */
+  .main {
+    padding: 1.5rem 1rem 3rem !important;
+  }
+  
+  /* Card — full bleed minus small gutter, reasonable padding */
+  .main-inner .card,
+  .main-inner .results-card,
+  .main-inner .loading-card {
+    padding: 1.5rem 1.25rem !important;
+    border-radius: 10px !important;
+  }
+
+  /* Hero — compact on phones */
+  .hero {
+    padding: 4rem 1rem 2.5rem !important;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 11vw, 44px) !important;
+  }
+  .hero p {
+    font-size: 14px !important;
+    padding: 0 0.5rem;
+  }
+  .hero .byline, .hero .lab {
+    font-size: 9px !important;
+    letter-spacing: 0.25em !important;
+  }
+
+  /* Hero nav — stack and shrink */
+  .hero-nav {
+    padding: 14px 14px !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    position: static !important;
+    margin-bottom: 1rem;
+  }
+  .hero-nav > div {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px !important;
+  }
+
+  /* A-A-A buttons — smaller on mobile but still tappable */
+  .text-size-btn.size-s { font-size: 13px !important; padding: 8px 12px !important; }
+  .text-size-btn.size-m { font-size: 16px !important; padding: 8px 12px !important; }
+  .text-size-btn.size-l { font-size: 20px !important; padding: 8px 12px !important; }
+
+  /* ESPAÑOL / ADMIN — smaller on mobile */
+  .lang-btn {
+    font-size: 12px !important;
+    padding: 8px 14px !important;
+    border-width: 1px !important;
+  }
+  .admin-link {
+    font-size: 12px !important;
+    padding: 8px 14px !important;
+    border-width: 1px !important;
+  }
+
+  /* Results header — wrap for phone */
+  .results-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+  .header-btns {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  /* On the go / Full Leadership Tool sections — tighter padding */
+  .tool-section.on-the-go,
+  .tool-section.full-tool {
+    padding: 1rem !important;
+  }
+
+  /* Section hero images — shorter on phones */
+  .section-hero-img {
+    height: 140px !important;
+  }
+
+  /* Big section headers — smaller on phones */
+  .big-section-header {
+    font-size: 22px !important;
+    padding-bottom: 0.6rem;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Quick view tabs — stack vertically on phones for readability */
+  .qv-tab-group {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+  .qv-tab-btn {
+    font-size: 11px !important;
+    padding: 10px 8px !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  /* Say This card — generous padding even on mobile */
+  .qv-card.script {
+    padding: 16px 16px !important;
+  }
+  .qv-card.script .qv-card-text {
+    font-size: 15px !important;
+  }
+
+  /* Situation box — readable on mobile */
+  .qv-situation-box {
+    padding: 14px 16px !important;
+  }
+
+  /* Tone pills (Supportive / Direct) — stack vertically on phone */
+  .tone-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .tone-pill {
+    min-height: auto !important;
+    padding: 16px 50px 16px 16px !important;
+  }
+
+  /* Pattern segment (First time / Repeated) — stack on phone */
+  .segment {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .segment-option {
+    min-height: auto !important;
+    padding: 16px 50px 16px 16px !important;
+  }
+
+  /* Form buttons in btn-row — stack on narrow */
+  .btn-row {
+    flex-direction: column;
+    gap: 10px !important;
+  }
+  .btn-row .btn-secondary,
+  .btn-row .btn-primary {
+    width: 100%;
+  }
+
+  /* Impact grid — single column on phone */
+  .igrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Progress rail — allow wrapping */
+  .progress-rail {
+    flex-wrap: wrap;
+    gap: 6px !important;
+  }
+
+  /* Overlay cards (login + splash) — sit comfortably on phone */
+  .overlay {
+    padding: 1rem !important;
+  }
+  .overlay-card {
+    padding: 2rem 1.5rem 1.75rem !important;
+  }
+  #splash-overlay .overlay-card {
+    padding: 2rem 1.5rem 1.75rem !important;
+    max-width: 100% !important;
+  }
+  .overlay-title {
+    font-size: 22px !important;
+  }
+  .splash-body {
+    font-size: 13px !important;
+  }
+
+  /* Form inputs — full width, no horizontal overflow */
+  textarea.values-input {
+    min-height: 140px !important;
+  }
+
+  /* Common values & sector pill wraps — tighter spacing */
+  .preset-pill, .sector-pill {
+    font-size: 11.5px !important;
+    padding: 6px 11px !important;
+  }
+
+  /* Card title / subtitle — compact */
+  .card-title {
+    font-size: 20px !important;
+  }
+  .card-subtitle {
+    font-size: 12.5px !important;
+  }
+
+  /* Action banner in quick view — wrap neatly */
+  .qv-action-banner {
+    flex-direction: column;
+    align-items: flex-start !important;
+    padding: 14px 16px !important;
+  }
+}
+
+/* Very narrow phones (iPhone SE etc) */
+@media (max-width: 380px) {
+  .qv-tab-group {
+    grid-template-columns: 1fr !important;
+  }
+  .hero h1 {
+    font-size: 34px !important;
+  }
+  .main-inner .card,
+  .main-inner .results-card {
+    padding: 1.25rem 1rem !important;
+  }
+}
 
 </style>
 </head>
