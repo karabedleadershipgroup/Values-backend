@@ -70,20 +70,21 @@ body { font-family: var(--body); background: var(--paper); color: var(--ink); mi
 .hero-nav {
   position: absolute;
   top: 0; left: 0; right: 0;
-  padding: 18px 24px;
+  padding: 24px 36px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
 }
 .lang-btn {
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--gold-soft);
   background: transparent;
-  border: 1px solid rgba(201,168,76,0.35);
+  border: 1.5px solid rgba(201,168,76,0.5);
   border-radius: var(--r);
-  padding: 6px 14px;
-  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  letter-spacing: 0.1em;
   cursor: pointer;
   font-family: var(--body);
   transition: all 0.2s ease;
@@ -91,13 +92,16 @@ body { font-family: var(--body); background: var(--paper); color: var(--ink); mi
 }
 .lang-btn:hover { background: rgba(201,168,76,0.08); border-color: var(--gold); color: var(--gold); }
 .admin-link {
-  font-size: 11px;
-  font-weight: 500;
-  color: rgba(247,245,239,0.45);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(247,245,239,0.65);
   text-decoration: none;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   transition: color 0.2s ease;
+  padding: 10px 16px;
+  border: 1.5px solid rgba(247,245,239,0.25);
+  border-radius: var(--r);
 }
 .admin-link:hover { color: rgba(247,245,239,0.85); }
 
@@ -1345,18 +1349,18 @@ textarea.values-input {
   background: transparent;
   border: none;
   color: var(--gold-soft);
-  padding: 5px 10px;
   cursor: pointer;
-  font-family: var(--body);
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0.02em;
   transition: all 0.15s ease;
   border-right: 1px solid rgba(201,168,76,0.2);
+  line-height: 1;
 }
 .text-size-btn:last-child { border-right: none; }
-.text-size-btn.size-s { font-size: 10px; }
-.text-size-btn.size-m { font-size: 13px; }
-.text-size-btn.size-l { font-size: 15px; }
+.text-size-btn.size-s { font-size: 13px; padding: 8px 14px; }
+.text-size-btn.size-m { font-size: 17px; padding: 8px 14px; }
+.text-size-btn.size-l { font-size: 21px; padding: 8px 14px; }
 .text-size-btn:hover { background: rgba(201,168,76,0.08); color: var(--gold); }
 .text-size-btn.active {
   background: var(--gold);
