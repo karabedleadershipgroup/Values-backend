@@ -148,9 +148,9 @@ body { font-family: var(--body); background: var(--paper); color: var(--ink); mi
 
 /* ==================== MAIN ==================== */
 .main {
-  max-width: 1400px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 3rem 2.5rem 5rem;
+  padding: 3rem 1.5rem 5rem;
 }
 
 .progress-rail {
@@ -1329,6 +1329,120 @@ textarea.values-input {
   font-style: italic;
 }
 
+
+/* ==================== TEXT SIZE CONTROL ==================== */
+.text-size-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-right: 10px;
+}
+.text-size-btn {
+  background: transparent;
+  border: none;
+  color: var(--gold-soft);
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: var(--body);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  transition: all 0.15s ease;
+  border-right: 1px solid rgba(201,168,76,0.2);
+}
+.text-size-btn:last-child { border-right: none; }
+.text-size-btn.size-s { font-size: 10px; }
+.text-size-btn.size-m { font-size: 13px; }
+.text-size-btn.size-l { font-size: 15px; }
+.text-size-btn:hover { background: rgba(201,168,76,0.08); color: var(--gold); }
+.text-size-btn.active {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+/* Overlay version — lighter styling for the white login/splash cards */
+.overlay-text-size {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: inline-flex;
+  background: transparent;
+  border: 1px solid var(--stone-200);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.overlay-text-size .text-size-btn {
+  color: var(--stone-500);
+  border-right: 1px solid var(--stone-200);
+}
+.overlay-text-size .text-size-btn:last-child { border-right: none; }
+.overlay-text-size .text-size-btn:hover {
+  background: var(--stone-50);
+  color: var(--ink);
+}
+.overlay-text-size .text-size-btn.active {
+  background: var(--navy);
+  color: var(--gold);
+}
+
+/* Scale the whole page content based on data attribute */
+html[data-text-size="s"] body { font-size: 15px; }
+html[data-text-size="m"] body { font-size: 16px; }
+html[data-text-size="l"] body { font-size: 18.5px; }
+
+html[data-text-size="s"] .hero h1 { font-size: clamp(42px, 6.2vw, 56px); }
+html[data-text-size="l"] .hero h1 { font-size: clamp(54px, 8vw, 72px); }
+
+html[data-text-size="s"] .card-title,
+html[data-text-size="s"] .overlay-title { font-size: 21px; }
+html[data-text-size="l"] .card-title,
+html[data-text-size="l"] .overlay-title { font-size: 28px; }
+
+html[data-text-size="s"] .big-section-header { font-size: 30px; }
+html[data-text-size="l"] .big-section-header { font-size: 40px; }
+
+html[data-text-size="s"] .content,
+html[data-text-size="s"] .qv-card-text,
+html[data-text-size="s"] .qv-situation-text,
+html[data-text-size="s"] .qv-action-reasoning,
+html[data-text-size="s"] .btext,
+html[data-text-size="s"] .icard p,
+html[data-text-size="s"] .staff-reality,
+html[data-text-size="s"] .sblock,
+html[data-text-size="s"] .splash-body,
+html[data-text-size="s"] .field-hint,
+html[data-text-size="s"] .card-subtitle { font-size: 13px; }
+
+html[data-text-size="l"] .content,
+html[data-text-size="l"] .qv-card-text,
+html[data-text-size="l"] .qv-situation-text,
+html[data-text-size="l"] .qv-action-reasoning,
+html[data-text-size="l"] .btext,
+html[data-text-size="l"] .icard p,
+html[data-text-size="l"] .staff-reality,
+html[data-text-size="l"] .sblock,
+html[data-text-size="l"] .splash-body { font-size: 16.5px; line-height: 1.75; }
+
+html[data-text-size="l"] .field-hint,
+html[data-text-size="l"] .card-subtitle { font-size: 14.5px; }
+
+html[data-text-size="l"] .qv-card.script .qv-card-text { font-size: 18px; }
+html[data-text-size="s"] .qv-card.script .qv-card-text { font-size: 14.5px; }
+
+html[data-text-size="l"] .values-input,
+html[data-text-size="l"] textarea.values-input { font-size: 16.5px; }
+html[data-text-size="s"] .values-input,
+html[data-text-size="s"] textarea.values-input { font-size: 14px; }
+
+html[data-text-size="l"] .qv-tab-btn { font-size: 13px; }
+html[data-text-size="s"] .qv-tab-btn { font-size: 11px; }
+
+html[data-text-size="l"] .r-label,
+html[data-text-size="l"] .qv-card-label { font-size: 12px; }
+
 </style>
 </head>
 <body>
@@ -1392,7 +1506,14 @@ textarea.values-input {
 <!-- ==================== HERO ==================== -->
 <div class="hero">
   <div class="hero-nav">
-    <button onclick="toggleLanguage()" id="lang-btn-hero" class="lang-btn">Español</button>
+    <div style="display:inline-flex; align-items:center; gap:10px;">
+      <div class="text-size-toggle" role="group" aria-label="Text size">
+        <button class="text-size-btn size-s" onclick="setTextSize('s')" data-size="s" aria-label="Small text">A</button>
+        <button class="text-size-btn size-m active" onclick="setTextSize('m')" data-size="m" aria-label="Normal text">A</button>
+        <button class="text-size-btn size-l" onclick="setTextSize('l')" data-size="l" aria-label="Large text">A</button>
+      </div>
+      <button onclick="toggleLanguage()" id="lang-btn-hero" class="lang-btn">Español</button>
+    </div>
     <a href="/admin.html" class="admin-link" id="admin-link">Admin</a>
   </div>
   <div class="hero-mark">
@@ -1632,6 +1753,24 @@ let selectedSector = '';
 let selectedTone = '';
 let selectedPattern = '';
 
+function setTextSize(size) {
+  document.documentElement.setAttribute('data-text-size', size);
+  try { localStorage.setItem('vl_text_size', size); } catch(e) {}
+  document.querySelectorAll('.text-size-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-size') === size);
+  });
+}
+
+// Restore saved text size on load
+(function() {
+  try {
+    var saved = localStorage.getItem('vl_text_size') || 'm';
+    document.documentElement.setAttribute('data-text-size', saved);
+  } catch(e) {
+    document.documentElement.setAttribute('data-text-size', 'm');
+  }
+})();
+
 function attemptLogin() {
   const pwInput = document.getElementById('login-pw').value;
   const errEl = document.getElementById('login-error');
@@ -1657,6 +1796,14 @@ function enterApp() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Sync the text-size button active state with the restored preference
+  try {
+    var sz = document.documentElement.getAttribute('data-text-size') || 'm';
+    document.querySelectorAll('.text-size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-size') === sz);
+    });
+  } catch(e) {}
+
   if (sessionStorage.getItem('vl_authed') === '1') {
     document.getElementById('login-overlay').style.display = 'none';
   }
