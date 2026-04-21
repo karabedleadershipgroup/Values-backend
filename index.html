@@ -1886,6 +1886,7 @@ function render(d) {
     expectation: 'Expectativa', alignmentStatement: 'Declaración de alineación',
     recommendedAction: 'Acción recomendada',
     doThis: 'Haga esto', sayThis: 'Diga esto', watchForThis: 'Observe esto', saveThis: 'Documente esto',
+    saveThisEmpty: 'No se requiere documentación para esta situación. Documente Esto es más útil cuando la acción recomendada es Documentar o Escalar, o cuando se sospecha deterioro.',
     showFull: 'Ver análisis completo', hideFull: 'Ocultar análisis completo',
     onTheGoHeader: 'Herramienta de Liderazgo en el Momento',
     fullToolHeader: 'Herramienta Completa de Liderazgo',
@@ -1905,6 +1906,7 @@ function render(d) {
     expectation: 'Expectation', alignmentStatement: 'Alignment statement',
     recommendedAction: 'Recommended action',
     doThis: 'Do this', sayThis: 'Say this', watchForThis: 'Watch for this', saveThis: 'Save this',
+    saveThisEmpty: 'No documentation needed for this situation. Save This is most useful when the recommended action is Document or Escalate, or when impairment is suspected.',
     showFull: 'Show full analysis', hideFull: 'Hide full analysis',
     onTheGoHeader: 'On the Go Leadership Tool',
     fullToolHeader: 'Full Leadership Tool',
@@ -1959,11 +1961,10 @@ function render(d) {
           <div class="qv-tab-dot"></div>
           <span>${L.watchForThis}</span>
         </button>
-        ${showSaveCard && qv.saveThis ? `
         <button class="qv-tab-btn" role="tab" data-tab="save" onclick="switchQvTab('save')">
           <div class="qv-tab-dot"></div>
           <span>${L.saveThis}</span>
-        </button>` : ''}
+        </button>
       </div>
 
       <div class="qv-tab-panel" data-panel="do">
@@ -1997,16 +1998,15 @@ function render(d) {
         </div>
       </div>
 
-      ${showSaveCard && qv.saveThis ? `
       <div class="qv-tab-panel" data-panel="save">
         <div class="qv-card">
           <div class="qv-card-header">
             <div class="qv-card-dot"></div>
             <div class="qv-card-label">${L.saveThis}</div>
           </div>
-          <div class="qv-card-text">${qv.saveThis}</div>
+          <div class="qv-card-text">${qv.saveThis && qv.saveThis.trim() ? qv.saveThis : L.saveThisEmpty}</div>
         </div>
-      </div>` : ''}
+      </div>
     </div>
 
     <button class="btn-expand" id="btn-expand-full" onclick="toggleFullAnalysis()">
