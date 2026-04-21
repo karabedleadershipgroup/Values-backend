@@ -152,9 +152,26 @@ body { font-family: var(--body); background: var(--paper); color: var(--ink); mi
 
 /* ==================== MAIN ==================== */
 .main {
-  max-width: 1100px;
+  max-width: 100%;
+  margin: 0;
+  padding: 3rem 4rem 5rem;
+  background: #FBFAF4;
+  border-top: 1px solid rgba(201,168,76,0.12);
+}
+.main-inner {
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 3rem 2rem 5rem;
+}
+.main-inner .card,
+.main-inner .results-card,
+.main-inner .loading-card,
+.main-inner .progress-rail {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 900px) {
+  .main { padding: 2rem 1.5rem 4rem; }
 }
 
 .progress-rail {
@@ -1448,79 +1465,7 @@ html[data-text-size="l"] .r-label,
 html[data-text-size="l"] .qv-card-label { font-size: 12px; }
 
 
-/* ==================== SIDE GOLD ACCENTS ==================== */
-body {
-  position: relative;
-}
-body::before,
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  width: 30vw;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    radial-gradient(ellipse at center, rgba(201,168,76,0.06) 0%, transparent 55%),
-    linear-gradient(to bottom, transparent 0%, rgba(201,168,76,0.025) 30%, rgba(201,168,76,0.035) 70%, transparent 100%);
-}
-body::before {
-  left: 0;
-  border-right: 1px solid rgba(201,168,76,0.1);
-}
-body::after {
-  right: 0;
-  border-left: 1px solid rgba(201,168,76,0.1);
-}
 
-/* A subtle vertical gold line motif that feels like a KLG mark — 
-   tiny horizontal hash marks spaced down the side */
-body::before {
-  background-image:
-    radial-gradient(ellipse at 60% 35%, rgba(201,168,76,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 40% 75%, rgba(201,168,76,0.05) 0%, transparent 50%),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 120px,
-      rgba(201,168,76,0.12) 120px,
-      rgba(201,168,76,0.12) 121px,
-      transparent 121px,
-      transparent 240px
-    );
-  background-position: right 60px top, right 120px center, right 80px top;
-  background-size: 100% 100%, 100% 100%, 80px 480px;
-  background-repeat: no-repeat, no-repeat, no-repeat;
-}
-body::after {
-  background-image:
-    radial-gradient(ellipse at 40% 35%, rgba(201,168,76,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 60% 75%, rgba(201,168,76,0.05) 0%, transparent 50%),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 120px,
-      rgba(201,168,76,0.12) 120px,
-      rgba(201,168,76,0.12) 121px,
-      transparent 121px,
-      transparent 240px
-    );
-  background-position: left 60px top, left 120px center, left 80px top;
-  background-size: 100% 100%, 100% 100%, 80px 480px;
-  background-repeat: no-repeat, no-repeat, no-repeat;
-}
-
-/* Make sure the hero sits above the side accents */
-.hero, .main, .overlay {
-  position: relative;
-  z-index: 1;
-}
-
-/* Hide the accents on narrow screens where there is no side space */
-@media (max-width: 1280px) {
-  body::before, body::after { display: none; }
-}
 
 </style>
 </head>
@@ -1615,6 +1560,7 @@ body::after {
 </div>
 
 <div class="main">
+<div class="main-inner">
 
 <!-- ==================== STEP 1 ==================== -->
 <div id="step-1">
@@ -1818,6 +1764,7 @@ body::after {
   <div class="footer"><p>Powered by <strong>Karabed Leadership Group</strong> — Values Lab</p></div>
 </div>
 
+</div>
 </div>
 
 <script>
