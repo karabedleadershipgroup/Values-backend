@@ -70,20 +70,20 @@ body { font-family: var(--body); background: var(--paper); color: var(--ink); mi
 .hero-nav {
   position: absolute;
   top: 0; left: 0; right: 0;
-  padding: 24px 36px;
+  padding: 32px 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 .lang-btn {
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 600;
   color: var(--gold-soft);
   background: transparent;
   border: 2px solid rgba(201,168,76,0.6);
   border-radius: var(--r);
-  padding: 13px 26px;
+  padding: 18px 36px;
   letter-spacing: 0.1em;
   cursor: pointer;
   font-family: var(--body);
@@ -92,14 +92,14 @@ body { font-family: var(--body); background: var(--paper); color: var(--ink); mi
 }
 .lang-btn:hover { background: rgba(201,168,76,0.08); border-color: var(--gold); color: var(--gold); }
 .admin-link {
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 600;
   color: rgba(247,245,239,0.75);
   text-decoration: none;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   transition: color 0.2s ease;
-  padding: 13px 22px;
+  padding: 18px 32px;
   border: 2px solid rgba(247,245,239,0.3);
   border-radius: var(--r);
 }
@@ -152,9 +152,9 @@ body { font-family: var(--body); background: var(--paper); color: var(--ink); mi
 
 /* ==================== MAIN ==================== */
 .main {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 3rem 1.5rem 5rem;
+  padding: 3rem 2rem 5rem;
 }
 
 .progress-rail {
@@ -1358,9 +1358,9 @@ textarea.values-input {
   line-height: 1;
 }
 .text-size-btn:last-child { border-right: none; }
-.text-size-btn.size-s { font-size: 15px; padding: 10px 16px; }
-.text-size-btn.size-m { font-size: 20px; padding: 10px 16px; }
-.text-size-btn.size-l { font-size: 26px; padding: 10px 16px; }
+.text-size-btn.size-s { font-size: 22px; padding: 14px 22px; }
+.text-size-btn.size-m { font-size: 30px; padding: 14px 22px; }
+.text-size-btn.size-l { font-size: 40px; padding: 14px 22px; }
 .text-size-btn:hover { background: rgba(201,168,76,0.08); color: var(--gold); }
 .text-size-btn.active {
   background: var(--gold);
@@ -1446,6 +1446,81 @@ html[data-text-size="s"] .qv-tab-btn { font-size: 11px; }
 
 html[data-text-size="l"] .r-label,
 html[data-text-size="l"] .qv-card-label { font-size: 12px; }
+
+
+/* ==================== SIDE GOLD ACCENTS ==================== */
+body {
+  position: relative;
+}
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 30vw;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(ellipse at center, rgba(201,168,76,0.06) 0%, transparent 55%),
+    linear-gradient(to bottom, transparent 0%, rgba(201,168,76,0.025) 30%, rgba(201,168,76,0.035) 70%, transparent 100%);
+}
+body::before {
+  left: 0;
+  border-right: 1px solid rgba(201,168,76,0.1);
+}
+body::after {
+  right: 0;
+  border-left: 1px solid rgba(201,168,76,0.1);
+}
+
+/* A subtle vertical gold line motif that feels like a KLG mark — 
+   tiny horizontal hash marks spaced down the side */
+body::before {
+  background-image:
+    radial-gradient(ellipse at 60% 35%, rgba(201,168,76,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 40% 75%, rgba(201,168,76,0.05) 0%, transparent 50%),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 120px,
+      rgba(201,168,76,0.12) 120px,
+      rgba(201,168,76,0.12) 121px,
+      transparent 121px,
+      transparent 240px
+    );
+  background-position: right 60px top, right 120px center, right 80px top;
+  background-size: 100% 100%, 100% 100%, 80px 480px;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+}
+body::after {
+  background-image:
+    radial-gradient(ellipse at 40% 35%, rgba(201,168,76,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 75%, rgba(201,168,76,0.05) 0%, transparent 50%),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 120px,
+      rgba(201,168,76,0.12) 120px,
+      rgba(201,168,76,0.12) 121px,
+      transparent 121px,
+      transparent 240px
+    );
+  background-position: left 60px top, left 120px center, left 80px top;
+  background-size: 100% 100%, 100% 100%, 80px 480px;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+}
+
+/* Make sure the hero sits above the side accents */
+.hero, .main, .overlay {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hide the accents on narrow screens where there is no side space */
+@media (max-width: 1280px) {
+  body::before, body::after { display: none; }
+}
 
 </style>
 </head>
