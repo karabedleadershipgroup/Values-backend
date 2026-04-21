@@ -1824,7 +1824,7 @@ The quickView is a condensed "on the go" version a supervisor can read in under 
 
 - quickView.watchForThis: 1-2 sentences naming the warning signs that this behavior is becoming a pattern or escalating.
 
-- quickView.saveThis: 1-2 sentences listing what to document. ONLY required when the recommendedAction is "Document" or "Escalate", or when impairmentSuspected is true. For "Coach" actions where impairment is NOT suspected, return an empty string.
+- quickView.saveThis: 1-2 sentences listing what to document. ALWAYS return documentation guidance, regardless of the recommended action. Every leader-staff interaction should be documented to establish a record in case the behavior repeats. Tailor the framing to the action: for "Coach", frame it as light protective documentation (e.g., brief note on date, what was observed, what was discussed, and the staff member's response, to establish a baseline in case the behavior recurs); for "Document", list specific required fields (date, time, objective observations, witnesses, what was said, next steps); for "Escalate", include everything for Document plus who was notified and when.
 
 ${spanishBlock}
 
@@ -1848,7 +1848,7 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 "doThis": "string",
 "sayThis": "string — exactly 3 sentences ending on the invitation",
 "watchForThis": "string",
-"saveThis": "string — empty if action is Coach and no impairment suspected"
+"saveThis": "string — always return documentation guidance, tailored to the recommended action"
 },
 "recommendedAction": {"action": "Coach|Document|Escalate", "reasoning": "string"}
 }`;
@@ -1886,7 +1886,7 @@ function render(d) {
     expectation: 'Expectativa', alignmentStatement: 'Declaración de alineación',
     recommendedAction: 'Acción recomendada',
     doThis: 'Haga esto', sayThis: 'Diga esto', watchForThis: 'Observe esto', saveThis: 'Documente esto',
-    saveThisEmpty: 'No se requiere documentación para esta situación. Documente Esto es más útil cuando la acción recomendada es Documentar o Escalar, o cuando se sospecha deterioro.',
+    saveThisEmpty: 'Haga una nota breve de esta conversación para sus registros: fecha, lo que observó, lo que discutió, y la respuesta del miembro del personal. Esto establece una base si el comportamiento se repite.',
     showFull: 'Ver análisis completo', hideFull: 'Ocultar análisis completo',
     onTheGoHeader: 'Herramienta de Liderazgo en el Momento',
     fullToolHeader: 'Herramienta Completa de Liderazgo',
@@ -1906,7 +1906,7 @@ function render(d) {
     expectation: 'Expectation', alignmentStatement: 'Alignment statement',
     recommendedAction: 'Recommended action',
     doThis: 'Do this', sayThis: 'Say this', watchForThis: 'Watch for this', saveThis: 'Save this',
-    saveThisEmpty: 'No documentation needed for this situation. Save This is most useful when the recommended action is Document or Escalate, or when impairment is suspected.',
+    saveThisEmpty: 'Make a brief note of this conversation for your records: date, what you observed, what you discussed, and the staff member\'s response. This establishes a baseline if the behavior recurs.',
     showFull: 'Show full analysis', hideFull: 'Hide full analysis',
     onTheGoHeader: 'On the Go Leadership Tool',
     fullToolHeader: 'Full Leadership Tool',
