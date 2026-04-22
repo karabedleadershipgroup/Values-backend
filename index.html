@@ -394,6 +394,11 @@ body.fast-results #full-analysis { display: none !important; }
 body.fast-results .results-header { display: none !important; }
 body.fast-results #fast-actions-bar { display: flex !important; }
 
+/* Detailed Mode: hide the On the Go quick view entirely; show only full analysis */
+body.detailed-results .tool-section.on-the-go { display: none !important; }
+body.detailed-results #btn-expand-full { display: none !important; }
+body.detailed-results #full-analysis { display: block !important; }
+
 /* ==================== MAIN ==================== */
 .main {
   max-width: 100%;
@@ -2696,13 +2701,30 @@ function switchMode(mode) {
   document.getElementById('mode-btn-fast').classList.toggle('active', mode === 'fast');
   document.getElementById('mode-btn-detailed').classList.toggle('active', mode === 'detailed');
 
-  // Hide all app screens first
+  // --- IMPORTANT: if a result is already on screen, preserve it ---
+  // We only flip the layout (On-the-Go only vs. full analysis) — we do NOT
+  // re-run the analysis or hide the results.
+  const resultsVisible = document.getElementById('results-view').style.display === 'block';
+  if (resultsVisible && lastResult) {
+    if (mode === 'fast') {
+      document.body.classList.add('fast-results');
+      document.body.classList.remove('detailed-results');
+    } else {
+      document.body.classList.remove('fast-results');
+      document.body.classList.add('detailed-results');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  // Otherwise — no result yet — hide all screens and show the correct input view.
   document.getElementById('fast-mode').style.display = 'none';
   document.getElementById('step-1').style.display = 'none';
   document.getElementById('step-2').style.display = 'none';
   document.getElementById('results-view').style.display = 'none';
   document.getElementById('loading-view').style.display = 'none';
   document.body.classList.remove('fast-results');
+  document.body.classList.remove('detailed-results');
 
   if (mode === 'fast') {
     document.getElementById('fast-mode').style.display = 'block';
@@ -2935,6 +2957,11 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
     if (!res.ok) throw new Error(data.error || 'Something went wrong.');
     lastResult = data;
     render(data);
+    // If this was a direct Detailed-Mode run (not routed through generateFast),
+    // mark the body so CSS hides the On the Go quick-view and shows the full analysis.
+    if (!document.body.classList.contains('fast-results')) {
+      document.body.classList.add('detailed-results');
+    }
   } catch (e) {
     document.getElementById('loading-view').style.display = 'none';
     document.getElementById('step-2').style.display = 'block';
@@ -3343,6 +3370,7 @@ function restart() {
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   document.getElementById('results-view').style.display = 'none';
   document.body.classList.remove('fast-results');
+  document.body.classList.remove('detailed-results');
   document.getElementById('f-situation').value = '';
   document.querySelectorAll('input[name="pattern"]').forEach(r => r.checked = false);
   document.getElementById('seg-first').classList.remove('selected');
@@ -3377,13 +3405,12 @@ function restart() {
 function switchToDetailedFromResults() {
   // Keep the rendered results visible, just reveal the Full Leadership Tool section
   document.body.classList.remove('fast-results');
+  document.body.classList.add('detailed-results');
   document.getElementById('fast-actions-bar').style.display = 'none';
   // Flip the mode toggle to Detailed so the top chips reflect current state
   currentMode = 'detailed';
   document.getElementById('mode-btn-fast').classList.remove('active');
   document.getElementById('mode-btn-detailed').classList.add('active');
-  // Auto-expand the full analysis so the user sees the Detailed view immediately
-  if (typeof toggleFullAnalysis === 'function') toggleFullAnalysis(true);
 }
 
 function newFastSituation() {
@@ -3391,6 +3418,7 @@ function newFastSituation() {
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   document.getElementById('results-view').style.display = 'none';
   document.body.classList.remove('fast-results');
+  document.body.classList.remove('detailed-results');
   document.getElementById('fast-f-situation').value = '';
   document.getElementById('f-situation').value = '';
   selectedPattern = '';
@@ -3461,7 +3489,37 @@ const translations = {
   'loading-text': { en: 'This may take 30 to 60 seconds. Your guidance will appear here.', es: 'Esto puede tardar de 30 a 60 segundos. Su guía aparecerá aquí.' },
   'results-eyebrow': { en: 'Leadership Response', es: 'Respuesta de Liderazgo' },
   'results-title': { en: 'Your Guidance', es: 'Su Guía' },
-  'restart-btn': { en: 'Start over', es: 'Comenzar de nuevo' }
+  'restart-btn': { en: 'Start over', es: 'Comenzar de nuevo' },
+
+  // ===== Mode switcher =====
+  'mode-btn-fast-label':     { en: 'Fast Mode',     es: 'Modo Rápido' },
+  'mode-btn-detailed-label': { en: 'Detailed Mode', es: 'Modo Detallado' },
+
+  // ===== Fast Mode input screen =====
+  'fast-eyebrow':  { en: 'Fast Mode — In the moment', es: 'Modo Rápido — En el momento' },
+  'fast-title':    { en: "What was the staff's behavior?", es: '¿Cuál fue el comportamiento del personal?' },
+  'fast-subtitle': { en: "Write what you just observed. We'll respond with what to do, say, watch for, and save — in under a minute.",
+                     es: 'Escriba lo que acaba de observar. Responderemos con qué hacer, decir, observar y documentar, en menos de un minuto.' },
+  'fast-values-label':       { en: "Your organization's values", es: 'Los valores de su organización' },
+  'fast-edit-btn':           { en: 'Edit values', es: 'Editar valores' },
+  'fast-first-title':        { en: 'One-time setup:', es: 'Configuración única:' },
+  'fast-first-body':         { en: "enter your organization's values below. We'll remember them, so every future visit skips straight to the behavior.",
+                               es: 'ingrese los valores de su organización abajo. Los recordaremos para que cada visita futura vaya directo al comportamiento.' },
+  'fast-values-input-label': { en: 'Organizational values', es: 'Valores organizacionales' },
+  'fast-values-hint':        { en: "Separate with commas. You'll only enter these once.",
+                               es: 'Separe con comas. Solo los ingresará una vez.' },
+  'fast-situation-label':    { en: 'The behavior', es: 'El comportamiento' },
+  'fast-pattern-label':      { en: 'Pattern:', es: 'Patrón:' },
+  'fast-pat-first':          { en: 'First time', es: 'Primera vez' },
+  'fast-pat-repeated':       { en: 'Repeated',   es: 'Repetido' },
+  'fast-generate-btn':       { en: 'Get guidance', es: 'Obtener guía' },
+
+  // ===== Fast Mode results action bar =====
+  'btn-switch-detailed-label': { en: 'Detailed view',  es: 'Vista detallada' },
+  'btn-new-situation-label':   { en: 'New situation',  es: 'Nueva situación' },
+  'btn-edit-values-label':     { en: 'Edit my values', es: 'Editar mis valores' },
+  'btn-listen-fast-label':     { en: '▶ Listen',       es: '▶ Escuchar' },
+  'btn-pdf-fast-label':        { en: '↓ PDF',          es: '↓ PDF' }
 };
 
 const sectorTranslations = {
@@ -3568,6 +3626,48 @@ function applyTranslations() {
     });
     valuesInput.value = translatedValues.join(', ');
     valuesInput.dispatchEvent(new Event('input'));
+  }
+
+  // ===== Fast Mode: input placeholders =====
+  const fastValuesInput = document.getElementById('fast-f-values');
+  if (fastValuesInput) {
+    fastValuesInput.placeholder = currentLang === 'es'
+      ? 'Ej: Centrado en el Cliente, Respeto, Integridad, Colaboración'
+      : 'e.g., Client-Centered, Respect, Integrity, Collaboration';
+  }
+  const fastSituationInput = document.getElementById('fast-f-situation');
+  if (fastSituationInput) {
+    fastSituationInput.placeholder = currentLang === 'es'
+      ? 'Ejemplo: Un miembro del personal alzó la voz a un cliente durante la admisión cuando el cliente no podía encontrar su identificación.'
+      : 'Example: A staff member raised their voice at a client during intake when the client could not locate their ID.';
+  }
+
+  // ===== Fast Mode: re-render saved-values chips in the current language =====
+  const fastChips = document.getElementById('fast-values-chips');
+  if (fastChips && Array.isArray(orgValues) && orgValues.length) {
+    const translatedOrg = orgValues.map(v => {
+      if (currentLang === 'es') return valueTranslations[v] || v;
+      const englishKey = Object.keys(valueTranslations).find(k => valueTranslations[k] === v);
+      return englishKey || v;
+    });
+    // Keep orgValues synced so Fast Mode generate uses the current-language values
+    orgValues = translatedOrg;
+    try { localStorage.setItem(LS_KEYS.values, JSON.stringify(translatedOrg)); } catch(e) {}
+    fastChips.innerHTML = translatedOrg.map(v => `<span class="fast-value-chip">${v}</span>`).join('');
+  }
+
+  // ===== Fast Mode: keep audio label consistent with active state =====
+  const listenFastLabel = document.getElementById('btn-listen-fast-label');
+  if (listenFastLabel && !currentAudio) {
+    listenFastLabel.textContent = currentLang === 'es' ? '▶ Escuchar' : '▶ Listen';
+  }
+
+  // ===== If a result is currently rendered, re-render it in the new language =====
+  // This updates UI labels (On the Go, Do this, Say this, The situation you described, etc.)
+  // Note: AI-generated content (scripts, analysis text) remains in the language it was
+  // generated in — that cannot be retranslated without a new API call.
+  if (typeof lastResult === 'object' && lastResult && document.getElementById('results-view').style.display === 'block') {
+    try { render(lastResult); } catch(e) {}
   }
 }
 </script>
