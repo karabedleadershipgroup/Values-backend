@@ -738,6 +738,11 @@
     // the human-context lens up front, which matches a trauma-informed
     // coaching flow.
     reorderDetailedViewSections(fullAnalysis);
+
+    // Then inject the "What may be going on for you" (manager reflection)
+    // section so it appears right after the staff reality section. This
+    // mirrors the parallel structure of looking at both lenses together.
+    injectManagerReflectionSection(fullAnalysis);
   }
 
   function reorderDetailedViewSections(fullAnalysis) {
@@ -797,6 +802,75 @@
     }
 
     fullAnalysis.setAttribute('data-reordered', '1');
+  }
+
+  function injectManagerReflectionSection(fullAnalysis) {
+    // Don't inject twice on the same render
+    if (fullAnalysis.getAttribute('data-reflection-injected') === '1') return;
+
+    // We need the AI's response (lastResult) to find the managerReflection field.
+    // If it's not present (because the index.html prompt patch hasn't been
+    // applied yet, or because the AI didn't return it for some reason), we
+    // gracefully skip. The page still works exactly as before.
+    const result = window.lastResult;
+    if (!result || typeof result !== 'object') return;
+    const reflection = result.managerReflection;
+    if (!reflection || typeof reflection !== 'string' || reflection.trim().length === 0) return;
+
+    // Find the staff reality section so we can place the new section right after it
+    const toolSection = fullAnalysis.querySelector('.tool-section.full-tool');
+    if (!toolSection) return;
+    const staffRealityEl = toolSection.querySelector('.staff-reality');
+    if (!staffRealityEl) return;
+    const staffSection = staffRealityEl.closest('.r-section');
+    if (!staffSection) return;
+    // The divider that comes right after the staff section
+    const dividerAfterStaff = staffSection.nextElementSibling;
+
+    // Pick the right label based on current language
+    const currentLang = (typeof window.currentLang === 'string') ? window.currentLang : 'en';
+    const sectionLabel = currentLang === 'es'
+      ? 'Lo que puede estar pasando con usted'
+      : 'What may be going on for you';
+
+    // Build the new section. We give it a slightly different visual treatment
+    // (warm sand background with a navy left border) so it reads as a
+    // companion piece to the green staff-reality block — same shape, but
+    // clearly aimed at the leader, not the staff member.
+    const newSection = document.createElement('div');
+    newSection.className = 'r-section';
+    newSection.setAttribute('data-org-injected', 'manager-reflection');
+    newSection.innerHTML = `
+      <div class="r-label">${escapeHtml(sectionLabel)}</div>
+      <div class="manager-reflection" style="
+        background: #FBF6E8;
+        border-left: 3px solid #1B2A4A;
+        border-radius: 0 10px 10px 0;
+        padding: 16px 20px;
+        font-size: 14px;
+        line-height: 1.75;
+        font-weight: 400;
+        color: #2C2B27;
+        font-style: italic;
+      ">${escapeHtml(reflection)}</div>
+    `;
+
+    // The new divider that sits between this section and the next
+    const newDivider = document.createElement('div');
+    newDivider.className = 'r-divider';
+
+    // Place the new section right after the divider that follows staff reality
+    if (dividerAfterStaff && dividerAfterStaff.classList.contains('r-divider')) {
+      // Insert: [staff section] [existing divider] [NEW section] [NEW divider] [next section]
+      dividerAfterStaff.insertAdjacentElement('afterend', newSection);
+      newSection.insertAdjacentElement('afterend', newDivider);
+    } else {
+      // Fallback: just append after the staff section with our own divider
+      staffSection.insertAdjacentElement('afterend', newDivider);
+      newDivider.insertAdjacentElement('afterend', newSection);
+    }
+
+    fullAnalysis.setAttribute('data-reflection-injected', '1');
   }
 
   // -----------------------------------------------------------
