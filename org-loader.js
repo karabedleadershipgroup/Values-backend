@@ -384,28 +384,68 @@
 
   function addValuesDefinitionsLink(values) {
     if (!Array.isArray(values) || !values.length) return;
-    // Wait a tick for the page to finish initializing
-    setTimeout(function () {
-      const bar = document.getElementById('fast-values-bar');
-      if (!bar) return;
 
-      // Check if the link is already there
-      if (document.getElementById('org-defs-link')) return;
+    // We make two passes:
+    //  - One immediately, in case the elements are already in the DOM
+    //  - One after a short delay, to catch elements that get inserted/changed
+    //    when the user navigates between modes or finishes a session
+    swapEditForDefinitionsButtons(values);
+    setTimeout(function () { swapEditForDefinitionsButtons(values); }, 500);
+    setTimeout(function () { swapEditForDefinitionsButtons(values); }, 1500);
 
+    // Also watch for DOM changes (like the results screen appearing) so we
+    // can swap the buttons when those new elements show up.
+    const observer = new MutationObserver(function () {
+      swapEditForDefinitionsButtons(values);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function swapEditForDefinitionsButtons(values) {
+    // ---- Saved-values bar at the top of Fast Mode ----
+    // Original button calls editSavedValues() which jumps to Detailed Mode.
+    // For org users, we hide it and add a "View definitions" button instead.
+    const editTopBtn = document.getElementById('fast-edit-btn');
+    if (editTopBtn && editTopBtn.style.display !== 'none') {
+      editTopBtn.style.display = 'none';
+    }
+    const valuesBar = document.getElementById('fast-values-bar');
+    if (valuesBar && !document.getElementById('org-defs-link-top')) {
       const link = document.createElement('button');
-      link.id = 'org-defs-link';
+      link.id = 'org-defs-link-top';
       link.type = 'button';
       link.className = 'fast-edit-link';
-      link.style.marginLeft = '8px';
       link.textContent = 'View definitions';
       link.addEventListener('click', function () { showDefinitionsModal(values); });
+      valuesBar.appendChild(link);
+    }
 
-      // Add it next to the existing edit-values button if present
-      const editBtn = bar.querySelector('.fast-edit-link');
-      if (editBtn) editBtn.insertAdjacentElement('afterend', link);
-      else bar.appendChild(link);
-    }, 600);
+    // ---- Results action bar (Fast Mode results screen) ----
+    // Original button is "Edit my values" with id btn-edit-values.
+    // We hide it and add a "View definitions" button next to it.
+    const editResultsBtn = document.getElementById('btn-edit-values');
+    if (editResultsBtn && editResultsBtn.style.display !== 'none') {
+      editResultsBtn.style.display = 'none';
+
+      // Add a replacement button right where the old one was
+      if (!document.getElementById('btn-view-defs-results')) {
+        const btn = document.createElement('button');
+        btn.id = 'btn-view-defs-results';
+        btn.type = 'button';
+        btn.className = 'fast-action-btn';
+        btn.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+          <span>View definitions</span>
+        `;
+        btn.addEventListener('click', function () { showDefinitionsModal(values); });
+        editResultsBtn.insertAdjacentElement('afterend', btn);
+      }
+    }
   }
+
 
   function showDefinitionsModal(values) {
     // Simple modal showing each value with its definition
