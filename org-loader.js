@@ -91,6 +91,12 @@
       // Step 4: Hook into the existing generate function so that each
       // session is saved to Supabase with the correct org_id.
       installSessionLogger();
+
+      // Step 5: Patch the rendered results so the "Behavior Observed"
+      // shown in Detailed view is the user's verbatim text rather than
+      // the AI's restatement (which can drift and add details the user
+      // never wrote).
+      installVerbatimBehaviorPatch();
     } catch (e) {
       console.error('Org loader failed to initialize:', e);
       // If we can't load Supabase config, fall back to the original
@@ -444,6 +450,93 @@
         editResultsBtn.insertAdjacentElement('afterend', btn);
       }
     }
+
+    // ---- Add an "Edit behavior" button to the results action bar ----
+    // This lets the user go back to the input screen with their behavior
+    // text and pattern selection pre-filled, so they can refine the scenario
+    // without typing it all over again.
+    const newSituationBtn = document.getElementById('btn-new-situation');
+    if (newSituationBtn && !document.getElementById('btn-edit-behavior')) {
+      const editBtn = document.createElement('button');
+      editBtn.id = 'btn-edit-behavior';
+      editBtn.type = 'button';
+      editBtn.className = 'fast-action-btn';
+      editBtn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"/>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+        <span>Edit behavior</span>
+      `;
+      editBtn.addEventListener('click', editBehavior);
+      // Insert it right after the "New situation" button
+      newSituationBtn.insertAdjacentElement('afterend', editBtn);
+    }
+  }
+
+  // -----------------------------------------------------------
+  // Edit behavior: take the user back to the input screen
+  // with their original behavior and pattern pre-filled
+  // -----------------------------------------------------------
+  function editBehavior() {
+    try {
+      // Stop any audio that might be playing
+      if (typeof currentAudio !== 'undefined' && currentAudio) {
+        currentAudio.pause();
+      }
+
+      // Capture the original situation text and pattern.
+      // The existing app stores the original situation on window.lastSituation
+      // and the pattern in either fastSelectedPattern or selectedPattern.
+      const originalText = (typeof window.lastSituation === 'string')
+        ? window.lastSituation
+        : (document.getElementById('f-situation')
+            ? document.getElementById('f-situation').value
+            : '');
+      const originalPattern = (typeof window.fastSelectedPattern === 'string' && window.fastSelectedPattern)
+        ? window.fastSelectedPattern
+        : ((typeof window.selectedPattern === 'string' && window.selectedPattern)
+            ? window.selectedPattern
+            : 'first');
+
+      // Hide the results screen
+      const resultsView = document.getElementById('results-view');
+      if (resultsView) resultsView.style.display = 'none';
+      document.body.classList.remove('fast-results');
+      document.body.classList.remove('detailed-results');
+
+      // Reset the audio UI to its initial state
+      const audioPlayer = document.getElementById('audio-player');
+      if (audioPlayer) audioPlayer.classList.remove('visible');
+      const playIcon = document.getElementById('play-icon');
+      const pauseIcon = document.getElementById('pause-icon');
+      if (playIcon) playIcon.style.display = 'block';
+      if (pauseIcon) pauseIcon.style.display = 'none';
+
+      // Switch back to Fast Mode and pre-fill the textarea
+      if (typeof window.switchMode === 'function') {
+        window.switchMode('fast');
+      }
+
+      const fastTextarea = document.getElementById('fast-f-situation');
+      if (fastTextarea) {
+        fastTextarea.value = originalText;
+        // Place the cursor at the end so the user can continue typing
+        fastTextarea.focus();
+        const len = fastTextarea.value.length;
+        try { fastTextarea.setSelectionRange(len, len); } catch (e) { /* ignore */ }
+      }
+
+      // Restore the pattern selection in the Fast Mode pattern segmented control
+      if (typeof window.selectFastPattern === 'function') {
+        window.selectFastPattern(originalPattern);
+      }
+
+      // Smooth scroll up so the user lands on the input
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {
+      console.warn('editBehavior failed:', e);
+    }
   }
 
 
@@ -561,6 +654,83 @@
       }
       return response;
     };
+  }
+
+  // -----------------------------------------------------------
+  // Verbatim behavior patch: replace the AI's restatement of the
+  // user's behavior with the user's actual words. This applies to:
+  //   1. The "Behavior Observed" field in Detailed view
+  //   2. The PDF download
+  // We do this because LLMs sometimes embellish or invent details
+  // when restating, and we want the displayed behavior to be a
+  // faithful record of what the user actually wrote.
+  // -----------------------------------------------------------
+  function installVerbatimBehaviorPatch() {
+    // Watch the DOM for the results card to be updated. When we see the
+    // "Behavior Observed" section appear, swap its content for the user's
+    // verbatim text (window.lastSituation).
+    const observer = new MutationObserver(function () {
+      patchBehaviorObservedInDetailedView();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Also patch the PDF generator so the printed document uses the user's
+    // verbatim text in the Behavior Observed section. We do this by wrapping
+    // the original downloadPDF function once it becomes available.
+    let pdfPatched = false;
+    const tryPatchPDF = function () {
+      if (pdfPatched) return;
+      if (typeof window.downloadPDF !== 'function') return;
+      const originalDownload = window.downloadPDF;
+      window.downloadPDF = function () {
+        // Briefly inject the user's verbatim text into lastResult so the
+        // PDF builder picks it up, then restore the original AI value
+        // afterward so nothing else in the app sees the change.
+        const verbatim = (typeof window.lastSituation === 'string' && window.lastSituation)
+          ? window.lastSituation : null;
+        if (verbatim && window.lastResult && typeof window.lastResult === 'object') {
+          const original = window.lastResult.behaviorObserved;
+          window.lastResult.behaviorObserved = verbatim;
+          try { originalDownload.apply(this, arguments); }
+          finally { window.lastResult.behaviorObserved = original; }
+        } else {
+          return originalDownload.apply(this, arguments);
+        }
+      };
+      pdfPatched = true;
+    };
+    // The downloadPDF function is defined inline in index.html so it should
+    // already exist by the time we boot, but we also retry briefly in case.
+    tryPatchPDF();
+    setTimeout(tryPatchPDF, 250);
+    setTimeout(tryPatchPDF, 1000);
+  }
+
+  function patchBehaviorObservedInDetailedView() {
+    // The verbatim text the user actually typed
+    const verbatim = (typeof window.lastSituation === 'string' && window.lastSituation)
+      ? window.lastSituation : null;
+    if (!verbatim) return;
+
+    // The Detailed view is rendered inside #full-analysis. The first
+    // r-section in there is "Behavior Observed" with a <p class="content">
+    // showing the AI's restatement. We replace its text with the verbatim.
+    const fullAnalysis = document.getElementById('full-analysis');
+    if (!fullAnalysis) return;
+
+    // Look at the first .r-section inside the full analysis
+    const firstSection = fullAnalysis.querySelector('.r-section');
+    if (!firstSection) return;
+    const para = firstSection.querySelector('p.content');
+    if (!para) return;
+
+    // Only replace if it's currently showing the AI version (so we don't
+    // overwrite repeatedly). We mark it once we've replaced it.
+    if (para.getAttribute('data-verbatim-applied') === '1') return;
+    para.textContent = verbatim;
+    para.setAttribute('data-verbatim-applied', '1');
+    // Add a small italic style cue so the user sees this is their own text
+    para.style.fontStyle = 'italic';
   }
 
   // -----------------------------------------------------------
