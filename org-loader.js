@@ -241,6 +241,31 @@
         return typeof v === 'string' ? v : v.name;
       });
       localStorage.setItem(LS_VALUES, JSON.stringify(valueNames));
+
+      // Also push the values straight into the in-memory state of the
+      // existing app. This is important because Fast Mode runs its
+      // "do I have saved values?" check ONCE on page load, before our
+      // login completes. If we don't re-trigger it here, Fast Mode will
+      // still show the one-time setup screen even though the values are
+      // now in storage. So we re-render Fast Mode if it's the active mode.
+      try {
+        if (typeof window.orgValues !== 'undefined') {
+          window.orgValues = valueNames;
+        }
+        if (typeof renderFastValuesBar === 'function') {
+          renderFastValuesBar();
+        }
+        // Also pre-fill the Detailed Mode values input, in case the user
+        // switches there. This matches what switchMode('detailed') does
+        // when there are stored values, but applied immediately.
+        const detailedValuesInput = document.getElementById('f-values');
+        if (detailedValuesInput) {
+          detailedValuesInput.value = valueNames.join(', ');
+          detailedValuesInput.dispatchEvent(new Event('input'));
+        }
+      } catch (e) {
+        console.warn('Could not re-render Fast Mode values bar:', e);
+      }
     }
 
     // 4. Update the page title and any "Karabed Leadership Group"
