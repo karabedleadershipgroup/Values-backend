@@ -2909,6 +2909,12 @@ ${toneInstruction}
 - Even if a behavior could plausibly uphold multiple values, you MUST pick the SINGLE most central value. Do not list two values. Do not write "and". Pick one.
 - Vary the values across the list when possible.
 - Aim for 4 to 6.
+CRITICAL — managerReflection field requirements:
+Produce a short, warm, trauma-informed reflection (3 to 5 sentences) directed at the leader (NOT the staff member). The purpose is to help the leader notice what they themselves may be carrying into this situation: assumptions, frustrations, biases, workload pressures, prior incidents, or personal triggers that may be shaping how they are reading the staff member's behavior.
+
+This is NOT advice. It is a gentle prompt to pause and self-examine before walking into the conversation. Use second person ("you" / "your") throughout. Acknowledge that the leader's feelings are valid. Then invite them to consider one or two alternative interpretations or self-questions they could sit with before the conversation. Do not shame, lecture, or moralize. Do not tell the leader what to do. Match the warm, invitational tone used elsewhere in this prompt.
+
+Examples of phrasing to use: "You may be carrying...", "Notice if you are feeling...", "Before walking in, consider...", "It is worth pausing to ask yourself...", "Your reaction makes sense, and..."
 
 CRITICAL — quickView field requirements:
 The quickView is a condensed "on the go" version a supervisor can read in under a minute right before a conversation. It must be tight, scannable, and immediately usable. Every quickView field must be HIGHLY SPECIFIC to the scenario described.
@@ -2928,6 +2934,7 @@ Respond ONLY in this JSON format with no markdown, no preamble, no backticks:
 {
 "impairmentSuspected": true|false,
 "behaviorObserved": "string",
+"managerReflection": "string",
 "valuesAnalysis": [{"value": "string", "status": "Misaligned|Upheld", "explanation": "string"}],
 "staffReality": "string",
 "impact": {"client": "string", "team": "string", "organizational": "string"},
