@@ -731,6 +731,72 @@
     para.setAttribute('data-verbatim-applied', '1');
     // Add a small italic style cue so the user sees this is their own text
     para.style.fontStyle = 'italic';
+
+    // Once we've patched the verbatim text, also reorder the sections so
+    // "What may be going on for this staff member" appears right after
+    // "Behavior Observed" instead of being buried further down. This puts
+    // the human-context lens up front, which matches a trauma-informed
+    // coaching flow.
+    reorderDetailedViewSections(fullAnalysis);
+  }
+
+  function reorderDetailedViewSections(fullAnalysis) {
+    // Don't reorder twice
+    if (fullAnalysis.getAttribute('data-reordered') === '1') return;
+
+    // The "Full Leadership Tool" wrapper holds all the r-section blocks
+    // and r-divider blocks. We need to find the section whose label
+    // starts with "What may" (English) or "La posible" (Spanish), and
+    // move it up to right after the first section.
+    const toolSection = fullAnalysis.querySelector('.tool-section.full-tool');
+    if (!toolSection) return;
+
+    const sections = Array.from(toolSection.querySelectorAll('.r-section'));
+    // Find the staff-reality section by looking for an .r-section that
+    // contains a .staff-reality element (most reliable selector).
+    let staffSectionIndex = -1;
+    for (let i = 0; i < sections.length; i++) {
+      if (sections[i].querySelector('.staff-reality')) {
+        staffSectionIndex = i;
+        break;
+      }
+    }
+    if (staffSectionIndex === -1) return;
+    // If it's already in position 1 (right after Behavior Observed), we're done
+    if (staffSectionIndex === 1) {
+      fullAnalysis.setAttribute('data-reordered', '1');
+      return;
+    }
+
+    const staffSection = sections[staffSectionIndex];
+    // The divider that sits right before this section in the DOM
+    const dividerBefore = staffSection.previousElementSibling;
+    // We want to move both the section and a divider together, to keep
+    // the visual rhythm consistent with the rest of the page.
+
+    // Insert the staff section right after the first (Behavior Observed) section
+    const firstSection = sections[0];
+    const firstDivider = firstSection.nextElementSibling; // the divider after Behavior Observed
+
+    // Move staffSection so it sits right after the firstDivider
+    // (so order becomes: Behavior Observed, divider, Staff Reality, divider, ...)
+    if (firstDivider && firstDivider.classList.contains('r-divider')) {
+      // First, remove the staff section and the divider that was before it
+      // (so we don't leave a stray divider behind in the original spot).
+      if (dividerBefore && dividerBefore.classList.contains('r-divider')) {
+        dividerBefore.remove();
+      }
+      staffSection.remove();
+
+      // Now insert it after the firstDivider
+      firstDivider.insertAdjacentElement('afterend', staffSection);
+      // And add a new divider right after it so the next section is separated
+      const newDivider = document.createElement('div');
+      newDivider.className = 'r-divider';
+      staffSection.insertAdjacentElement('afterend', newDivider);
+    }
+
+    fullAnalysis.setAttribute('data-reordered', '1');
   }
 
   // -----------------------------------------------------------
