@@ -213,6 +213,28 @@ body { font-family: var(--body); background: var(--paper); color: var(--ink); mi
 @media (max-width: 720px) {
   .fast-card { padding: 1.75rem 1.5rem; }
 }
+/* ---- Subtle background watermark on input cards ---- */
+.fast-card,
+.card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.fast-card::before,
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('https://mjgeztpxlbzrceeysuxe.supabase.co/storage/v1/object/public/org-logos/a-c-x55M--XCrR8-unsplash.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.08;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
 .fast-eyebrow {
   font-size: 10px;
   font-weight: 600;
