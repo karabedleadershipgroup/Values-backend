@@ -57,6 +57,35 @@
   let sb = null;          // Supabase client
   let currentOrg = null;  // The signed-in org (object with id, name, values, logo, colors)
 
+  // ===== Language helpers =====
+  // Read the current language (en or es) from the same place index.html stores it.
+  function getCurrentLang() {
+    try {
+      const stored = localStorage.getItem('vl_lang');
+      if (stored === 'es') return 'es';
+    } catch(e) {}
+    if (typeof window !== 'undefined' && window.currentLang === 'es') return 'es';
+    return 'en';
+  }
+
+  // Get the value's display name in the current language. Falls back to English.
+  function valueName(v) {
+    if (typeof v === 'string') return v;
+    if (!v) return '';
+    const lang = getCurrentLang();
+    if (lang === 'es' && v.name_es) return v.name_es;
+    return v.name || '';
+  }
+
+  // Get the value's definition in the current language.
+  function valueDefinition(v) {
+    if (typeof v !== 'object' || !v) return '';
+    const lang = getCurrentLang();
+    if (lang === 'es' && v.definition_es) return v.definition_es;
+    return v.definition || '';
+  }
+
+
   // -----------------------------------------------------------
   // Boot: runs as soon as the page loads
   // -----------------------------------------------------------
@@ -242,9 +271,9 @@
     //    (which is what the existing app expects).
     if (Array.isArray(org.values) && org.values.length) {
       const valueNames = org.values.map(function (v) {
-        // Each value in the database is { name, definition }
-        // The existing app just wants an array of names.
-        return typeof v === 'string' ? v : v.name;
+        // Database values may be { name, definition, name_es, definition_es }
+        // Pick the language-appropriate name.
+        return valueName(v);
       });
       localStorage.setItem(LS_VALUES, JSON.stringify(valueNames));
 
@@ -446,7 +475,7 @@
       link.id = 'org-defs-link-top';
       link.type = 'button';
       link.className = 'fast-edit-link';
-      link.textContent = 'View definitions';
+      link.textContent = getCurrentLang() === 'es' ? 'Ver definiciones' : 'View definitions';
       link.addEventListener('click', function () { showDefinitionsModal(values); });
       valuesBar.appendChild(link);
     }
@@ -469,7 +498,7 @@
             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
           </svg>
-          <span>View definitions</span>
+          <span>${getCurrentLang() === 'es' ? 'Ver definiciones' : 'View definitions'}</span>
         `;
         btn.addEventListener('click', function () { showDefinitionsModal(values); });
         editResultsBtn.insertAdjacentElement('afterend', btn);
@@ -589,7 +618,7 @@
             ${escapeHtml(currentOrg && currentOrg.name ? currentOrg.name : 'Organization')} Values
           </div>
           <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:600;color:#1a1a17;">
-            Our values, in our words
+            ${getCurrentLang() === 'es' ? 'Nuestros valores, en nuestras palabras' : 'Our values, in our words'}
           </div>
         </div>
         <button id="defs-close" style="background:none;border:none;font-size:24px;cursor:pointer;color:#888;line-height:1;">×</button>
@@ -597,8 +626,8 @@
     `;
 
     values.forEach(function (v) {
-      const name = typeof v === 'string' ? v : (v.name || '');
-      const def = typeof v === 'object' ? (v.definition || '') : '';
+      const name = valueName(v);
+      const def = valueDefinition(v);
       html += `
         <div style="padding:14px 0;border-bottom:1px solid #eee;">
           <div style="font-weight:600;color:#1a1a17;font-size:15px;margin-bottom:4px;">${escapeHtml(name)}</div>
@@ -911,6 +940,46 @@
       .replace(/'/g, '&#39;');
   }
   function escapeAttr(str) { return escapeHtml(str); }
+
+  // ===== Language toggle handler =====
+  // When the user toggles language AFTER login, we need to re-render the org's
+  // value chips and re-update localStorage so the rest of the app sees them
+  // in the new language.
+  function onLanguageChange() {
+    if (!currentOrg || !Array.isArray(currentOrg.values)) return;
+    // Re-derive the value names in the new language
+    const newValueNames = currentOrg.values.map(function (v) {
+      return valueName(v);
+    });
+    try { localStorage.setItem(LS_VALUES, JSON.stringify(newValueNames)); } catch(e) {}
+    // Push into in-memory state of the existing app
+    if (typeof window !== 'undefined') {
+      window.orgValues = newValueNames;
+    }
+    // Re-render the chips visible in the Fast Mode values bar
+    const chips = document.getElementById('fast-values-chips');
+    if (chips) {
+      chips.innerHTML = newValueNames.map(function (n) {
+        return '<span class="fast-value-chip">' + escapeHtml(n) + '</span>';
+      }).join('');
+    }
+    // Re-translate the "View definitions" buttons
+    const link = document.getElementById('org-defs-link-top');
+    if (link) link.textContent = getCurrentLang() === 'es' ? 'Ver definiciones' : 'View definitions';
+    const btnSpan = document.querySelector('#btn-view-defs-results span');
+    if (btnSpan) btnSpan.textContent = getCurrentLang() === 'es' ? 'Ver definiciones' : 'View definitions';
+  }
+
+  // Watch for language changes by polling vl_lang in storage and currentLang on window.
+  // We poll because index.html's toggleLanguage doesn't fire a custom event we can listen to.
+  let _lastSeenLang = getCurrentLang();
+  setInterval(function () {
+    const now = getCurrentLang();
+    if (now !== _lastSeenLang) {
+      _lastSeenLang = now;
+      onLanguageChange();
+    }
+  }, 250);
 
   // Naive color darken: drops each RGB channel by ~12 to make a hover state.
   function darken(hex) {
