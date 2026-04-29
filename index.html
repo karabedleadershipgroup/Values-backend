@@ -1565,18 +1565,14 @@ textarea.values-input {
 .splash-body p + p { margin-top: 0.85rem; }
 
 .splash-agree {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
   text-align: left;
   margin-bottom: 1.5rem;
-  padding: 16px;
+  padding: 16px 18px;
   background: var(--stone-50);
   border-radius: var(--r-lg);
   border: 1px solid var(--stone-200);
 }
-.splash-agree input { margin-top: 3px; accent-color: var(--navy); flex-shrink: 0; cursor: pointer; width: 14px; height: 14px; }
-.splash-agree label { font-size: 13px; color: var(--stone-700); font-weight: 400; line-height: 1.65; cursor: pointer; }
+.splash-agree #splash-agree-label { font-size: 13px; color: var(--stone-700); font-weight: 400; line-height: 1.65; }
 
 /* ==================== QUICK VIEW ==================== */
 .qv-action-banner {
@@ -2406,10 +2402,9 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
       <p id="splash-p3">We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.</p>
     </div>
     <div class="splash-agree" id="splash-agree-row">
-      <input type="checkbox" id="agree-check" aria-describedby="splash-agree-label">
-      <label for="agree-check" id="splash-agree-label">I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.</label>
+      <span id="splash-agree-label">By continuing, I confirm that I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.</span>
     </div>
-    <button class="btn-primary" id="enter-btn" disabled onclick="enterApp()" style="margin-top:0;">Enter Values Lab</button>
+    <button class="btn-primary" id="enter-btn" onclick="enterApp()" style="margin-top:0;">Enter Values Lab</button>
   </div>
 </div>
 
@@ -2926,18 +2921,6 @@ function attemptLogin() {
   document.getElementById('login-overlay').style.display = 'none';
 }
 
-function toggleEnter() {
-  const check = document.getElementById('agree-check');
-  const btn = document.getElementById('enter-btn');
-  if (!check || !btn) return;
-  btn.disabled = !check.checked;
-  // Belt-and-suspenders: also remove the disabled attribute entirely when checked
-  if (check.checked) {
-    btn.removeAttribute('disabled');
-  } else {
-    btn.setAttribute('disabled', 'disabled');
-  }
-}
 function enterApp() {
   document.getElementById('splash-overlay').style.display = 'none';
   sessionStorage.setItem('vl_agreed', '1');
@@ -2977,26 +2960,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (sessionStorage.getItem('vl_agreed') === '1') {
     document.getElementById('splash-overlay').style.display = 'none';
   }
-  const agreeCheck = document.getElementById('agree-check');
-  if (agreeCheck) {
-    // Use a small timeout so the browser has fully updated `checked` before we read it.
-    const sync = function() { setTimeout(toggleEnter, 0); };
-    agreeCheck.addEventListener('change', sync);
-    agreeCheck.addEventListener('click', sync);
-    agreeCheck.addEventListener('input', sync);
-    // Also let users click anywhere on the row to toggle.
-    const row = document.getElementById('splash-agree-row');
-    if (row) {
-      row.addEventListener('click', function(e) {
-        // If they clicked the checkbox or its label, the browser already handles it.
-        if (e.target === agreeCheck || e.target.tagName === 'LABEL') return;
-        agreeCheck.checked = !agreeCheck.checked;
-        sync();
-      });
-    }
-    // Initial sync
-    toggleEnter();
-  }
+  // Splash button is now always enabled. Clicking it constitutes agreement.
 
   // Initialize Fast Mode by default.
   // If the user has saved values, Fast Mode lands directly on the behavior screen.
@@ -4444,7 +4408,7 @@ const translations = {
   'splash-p1': { en: 'Welcome, and thank you for being part of this journey. Values Lab is in its early testing phase, and your presence here is a gift to this work.', es: 'Bienvenido, y gracias por ser parte de este camino. Values Lab está en su fase inicial de prueba, y su presencia aquí es un regalo para este trabajo.' },
   'splash-p2': { en: 'This is a shared space of trust. Everything generated inside, the guidance, the scripts, the analysis, is confidential and intended solely to support your feedback to Karabed Leadership Group as we shape this tool together.', es: 'Este es un espacio compartido de confianza. Todo lo que se genera aquí, la guía, los guiones, el análisis, es confidencial y tiene como único propósito apoyar su retroalimentación a Karabed Leadership Group mientras damos forma a esta herramienta juntos.' },
   'splash-p3': { en: 'We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.', es: 'Estamos profundamente agradecidos por su colaboración. Lo que comparte aquí nos ayuda a construir algo que verdaderamente sirve a los líderes y a las comunidades que apoyan.' },
-  'splash-agree-label': { en: "I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.", es: 'Estoy aquí para explorar Values Lab y ofrecer mi retroalimentación a Karabed Leadership Group. Mantendré toda la información aquí de manera confidencial y usaré este espacio solo para ese propósito.' },
+  'splash-agree-label': { en: "By continuing, I confirm that I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.", es: 'Al continuar, confirmo que estoy aquí para explorar Values Lab y ofrecer mi retroalimentación a Karabed Leadership Group. Mantendré toda la información aquí de manera confidencial y usaré este espacio solo para ese propósito.' },
   'enter-btn': { en: 'Enter Values Lab', es: 'Entrar a Values Lab' },
   'admin-link': { en: 'Admin', es: 'Administrador' },
   'hero-title': { en: 'Values<em> Lab</em>', es: 'Laboratorio<em> de Valores</em>' },
