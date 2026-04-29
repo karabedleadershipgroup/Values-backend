@@ -1465,6 +1465,10 @@ textarea.values-input {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  overflow-y: auto;          /* allow scroll when content is taller than viewport */
+}
+.overlay-card {
+  margin: auto;              /* re-center when scrollable */
 }
 .overlay-card {
   background: var(--white);
@@ -2401,10 +2405,10 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
       <p id="splash-p2">This is a shared space of trust. Everything generated inside, the guidance, the scripts, the analysis, is confidential and intended solely to support your feedback to Karabed Leadership Group as we shape this tool together.</p>
       <p id="splash-p3">We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.</p>
     </div>
-    <div class="splash-agree">
-      <input type="checkbox" id="agree-check" onchange="toggleEnter()">
-      <label for="agree-check" id="splash-agree-label">I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.</label>
-    </div>
+    <label class="splash-agree" for="agree-check">
+      <input type="checkbox" id="agree-check" aria-describedby="splash-agree-label" onchange="toggleEnter()" oninput="toggleEnter()" onclick="toggleEnter()">
+      <span id="splash-agree-label">I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.</span>
+    </label>
     <button class="btn-primary" id="enter-btn" disabled onclick="enterApp()" style="margin-top:0;">Enter Values Lab</button>
   </div>
 </div>
@@ -2923,7 +2927,16 @@ function attemptLogin() {
 }
 
 function toggleEnter() {
-  document.getElementById('enter-btn').disabled = !document.getElementById('agree-check').checked;
+  const check = document.getElementById('agree-check');
+  const btn = document.getElementById('enter-btn');
+  if (!check || !btn) return;
+  btn.disabled = !check.checked;
+  // Belt-and-suspenders: also remove the disabled attribute entirely when checked
+  if (check.checked) {
+    btn.removeAttribute('disabled');
+  } else {
+    btn.setAttribute('disabled', 'disabled');
+  }
 }
 function enterApp() {
   document.getElementById('splash-overlay').style.display = 'none';
