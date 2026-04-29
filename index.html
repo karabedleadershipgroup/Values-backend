@@ -54,6 +54,264 @@
   --body: 'DM Sans', -apple-system, system-ui, sans-serif;
 }
 
+/* ==================== KEYBOARD FOCUS INDICATORS ==================== */
+/* Make keyboard focus visible everywhere. */
+*:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+/* Hide focus ring when interaction is via mouse, show for keyboard. */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+*:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+/* Buttons get a slightly inset ring so they don't look like they grew. */
+button:focus-visible,
+.btn-primary:focus-visible,
+.btn-action:focus-visible,
+.fast-action-btn:focus-visible,
+.mode-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+/* Inputs and textareas get a heavier ring since their borders are subtle. */
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+  border-color: var(--gold) !important;
+}
+
+/* ==================== SKIP LINK (a11y) ==================== */
+/* Visible only when focused via keyboard. */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 8px;
+  background: var(--navy);
+  color: var(--gold-soft);
+  padding: 12px 18px;
+  z-index: 9999;
+  border-radius: 0 0 6px 6px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 0;
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ==================== HIGH-CONTRAST MODE ==================== */
+/* Activated by adding body.high-contrast class.
+   Overrides color variables for users with low vision or visual processing differences.
+   Foreground/background pairs all meet WCAG AAA (7:1) contrast ratio. */
+body.high-contrast {
+  --navy: #000000;
+  --navy-deep: #000000;
+  --navy-soft: #000000;
+  --gold: #B8860B;            /* darkened for AAA on white */
+  --gold-deep: #8B6508;
+  --gold-soft: #FFE08A;
+  --gold-pale: #FFFFFF;       /* no soft cream backgrounds */
+
+  --paper: #FFFFFF;
+  --paper-warm: #FFFFFF;
+  --white: #FFFFFF;
+  --stone-50:  #FFFFFF;
+  --stone-100: #F5F5F5;
+  --stone-200: #000000;       /* borders become hard black */
+  --stone-300: #000000;
+  --stone-400: #2A2A2A;
+  --stone-500: #1A1A1A;
+  --stone-600: #000000;
+  --stone-700: #000000;
+  --ink: #000000;
+
+  --success: #006400;
+  --success-bg: #FFFFFF;
+  --warning: #8B4500;
+  --warning-bg: #FFFFFF;
+  --danger:  #8B0000;
+  --danger-bg: #FFFFFF;
+
+  background: #FFFFFF !important;
+  color: #000000;
+}
+
+/* In high contrast: remove all soft backgrounds and shadows, force hard borders */
+body.high-contrast .fast-card,
+body.high-contrast .card,
+body.high-contrast .results-card,
+body.high-contrast .loading-card {
+  background: #FFFFFF !important;
+  border: 2px solid #000000 !important;
+  box-shadow: none !important;
+}
+
+/* In high contrast: keep all text pure black on pure white */
+body.high-contrast,
+body.high-contrast p,
+body.high-contrast div,
+body.high-contrast span,
+body.high-contrast label,
+body.high-contrast li,
+body.high-contrast h1,
+body.high-contrast h2,
+body.high-contrast h3 {
+  color: #000000;
+}
+
+/* Buttons: pure black with white text in high contrast */
+body.high-contrast .btn-primary,
+body.high-contrast .btn-action,
+body.high-contrast button.fast-action-btn,
+body.high-contrast button.fast-pattern-btn.active,
+body.high-contrast button.tone-pill.selected,
+body.high-contrast button.sector-pill.selected,
+body.high-contrast button.mode-btn.active {
+  background: #000000 !important;
+  color: #FFFFFF !important;
+  border: 2px solid #000000 !important;
+}
+
+/* Inactive secondary buttons: white with black border */
+body.high-contrast button:not(.btn-primary):not(.active):not(.selected):not(:disabled),
+body.high-contrast button.fast-action-btn.ghost {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+/* Input fields: hard black border */
+body.high-contrast .values-input,
+body.high-contrast input,
+body.high-contrast textarea {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+body.high-contrast .values-input::placeholder {
+  color: #4A4A4A !important;
+}
+
+/* All focus indicators become highly visible */
+body.high-contrast *:focus,
+body.high-contrast *:focus-visible {
+  outline: 3px solid #B8860B !important;
+  outline-offset: 2px !important;
+}
+
+/* Hero section in high contrast: keep navy bg with bright text but increase contrast */
+body.high-contrast .hero {
+  background: #000000 !important;
+  color: #FFFFFF !important;
+}
+body.high-contrast .hero h1,
+body.high-contrast .hero p,
+body.high-contrast .hero .lab,
+body.high-contrast .hero .byline {
+  color: #FFFFFF !important;
+}
+body.high-contrast .hero h1 em {
+  color: #FFE08A !important;
+}
+
+/* Loading mark: visible in high contrast */
+body.high-contrast .loading-mark svg {
+  color: #000000 !important;
+}
+
+/* Status pills: keep semantic meaning but with better contrast */
+body.high-contrast .status-pill.uph,
+body.high-contrast .uph {
+  background: #FFFFFF !important;
+  color: #006400 !important;
+  border: 2px solid #006400 !important;
+}
+body.high-contrast .status-pill.mis,
+body.high-contrast .mis {
+  background: #FFFFFF !important;
+  color: #8B0000 !important;
+  border: 2px solid #8B0000 !important;
+}
+
+/* Value tags / chips: outline style in high contrast */
+body.high-contrast .vtag,
+body.high-contrast .value-chip,
+body.high-contrast .fast-value-chip,
+body.high-contrast .behavior-value {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+/* The "What may be going on" warm sand box: hard outline in high contrast */
+body.high-contrast .staff-reality {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+  border-left-width: 6px !important;
+}
+
+/* Mode switcher buttons in high contrast */
+body.high-contrast .mode-btn {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+/* Action chip in results — keep semantic colors but with hard borders */
+body.high-contrast .qv-action-chip,
+body.high-contrast .action-chip {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+/* High contrast toggle button — visually distinct when active */
+.contrast-toggle {
+  background: transparent;
+  border: 1px solid var(--stone-300);
+  color: var(--stone-500);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  transition: all 0.15s ease;
+}
+.contrast-toggle:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.contrast-toggle.active {
+  background: var(--navy);
+  color: var(--gold);
+  border-color: var(--navy);
+}
+body.high-contrast .contrast-toggle {
+  background: #000000 !important;
+  color: #FFE08A !important;
+  border: 2px solid #FFE08A !important;
+}
+body.high-contrast .contrast-toggle:not(.active) {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+
 html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 body { font-family: var(--body); background: var(--paper); color: var(--ink); min-height: 100vh; font-weight: 400; line-height: 1.5; }
 
@@ -2092,6 +2350,9 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
 </head>
 <body>
 
+<!-- Skip link for keyboard users -->
+<a href="#main-content" class="skip-link" id="skip-link">Skip to main content</a>
+
 <!-- ==================== LOGIN OVERLAY ==================== -->
 <div class="overlay" id="login-overlay">
   <div class="overlay-card">
@@ -2149,14 +2410,20 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
 </div>
 
 <!-- ==================== HERO ==================== -->
-<div class="hero">
-  <div class="hero-nav">
+<div class="hero" role="banner">
+  <div class="hero-nav" role="navigation" aria-label="Header controls">
     <div style="display:inline-flex; align-items:center; gap:10px;">
       <div class="text-size-toggle" role="group" id="text-size-group" aria-label="Text size">
-        <button class="text-size-btn size-s" id="text-size-btn-s" onclick="setTextSize('s')" data-size="s" aria-label="Small text">A</button>
-        <button class="text-size-btn size-m active" id="text-size-btn-m" onclick="setTextSize('m')" data-size="m" aria-label="Normal text">A</button>
-        <button class="text-size-btn size-l" id="text-size-btn-l" onclick="setTextSize('l')" data-size="l" aria-label="Large text">A</button>
+        <button class="text-size-btn size-s" id="text-size-btn-s" onclick="setTextSize('s')" data-size="s" aria-label="Small text" aria-pressed="false">A</button>
+        <button class="text-size-btn size-m active" id="text-size-btn-m" onclick="setTextSize('m')" data-size="m" aria-label="Normal text" aria-pressed="true">A</button>
+        <button class="text-size-btn size-l" id="text-size-btn-l" onclick="setTextSize('l')" data-size="l" aria-label="Large text" aria-pressed="false">A</button>
       </div>
+      <button onclick="toggleHighContrast()" id="contrast-btn" class="contrast-toggle" aria-label="High contrast mode" aria-pressed="false" title="High contrast">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 3 a9 9 0 0 1 0 18 z" fill="currentColor"/>
+        </svg>
+      </button>
       <button onclick="toggleLanguage()" id="lang-btn-hero" class="lang-btn">Español</button>
     </div>
     <a href="/admin.html" class="admin-link" id="admin-link">Admin</a>
@@ -2180,7 +2447,7 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
   <p id="hero-description">A trauma-informed leadership response tool. Enter your organization's values, describe a staff behavior, and receive structured guidance grounded in what your culture stands for.</p>
 </div>
 
-<div class="main">
+<div class="main" id="main-content" tabindex="-1">
 <div class="main-inner">
 
 <!-- ==================== MODE SWITCHER ==================== -->
@@ -2235,14 +2502,14 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
 
     <div class="field-group">
       <label class="field-label" id="fast-situation-label">The behavior</label>
-      <textarea class="values-input" id="fast-f-situation" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID."></textarea>
+      <textarea class="values-input" id="fast-f-situation" aria-required="true" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID."></textarea>
     </div>
 
     <div class="fast-pattern-row">
       <span class="fast-pattern-label" id="fast-pattern-label">Pattern:</span>
       <div class="fast-pattern-group" role="group">
-        <button type="button" class="fast-pattern-btn active" data-pattern="first" onclick="selectFastPattern('first')" id="fast-pat-first">First time</button>
-        <button type="button" class="fast-pattern-btn" data-pattern="repeated" onclick="selectFastPattern('repeated')" id="fast-pat-repeated">Repeated</button>
+        <button type="button" class="fast-pattern-btn active" data-pattern="first" onclick="selectFastPattern('first')" id="fast-pat-first" aria-pressed="true">First time</button>
+        <button type="button" class="fast-pattern-btn" data-pattern="repeated" onclick="selectFastPattern('repeated')" id="fast-pat-repeated" aria-pressed="false">Repeated</button>
       </div>
     </div>
 
@@ -2276,19 +2543,19 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
     <div class="field-group">
       <label class="field-label" id="practice-type-label">What type of message is this?</label>
       <div class="tone-grid" id="practice-type-pills" style="grid-template-columns: repeat(2, 1fr); gap: 10px;">
-        <button class="tone-pill" data-mtype="email" onclick="selectMessageType(this)" id="mtype-email">
+        <button class="tone-pill" data-mtype="email" onclick="selectMessageType(this)" id="mtype-email" aria-pressed="false">
           <div id="mtype-email-title">Email</div>
           <div class="tone-desc" id="mtype-email-desc">A written message you plan to send</div>
         </button>
-        <button class="tone-pill" data-mtype="text" onclick="selectMessageType(this)" id="mtype-text">
+        <button class="tone-pill" data-mtype="text" onclick="selectMessageType(this)" id="mtype-text" aria-pressed="false">
           <div id="mtype-text-title">Text or DM</div>
           <div class="tone-desc" id="mtype-text-desc">A short message in chat or text</div>
         </button>
-        <button class="tone-pill" data-mtype="script" onclick="selectMessageType(this)" id="mtype-script">
+        <button class="tone-pill" data-mtype="script" onclick="selectMessageType(this)" id="mtype-script" aria-pressed="false">
           <div id="mtype-script-title">Conversation script</div>
           <div class="tone-desc" id="mtype-script-desc">What you plan to say out loud</div>
         </button>
-        <button class="tone-pill" data-mtype="other" onclick="selectMessageType(this)" id="mtype-other">
+        <button class="tone-pill" data-mtype="other" onclick="selectMessageType(this)" id="mtype-other" aria-pressed="false">
           <div id="mtype-other-title">Other</div>
           <div class="tone-desc" id="mtype-other-desc">Any other written communication</div>
         </button>
@@ -2297,7 +2564,7 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
 
     <div class="field-group">
       <label class="field-label" id="practice-message-label">Your message</label>
-      <textarea class="values-input" id="practice-message" placeholder="Paste your draft here. The more honest you are, the more useful the feedback will be."></textarea>
+      <textarea class="values-input" id="practice-message" aria-required="true" placeholder="Paste your draft here. The more honest you are, the more useful the feedback will be."></textarea>
       <div class="field-hint" id="practice-message-hint">This stays in your browser. We only send it to the analysis engine to check it against your values.</div>
     </div>
 
@@ -2436,7 +2703,7 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
 
     <div class="field-group">
       <label class="field-label" id="step-2-label">The behavior</label>
-      <textarea class="values-input" id="f-situation" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID. Other staff witnessed the interaction."></textarea>
+      <textarea class="values-input" id="f-situation" aria-required="true" placeholder="Example: A staff member raised their voice at a client during intake when the client could not locate their ID. Other staff witnessed the interaction."></textarea>
       <div class="field-hint" id="step-2-hint">Include who was involved, what was said or done, and the context. Avoid identifying details if you'd prefer.</div>
     </div>
 
@@ -2465,7 +2732,7 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
 </div>
 
 <!-- ==================== LOADING ==================== -->
-<div id="loading-view" style="display:none">
+<div id="loading-view" style="display:none" role="status" aria-live="polite">
   <div class="loading-card">
     <div class="loading-mark">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2481,7 +2748,7 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
 </div>
 
 <!-- ==================== RESULTS ==================== -->
-<div id="results-view" style="display:none">
+<div id="results-view" style="display:none" role="region" aria-label="Coaching guidance results">
 
   <!-- Fast Mode top action bar (only visible in Fast Mode results) -->
   <div class="fast-actions-bar" id="fast-actions-bar" style="display:none;">
@@ -2523,12 +2790,12 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
 
   <div class="audio-player" id="audio-player">
     <div class="audio-controls">
-      <button class="audio-play-btn" id="play-pause-btn" onclick="togglePlayPause()">
-        <svg id="play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-        <svg id="pause-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      <button class="audio-play-btn" id="play-pause-btn" onclick="togglePlayPause()" aria-label="Play">
+        <svg id="play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="5,3 19,12 5,21"/></svg>
+        <svg id="pause-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none" aria-hidden="true" focusable="false"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
       </button>
       <div class="audio-progress-wrap">
-        <div class="audio-progress" id="audio-progress" onclick="scrubAudio(event)">
+        <div class="audio-progress" id="audio-progress" onclick="scrubAudio(event)" role="slider" tabindex="0" aria-label="Audio progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
           <div class="audio-progress-fill" id="audio-progress-fill"></div>
         </div>
         <div class="audio-time" id="audio-time">0:00 / 0:00</div>
@@ -2537,11 +2804,11 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
   </div>
 
   <div class="results-card" id="results-card"></div>
-  <div class="footer"><p id="footer-powered-by-1">Powered by <strong>Karabed Leadership Group</strong> — Values Lab</p></div>
+  <div class="footer"><p id="footer-powered-by-1" role="contentinfo">Powered by <strong>Karabed Leadership Group</strong> — Values Lab</p></div>
 </div>
 
 <!-- ==================== PRACTICE RESULTS ==================== -->
-<div id="practice-results" style="display:none">
+<div id="practice-results" style="display:none" role="region" aria-label="Practice mode results">
   <div class="results-card" id="practice-results-card"></div>
   <div class="footer"><p id="footer-powered-by-2">Powered by <strong>Karabed Leadership Group</strong> &mdash; Values Lab</p></div>
 </div>
@@ -2572,7 +2839,9 @@ function setTextSize(size) {
   document.documentElement.setAttribute('data-text-size', size);
   try { localStorage.setItem('vl_text_size', size); } catch(e) {}
   document.querySelectorAll('.text-size-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-size') === size);
+    const isActive = btn.getAttribute('data-size') === size;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
 }
 
@@ -2585,6 +2854,57 @@ function setTextSize(size) {
     document.documentElement.setAttribute('data-text-size', 'm');
   }
 })();
+
+// ==================== HIGH CONTRAST MODE ====================
+function toggleHighContrast() {
+  const isOn = document.body.classList.toggle('high-contrast');
+  try { localStorage.setItem('vl_high_contrast', isOn ? '1' : '0'); } catch(e) {}
+  const btn = document.getElementById('contrast-btn');
+  if (btn) {
+    btn.classList.toggle('active', isOn);
+    btn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+  }
+  // Announce to screen readers
+  announceToScreenReader(
+    currentLang === 'es'
+      ? (isOn ? 'Modo de alto contraste activado' : 'Modo de alto contraste desactivado')
+      : (isOn ? 'High contrast mode on' : 'High contrast mode off')
+  );
+}
+
+// Restore saved high-contrast preference on load
+(function() {
+  try {
+    if (localStorage.getItem('vl_high_contrast') === '1') {
+      document.body.classList.add('high-contrast');
+      // Update button state once DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('contrast-btn');
+        if (btn) {
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+        }
+      });
+    }
+  } catch(e) {}
+})();
+
+// ==================== SCREEN READER ANNOUNCEMENTS ====================
+// A live region that allows JS to announce changes to screen reader users.
+// Used for things that don't naturally surface to AT, like toggle states.
+function announceToScreenReader(message) {
+  let region = document.getElementById('sr-live-region');
+  if (!region) {
+    region = document.createElement('div');
+    region.id = 'sr-live-region';
+    region.setAttribute('aria-live', 'polite');
+    region.setAttribute('aria-atomic', 'true');
+    region.style.cssText = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
+    document.body.appendChild(region);
+  }
+  region.textContent = '';
+  setTimeout(function() { region.textContent = message; }, 50);
+}
 
 function attemptLogin() {
   const pwInput = document.getElementById('login-pw').value;
@@ -2783,7 +3103,9 @@ let selectedMessageType = 'email'; // default
 function selectMessageType(btn) {
   selectedMessageType = btn.getAttribute('data-mtype');
   document.querySelectorAll('#practice-type-pills .tone-pill').forEach(p => {
-    p.classList.toggle('selected', p === btn);
+    const isSelected = p === btn;
+    p.classList.toggle('selected', isSelected);
+    p.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
   });
 }
 
@@ -3104,15 +3426,85 @@ function backToPracticeInput() {
 function selectFastPattern(val) {
   fastSelectedPattern = val;
   document.querySelectorAll('.fast-pattern-btn').forEach(b => {
-    b.classList.toggle('active', b.getAttribute('data-pattern') === val);
+    const isActive = b.getAttribute('data-pattern') === val;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
 }
 
+// Tablist keyboard handler — arrow keys move between mode tabs
+function handleModeTabKeys(e) {
+  const tabs = ['mode-btn-fast', 'mode-btn-detailed', 'mode-btn-practice'];
+  const currentIdx = tabs.indexOf(document.activeElement.id);
+  if (currentIdx === -1) return;
+  let nextIdx = null;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    nextIdx = (currentIdx + 1) % tabs.length;
+    e.preventDefault();
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    nextIdx = (currentIdx - 1 + tabs.length) % tabs.length;
+    e.preventDefault();
+  } else if (e.key === 'Home') {
+    nextIdx = 0;
+    e.preventDefault();
+  } else if (e.key === 'End') {
+    nextIdx = tabs.length - 1;
+    e.preventDefault();
+  }
+  if (nextIdx !== null) {
+    const nextEl = document.getElementById(tabs[nextIdx]);
+    if (nextEl) {
+      nextEl.focus();
+      // Activate (matches automatic-activation tabs pattern)
+      const modes = ['fast', 'detailed', 'practice'];
+      switchMode(modes[nextIdx]);
+    }
+  }
+}
+
+// Wire up the handler once at load
+document.addEventListener('DOMContentLoaded', function() {
+  ['mode-btn-fast', 'mode-btn-detailed', 'mode-btn-practice'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('keydown', handleModeTabKeys);
+  });
+  // Also wire keyboard for the audio progress slider
+  const prog = document.getElementById('audio-progress');
+  if (prog) {
+    prog.addEventListener('keydown', function(e) {
+      if (!currentAudio) return;
+      const step = 5; // seconds
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+        currentAudio.currentTime = Math.min(currentAudio.duration, currentAudio.currentTime + step);
+        e.preventDefault();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+        currentAudio.currentTime = Math.max(0, currentAudio.currentTime - step);
+        e.preventDefault();
+      } else if (e.key === 'Home') {
+        currentAudio.currentTime = 0;
+        e.preventDefault();
+      } else if (e.key === 'End') {
+        currentAudio.currentTime = currentAudio.duration;
+        e.preventDefault();
+      } else if (e.key === ' ' || e.key === 'Enter') {
+        togglePlayPause();
+        e.preventDefault();
+      }
+    });
+  }
+});
+
 function switchMode(mode) {
   currentMode = mode;
-  document.getElementById('mode-btn-fast').classList.toggle('active', mode === 'fast');
-  document.getElementById('mode-btn-detailed').classList.toggle('active', mode === 'detailed');
-  document.getElementById('mode-btn-practice').classList.toggle('active', mode === 'practice');
+  // Update visual + ARIA state for the mode tablist
+  ['fast','detailed','practice'].forEach(m => {
+    const btn = document.getElementById('mode-btn-' + m);
+    if (!btn) return;
+    const isActive = mode === m;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    btn.setAttribute('tabindex', isActive ? '0' : '-1');
+  });
 
   // --- IMPORTANT: if a result is already on screen, preserve it ---
   // We only flip the layout (On-the-Go only vs. full analysis) — we do NOT
@@ -3716,6 +4108,8 @@ async function listenToSummary() {
       if (!currentAudio || !currentAudio.duration) return;
       const pct = (currentAudio.currentTime / currentAudio.duration) * 100;
       document.getElementById('audio-progress-fill').style.width = pct + '%';
+      const prog = document.getElementById('audio-progress');
+      if (prog) prog.setAttribute('aria-valuenow', Math.round(pct));
       document.getElementById('audio-time').textContent = formatTime(currentAudio.currentTime) + ' / ' + formatTime(currentAudio.duration);
     });
 
@@ -3747,14 +4141,17 @@ async function listenToSummary() {
 
 function togglePlayPause() {
   if (!currentAudio) return;
+  const ppBtn = document.getElementById('play-pause-btn');
   if (currentAudio.paused) {
     currentAudio.play();
     document.getElementById('play-icon').style.display = 'none';
     document.getElementById('pause-icon').style.display = 'block';
+    if (ppBtn) ppBtn.setAttribute('aria-label', currentLang === 'es' ? 'Pausa' : 'Pause');
   } else {
     currentAudio.pause();
     document.getElementById('play-icon').style.display = 'block';
     document.getElementById('pause-icon').style.display = 'none';
+    if (ppBtn) ppBtn.setAttribute('aria-label', currentLang === 'es' ? 'Reproducir' : 'Play');
   }
 }
 
@@ -3765,6 +4162,89 @@ function scrubAudio(e) {
   const pct = (e.clientX - rect.left) / rect.width;
   currentAudio.currentTime = pct * currentAudio.duration;
 }
+
+// Keyboard support for audio progress bar (arrow keys for seek)
+function audioProgressKeyHandler(e) {
+  if (!currentAudio || !currentAudio.duration) return;
+  const step = 5; // seconds per arrow press
+  if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    currentAudio.currentTime = Math.min(currentAudio.duration, currentAudio.currentTime + step);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    currentAudio.currentTime = Math.max(0, currentAudio.currentTime - step);
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    currentAudio.currentTime = 0;
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    currentAudio.currentTime = currentAudio.duration;
+  } else if (e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    if (typeof togglePlayPause === 'function') togglePlayPause();
+  }
+}
+// Bind it once on load
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    const bar = document.getElementById('audio-progress');
+    if (bar) bar.addEventListener('keydown', audioProgressKeyHandler);
+  });
+})();
+
+// Keyboard navigation for QuickView tabs (left/right arrows)
+function qvTabsKeyHandler(e) {
+  const tabs = Array.from(document.querySelectorAll('.qv-tab-btn'));
+  if (!tabs.length) return;
+  const currentIndex = tabs.findIndex(t => t === document.activeElement);
+  if (currentIndex < 0) return;
+  let nextIndex = currentIndex;
+  if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    nextIndex = (currentIndex + 1) % tabs.length;
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    nextIndex = 0;
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    nextIndex = tabs.length - 1;
+  } else {
+    return;
+  }
+  tabs[nextIndex].focus();
+  tabs[nextIndex].click();
+}
+// Delegate keyboard handler on document for dynamically rendered tabs
+document.addEventListener('keydown', function(e) {
+  if (document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('qv-tab-btn')) {
+    qvTabsKeyHandler(e);
+  }
+});
+
+// Keyboard navigation for mode switcher (left/right arrows between Fast/Detailed/Practice)
+document.addEventListener('keydown', function(e) {
+  const ae = document.activeElement;
+  if (!ae || !ae.classList || !ae.classList.contains('mode-btn')) return;
+  const tabs = Array.from(document.querySelectorAll('.mode-btn'));
+  if (!tabs.length) return;
+  const currentIndex = tabs.findIndex(t => t === ae);
+  if (currentIndex < 0) return;
+  let nextIndex = currentIndex;
+  if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    nextIndex = (currentIndex + 1) % tabs.length;
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+  } else {
+    return;
+  }
+  tabs[nextIndex].focus();
+  tabs[nextIndex].click();
+});
 
 function formatTime(s) {
   if (isNaN(s)) return '0:00';
@@ -4139,6 +4619,69 @@ function applyTranslations() {
   if (modeSwitcher) {
     modeSwitcher.setAttribute('aria-label', currentLang === 'es' ? 'Modo de la aplicación' : 'App mode');
   }
+  const contrastBtn = document.getElementById('contrast-btn');
+  if (contrastBtn) {
+    contrastBtn.setAttribute('aria-label', currentLang === 'es' ? 'Modo de alto contraste' : 'High contrast mode');
+    contrastBtn.setAttribute('title', currentLang === 'es' ? 'Alto contraste' : 'High contrast');
+  }
+  const skipLink = document.getElementById('skip-link');
+  if (skipLink) {
+    skipLink.textContent = currentLang === 'es' ? 'Saltar al contenido principal' : 'Skip to main content';
+  }
+  const playPauseBtn = document.getElementById('play-pause-btn');
+  if (playPauseBtn) {
+    // Default aria-label; toggleAudio code updates this dynamically when state changes
+    const isPlaying = playPauseBtn.getAttribute('aria-label') === 'Pause' || playPauseBtn.getAttribute('aria-label') === 'Pausa';
+    playPauseBtn.setAttribute('aria-label',
+      isPlaying
+        ? (currentLang === 'es' ? 'Pausa' : 'Pause')
+        : (currentLang === 'es' ? 'Reproducir' : 'Play')
+    );
+  }
+  const audioProgress = document.getElementById('audio-progress');
+  if (audioProgress) {
+    audioProgress.setAttribute('aria-label', currentLang === 'es' ? 'Progreso del audio' : 'Audio progress');
+  }
+  const hcBtn = document.getElementById('high-contrast-btn');
+  if (hcBtn) {
+    const hcLabel = currentLang === 'es' ? 'Modo de alto contraste' : 'High contrast mode';
+    hcBtn.setAttribute('aria-label', hcLabel);
+    hcBtn.setAttribute('title', hcLabel);
+  }
+  const skipLink = document.getElementById('skip-to-main');
+  if (skipLink) {
+    skipLink.textContent = currentLang === 'es' ? 'Saltar al contenido principal' : 'Skip to main content';
+  }
+  // Translate any aria-labels on icon-only or composite buttons
+  const audioBtn = document.getElementById('audio-btn');
+  if (audioBtn) {
+    audioBtn.setAttribute('aria-label', currentLang === 'es' ? 'Escuchar la guía' : 'Listen to guidance');
+  }
+  const pdfBtn = document.getElementById('pdf-btn');
+  if (pdfBtn) {
+    pdfBtn.setAttribute('aria-label', currentLang === 'es' ? 'Descargar PDF' : 'Download PDF');
+  }
+  const playPauseBtn = document.getElementById('play-pause-btn');
+  if (playPauseBtn) {
+    playPauseBtn.setAttribute('aria-label', currentLang === 'es' ? 'Reproducir o pausar audio' : 'Play or pause audio');
+  }
+  const audioProgress = document.getElementById('audio-progress');
+  if (audioProgress) {
+    audioProgress.setAttribute('aria-label', currentLang === 'es' ? 'Posición de reproducción de audio' : 'Audio playback position');
+    audioProgress.setAttribute('role', 'slider');
+    audioProgress.setAttribute('tabindex', '0');
+  }
+  const adminLink = document.getElementById('admin-link');
+  if (adminLink) {
+    adminLink.setAttribute('aria-label', currentLang === 'es' ? 'Panel de administrador' : 'Admin panel');
+  }
+  const langBtns = ['lang-btn-login','lang-btn-splash','lang-btn-hero'];
+  langBtns.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.setAttribute('aria-label', currentLang === 'es' ? 'Cambiar a inglés' : 'Switch to Spanish');
+    }
+  });
 
   document.querySelectorAll('.preset-pill').forEach(btn => {
     const onclickAttr = btn.getAttribute('onclick');
