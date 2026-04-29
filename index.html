@@ -2405,10 +2405,10 @@ html[data-text-size="l"] .qv-card-label { font-size: 12px; }
       <p id="splash-p2">This is a shared space of trust. Everything generated inside, the guidance, the scripts, the analysis, is confidential and intended solely to support your feedback to Karabed Leadership Group as we shape this tool together.</p>
       <p id="splash-p3">We are so grateful for your partnership. What you share here helps us build something that truly serves leaders and the communities they support.</p>
     </div>
-    <label class="splash-agree" for="agree-check">
-      <input type="checkbox" id="agree-check" aria-describedby="splash-agree-label" onchange="toggleEnter()" oninput="toggleEnter()" onclick="toggleEnter()">
-      <span id="splash-agree-label">I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.</span>
-    </label>
+    <div class="splash-agree" id="splash-agree-row">
+      <input type="checkbox" id="agree-check" aria-describedby="splash-agree-label">
+      <label for="agree-check" id="splash-agree-label">I'm here to explore Values Lab and offer my feedback to Karabed Leadership Group. I'll keep everything I find here confidential and use this space only for that purpose.</label>
+    </div>
     <button class="btn-primary" id="enter-btn" disabled onclick="enterApp()" style="margin-top:0;">Enter Values Lab</button>
   </div>
 </div>
@@ -2979,8 +2979,22 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   const agreeCheck = document.getElementById('agree-check');
   if (agreeCheck) {
-    agreeCheck.addEventListener('click', toggleEnter);
-    agreeCheck.addEventListener('change', toggleEnter);
+    // Use a small timeout so the browser has fully updated `checked` before we read it.
+    const sync = function() { setTimeout(toggleEnter, 0); };
+    agreeCheck.addEventListener('change', sync);
+    agreeCheck.addEventListener('click', sync);
+    agreeCheck.addEventListener('input', sync);
+    // Also let users click anywhere on the row to toggle.
+    const row = document.getElementById('splash-agree-row');
+    if (row) {
+      row.addEventListener('click', function(e) {
+        // If they clicked the checkbox or its label, the browser already handles it.
+        if (e.target === agreeCheck || e.target.tagName === 'LABEL') return;
+        agreeCheck.checked = !agreeCheck.checked;
+        sync();
+      });
+    }
+    // Initial sync
     toggleEnter();
   }
 
