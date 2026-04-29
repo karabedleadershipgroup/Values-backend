@@ -375,17 +375,42 @@
   }
 
   function applyLogo(logoUrl, orgName) {
-    if (!logoUrl) return;
-
-    // Find the original SVG mark in the hero and replace it with an <img>
     const mark = document.querySelector('.hero .hero-mark');
-    if (!mark) return;
-    mark.innerHTML = `<img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(orgName || 'Organization logo')}"
-      style="max-height:72px;max-width:280px;object-fit:contain;background:white;padding:10px 16px;border-radius:8px;" />`;
 
-    // Also swap the wordmark text "Values Lab" subtitle to mention the org
+    // Case 1: org has its own logo image — replace the Values Lab mark with it
+    if (logoUrl && mark) {
+      mark.innerHTML = `<img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(orgName || 'Organization logo')}"
+        style="max-height:72px;max-width:280px;object-fit:contain;background:white;padding:10px 16px;border-radius:8px;" />`;
+    }
+
+    // Case 2: regardless of whether they have a custom logo, show the org name
+    // prominently in the hero. We add a styled badge OVERLAY directly on top
+    // of the Values Lab mark so the org instantly knows this is THEIR space.
+    if (orgName && mark && !document.getElementById('org-name-overlay')) {
+      const overlay = document.createElement('div');
+      overlay.id = 'org-name-overlay';
+      overlay.textContent = orgName;
+      overlay.style.cssText = [
+        'display:inline-block',
+        'margin-top:14px',
+        'padding:8px 18px',
+        'background:rgba(255,255,255,0.08)',
+        'color:#C9A84C',
+        'border:1px solid rgba(201,168,76,0.4)',
+        'border-radius:999px',
+        'font-family:\'Playfair Display\', Georgia, serif',
+        'font-size:18px',
+        'font-weight:500',
+        'letter-spacing:0.02em',
+        'text-align:center'
+      ].join(';');
+      // Insert it right after the hero-mark element so it sits below the logo
+      mark.insertAdjacentElement('afterend', overlay);
+    }
+
+    // Also swap the wordmark text "Values Lab" byline to mention the org
     const byline = document.querySelector('.hero .byline');
-    if (byline) byline.textContent = orgName || byline.textContent;
+    if (byline && orgName) byline.textContent = orgName;
   }
 
   function addValuesDefinitionsLink(values) {
